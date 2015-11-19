@@ -20,7 +20,7 @@ trait IdentifiablePacket
     protected function generateIdentifier()
     {
         if ($this->identifier <= 0) {
-            self::$nextIdentifier++;
+            ++self::$nextIdentifier;
             self::$nextIdentifier = self::$nextIdentifier & 0xFFFF;
 
             $this->identifier = self::$nextIdentifier;
