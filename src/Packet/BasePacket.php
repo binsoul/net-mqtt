@@ -223,8 +223,29 @@ class BasePacket implements Packet
      *
      * @throws MalformedPacketException
      */
+    protected function assertValidStringLength($value)
+    {
+        if (strlen($value) > 0xFFFF) {
+            throw new MalformedPacketException(
+                sprintf(
+                    'The string "%s" is longer than 65535 byte.',
+                    substr($value, 0, 50)
+                )
+            );
+        }
+    }
+
+    /**
+     * Asserts that the given string is a well-formed MQTT string.
+     *
+     * @param $value
+     *
+     * @throws MalformedPacketException
+     */
     protected function assertValidString($value)
     {
+        $this->assertValidStringLength($value);
+
         if (!mb_check_encoding($value, 'UTF-8')) {
             throw new MalformedPacketException(
                 sprintf(
