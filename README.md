@@ -4,6 +4,11 @@
 [![Software License][ico-license]](LICENSE.md)
 [![Total Downloads][ico-downloads]][link-downloads]
 
+MQTT is a machine-to-machine (M2M) / Internet of Things (IoT) connectivity protocol. It provides a lightweight method of carrying out messaging using a publish/subscribe model.
+
+This package implements the MQTT protocol versions 3.1 and 3.1.1.
+ 
+ 
 ## Install
 
 Via composer:
