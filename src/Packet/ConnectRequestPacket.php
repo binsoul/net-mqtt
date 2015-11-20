@@ -70,7 +70,7 @@ class ConnectRequestPacket extends BasePacket
     public function write(PacketStream $stream)
     {
         if ($this->clientID == '') {
-            $this->clientID = 'BinSoul-'.rand(100000, 999999);
+            $this->clientID = 'BinSoul'.rand(100000, 999999);
         }
 
         $data = new PacketStream();
@@ -150,6 +150,15 @@ class ConnectRequestPacket extends BasePacket
             throw new \InvalidArgumentException(
                 sprintf(
                     'Expected client id shorter than 24 bytes but got "%s".',
+                    $value
+                )
+            );
+        }
+
+        if ($value != '' && !preg_match('/[0-9a-zA-Z]+/', $value)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Expected a client id containing characters 0-9, a-z or A-Z but got "%s".',
                     $value
                 )
             );
