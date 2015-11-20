@@ -164,9 +164,14 @@ class BasePacket implements Packet
         $bytes = '';
         $ascii = '';
         for ($n = 0; $n < strlen($string); ++$n) {
-            $byte = ord($string[$n]);
+            $char = substr($string, $n, 1);
+            $byte = ord($char);
             $bytes .= str_pad($byte, 3, '0', STR_PAD_LEFT);
-            $ascii .= str_pad(($byte >= 32 && $byte <= 126) ? chr($string[$n]) : bin2hex($byte), 3, ' ', STR_PAD_LEFT);
+            if ($byte >= 32 && $byte <= 126) {
+                $ascii .= str_pad($char, 3, ' ', STR_PAD_LEFT);
+            } else {
+                $ascii .= str_pad(bin2hex($char), 3, ' ', STR_PAD_LEFT);
+            }
         }
 
         return $bytes."\n".$ascii."\n";
