@@ -21,7 +21,6 @@ interface Packet
     const TYPE_PINGREQ = 12;
     const TYPE_PINGRESP = 13;
     const TYPE_DISCONNECT = 14;
-    const TYPE_RESERVED = 15;
 
     /**
      * Returns the type of the packet.

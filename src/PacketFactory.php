@@ -13,7 +13,6 @@ use BinSoul\Net\Mqtt\Packet\PublishAckPacket;
 use BinSoul\Net\Mqtt\Packet\PublishCompletePacket;
 use BinSoul\Net\Mqtt\Packet\PublishReceivedPacket;
 use BinSoul\Net\Mqtt\Packet\PublishReleasePacket;
-use BinSoul\Net\Mqtt\Packet\ReservedPacket;
 use BinSoul\Net\Mqtt\Packet\SubscribeRequestPacket;
 use BinSoul\Net\Mqtt\Packet\SubscribeResponsePacket;
 use BinSoul\Net\Mqtt\Packet\UnsubscribeRequestPacket;
@@ -44,7 +43,6 @@ class PacketFactory
         Packet::TYPE_PINGREQ => PingRequestPacket::class,
         Packet::TYPE_PINGRESP => PingResponsePacket::class,
         Packet::TYPE_DISCONNECT => DisconnectRequestPacket::class,
-        Packet::TYPE_RESERVED => ReservedPacket::class,
     ];
 
     /**
