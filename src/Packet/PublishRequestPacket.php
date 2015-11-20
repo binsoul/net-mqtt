@@ -92,6 +92,11 @@ class PublishRequestPacket extends BasePacket
      */
     public function setTopic($value)
     {
+        $this->assertValidString($value);
+        if (strlen($value) == 0) {
+            throw new \InvalidArgumentException('The topic must not be empty.');
+        }
+
         $this->topic = $value;
     }
 

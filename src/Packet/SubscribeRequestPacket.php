@@ -71,11 +71,16 @@ class SubscribeRequestPacket extends BasePacket
     /**
      * Sets the Topic.
      *
-     * @param string $topic
+     * @param string $value
      */
-    public function setTopic($topic)
+    public function setTopic($value)
     {
-        $this->topic = $topic;
+        $this->assertValidString($value);
+        if (strlen($value) == 0) {
+            throw new \InvalidArgumentException('The topic must not be empty.');
+        }
+
+        $this->topic = $value;
     }
 
     /**
