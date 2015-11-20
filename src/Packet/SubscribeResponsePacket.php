@@ -36,14 +36,25 @@ class SubscribeResponsePacket extends BasePacket
         $returnCodeLength = $this->remainingPacketLength - 2;
         for ($n = 0; $n < $returnCodeLength; ++$n) {
             $returnCode = $stream->readByte();
-            if (!in_array($returnCode, [0, 1, 2, 128])) {
-                throw new MalformedPacketException(
-                    sprintf('Malformed quality of return code %02x.', $returnCode)
-                );
-            }
+            $this->assertValidReturnCode($returnCode);
 
             $this->returnCodes[] = $returnCode;
         }
+    }
+
+    public function write(PacketStream $stream)
+    {
+        $data = new PacketStream();
+
+        $data->writeWord($this->generateIdentifier());
+        foreach ($this->returnCodes as $returnCode) {
+            $data->writeByte($returnCode);
+        }
+
+        $this->remainingPacketLength = $data->length();
+
+        parent::write($stream);
+        $stream->write($data->getData());
     }
 
     /**
@@ -72,5 +83,45 @@ class SubscribeResponsePacket extends BasePacket
         }
 
         return 'Unknown '.$returnCode;
+    }
+
+    /**
+     * Returns the return codes.
+     *
+     * @return int[]
+     */
+    public function getReturnCodes()
+    {
+        return $this->returnCodes;
+    }
+
+    /**
+     * Sets the return codes.
+     *
+     * @param int[] $value
+     */
+    public function setReturnCodes(array $value)
+    {
+        foreach ($value as $returnCode) {
+            $this->assertValidReturnCode($returnCode);
+        }
+
+        $this->returnCodes = $value;
+    }
+
+    /**
+     * Asserts that a return code is valid.
+     *
+     * @param int $returnCode
+     *
+     * @throws MalformedPacketException
+     */
+    private function assertValidReturnCode($returnCode)
+    {
+        if (!in_array($returnCode, [0, 1, 2, 128])) {
+            throw new MalformedPacketException(
+                sprintf('Malformed return code %02x.', $returnCode)
+            );
+        }
     }
 }
