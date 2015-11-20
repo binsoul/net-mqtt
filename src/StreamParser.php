@@ -32,7 +32,7 @@ class StreamParser
      *
      * @param callable $callback
      */
-    public function onError(callable $callback)
+    public function onError($callback)
     {
         $this->errorCallback = $callback;
     }
