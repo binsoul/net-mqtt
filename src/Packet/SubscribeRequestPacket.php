@@ -59,7 +59,7 @@ class SubscribeRequestPacket extends BasePacket
     }
 
     /**
-     * Returns the Topic.
+     * Returns the topic.
      *
      * @return string
      */
@@ -69,7 +69,7 @@ class SubscribeRequestPacket extends BasePacket
     }
 
     /**
-     * Sets the Topic.
+     * Sets the topic.
      *
      * @param string $value
      */
@@ -84,7 +84,7 @@ class SubscribeRequestPacket extends BasePacket
     }
 
     /**
-     * Returns the QosLevel.
+     * Returns the quality of service level.
      *
      * @return int
      */
@@ -94,12 +94,12 @@ class SubscribeRequestPacket extends BasePacket
     }
 
     /**
-     * Sets the QosLevel.
+     * Sets the quality of service level.
      *
-     * @param int $qosLevel
+     * @param int $value
      */
-    public function setQosLevel($qosLevel)
+    public function setQosLevel($value)
     {
-        $this->qosLevel = $qosLevel;
+        $this->qosLevel = $value;
     }
 }
