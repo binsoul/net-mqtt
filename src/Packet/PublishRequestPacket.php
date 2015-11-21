@@ -58,23 +58,6 @@ class PublishRequestPacket extends BasePacket
         $this->assertValidString($this->topic);
     }
 
-    public function getResponse()
-    {
-        $result = null;
-
-        if ($this->qosLevel == 1) {
-            $result = new PublishAckPacket();
-            $result->setIdentifier($this->identifier);
-        }
-
-        if ($this->qosLevel == 2) {
-            $result = new PublishReceivedPacket();
-            $result->setIdentifier($this->identifier);
-        }
-
-        return $result;
-    }
-
     /**
      * Returns the topic.
      *
