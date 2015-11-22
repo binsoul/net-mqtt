@@ -2,7 +2,6 @@
 
 namespace BinSoul\Net\Mqtt\Packet;
 
-use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\PacketStream;
 use BinSoul\Net\Mqtt\Packet;
 
@@ -37,6 +36,23 @@ class PublishRequestPacket extends BasePacket
 
         $this->assertValidQosLevel($this->getQosLevel());
         $this->assertValidString($this->topic);
+    }
+
+    public function write(PacketStream $stream)
+    {
+        $data = new PacketStream();
+
+        $data->writeString($this->topic);
+        if ($this->getQosLevel() > 0) {
+            $stream->writeWord($this->generateIdentifier());
+        }
+
+        $data->write($this->payload);
+
+        $this->remainingPacketLength = $data->length();
+
+        parent::write($stream);
+        $stream->write($data->getData());
     }
 
     /**
