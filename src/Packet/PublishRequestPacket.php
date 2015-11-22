@@ -44,7 +44,7 @@ class PublishRequestPacket extends BasePacket
 
         $data->writeString($this->topic);
         if ($this->getQosLevel() > 0) {
-            $stream->writeWord($this->generateIdentifier());
+            $data->writeWord($this->generateIdentifier());
         }
 
         $data->write($this->payload);
