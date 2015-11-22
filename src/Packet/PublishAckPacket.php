@@ -7,7 +7,7 @@ use BinSoul\Net\Mqtt\Packet;
 /**
  * Represents the PUBACK packet.
  */
-class PublishAckPacket extends PublishBasePacket
+class PublishAckPacket extends IdentifierOnlyPacket
 {
     protected $packetType = Packet::TYPE_PUBACK;
 }

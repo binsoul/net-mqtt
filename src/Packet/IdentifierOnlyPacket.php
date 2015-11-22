@@ -7,18 +7,16 @@ use BinSoul\Net\Mqtt\PacketStream;
 /**
  * Provides a base class for PUB* packets.
  */
-abstract class PublishBasePacket extends BasePacket
+abstract class IdentifierOnlyPacket extends BasePacket
 {
     use IdentifiablePacket;
 
     protected $remainingPacketLength = 2;
-    /** @var int */
-    protected $expectedPacketFlags = 0;
 
     public function read(PacketStream $stream)
     {
         parent::read($stream);
-        $this->assertPacketFlags($this->expectedPacketFlags);
+        $this->assertPacketFlags($this->getExpectedPacketFlags());
         $this->assertRemainingPacketLength(2);
 
         $this->identifier = $stream->readWord();
@@ -30,5 +28,15 @@ abstract class PublishBasePacket extends BasePacket
         parent::write($stream);
 
         $stream->writeWord($this->generateIdentifier());
+    }
+
+    /**
+     * Returns the expected packet flags.
+     *
+     * @return int
+     */
+    protected function getExpectedPacketFlags()
+    {
+        return 0;
     }
 }

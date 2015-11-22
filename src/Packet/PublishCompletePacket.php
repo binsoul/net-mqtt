@@ -7,7 +7,7 @@ use BinSoul\Net\Mqtt\Packet;
 /**
  * Represents the PUBCOMP packet.
  */
-class PublishCompletePacket extends PublishBasePacket
+class PublishCompletePacket extends IdentifierOnlyPacket
 {
     protected $packetType = Packet::TYPE_PUBCOMP;
 }

@@ -17,12 +17,6 @@ class PublishRequestPacket extends BasePacket
     private $topic;
     /** @var string */
     private $payload;
-    /** @var bool */
-    private $isDuplicate;
-    /** @var bool */
-    private $isRetained;
-    /** @var int */
-    private $qosLevel;
 
     protected $packetType = Packet::TYPE_PUBLISH;
 
@@ -31,20 +25,17 @@ class PublishRequestPacket extends BasePacket
         parent::read($stream);
         $this->assertRemainingPacketLength();
 
-        $this->isDuplicate = $this->packetFlags & 8;
-        $this->isRetained = $this->packetFlags & 1;
-        $this->qosLevel = ($this->packetFlags & 6) >> 1;
         $originalPosition = $stream->getPosition();
         $this->topic = $stream->readString();
         $this->identifier = null;
-        if ($this->qosLevel > 0) {
+        if ($this->getQosLevel() > 0) {
             $this->identifier = $stream->readWord();
         }
 
         $payloadLength = $this->remainingPacketLength - ($stream->getPosition() - $originalPosition);
         $this->payload = $stream->read($payloadLength);
 
-        $this->assertValidQosLevel($this->qosLevel);
+        $this->assertValidQosLevel($this->getQosLevel());
         $this->assertValidString($this->topic);
     }
 
@@ -100,7 +91,7 @@ class PublishRequestPacket extends BasePacket
      */
     public function isDuplicate()
     {
-        return $this->isDuplicate;
+        return $this->packetFlags & 8;
     }
 
     /**
@@ -110,7 +101,11 @@ class PublishRequestPacket extends BasePacket
      */
     public function setDuplicate($value)
     {
-        $this->isDuplicate = $value;
+        if ($value) {
+            $this->packetFlags |= 8;
+        } else {
+            $this->packetFlags &= ~8;
+        }
     }
 
     /**
@@ -120,7 +115,7 @@ class PublishRequestPacket extends BasePacket
      */
     public function isRetained()
     {
-        return $this->isRetained;
+        return $this->packetFlags & 1;
     }
 
     /**
@@ -130,7 +125,11 @@ class PublishRequestPacket extends BasePacket
      */
     public function setRetained($value)
     {
-        $this->isRetained = $value;
+        if ($value) {
+            $this->packetFlags |= 1;
+        } else {
+            $this->packetFlags &= ~1;
+        }
     }
 
     /**
@@ -140,7 +139,7 @@ class PublishRequestPacket extends BasePacket
      */
     public function getQosLevel()
     {
-        return $this->qosLevel;
+        return ($this->packetFlags & 6) >> 1;
     }
 
     /**
@@ -152,6 +151,6 @@ class PublishRequestPacket extends BasePacket
     {
         $this->assertValidQosLevel($value);
 
-        $this->qosLevel = $value;
+        $this->packetFlags |= ($value & 3) << 1;
     }
 }

@@ -7,9 +7,13 @@ use BinSoul\Net\Mqtt\Packet;
 /**
  * Represents the PUBREL packet.
  */
-class PublishReleasePacket extends PublishBasePacket
+class PublishReleasePacket extends IdentifierOnlyPacket
 {
     protected $packetType = Packet::TYPE_PUBREL;
     protected $packetFlags = 2;
-    protected $expectedPacketFlags = 2;
+
+    protected function getExpectedPacketFlags()
+    {
+        return 2;
+    }
 }
