@@ -34,17 +34,6 @@ class PublishRequestPacket extends BasePacket
         $this->isDuplicate = $this->packetFlags & 8;
         $this->isRetained = $this->packetFlags & 1;
         $this->qosLevel = ($this->packetFlags & 6) >> 1;
-        if ($this->qosLevel == 3) {
-            throw new MalformedPacketException(
-                sprintf(
-                    'Malformed quality of service level: type=%02x, flags=%02x, length=%02x',
-                    $this->packetType,
-                    $this->packetFlags,
-                    $this->remainingPacketLength
-                )
-            );
-        }
-
         $originalPosition = $stream->getPosition();
         $this->topic = $stream->readString();
         $this->identifier = null;
@@ -55,6 +44,7 @@ class PublishRequestPacket extends BasePacket
         $payloadLength = $this->remainingPacketLength - ($stream->getPosition() - $originalPosition);
         $this->payload = $stream->read($payloadLength);
 
+        $this->assertValidQosLevel($this->qosLevel);
         $this->assertValidString($this->topic);
     }
 
@@ -160,6 +150,8 @@ class PublishRequestPacket extends BasePacket
      */
     public function setQosLevel($value)
     {
+        $this->assertValidQosLevel($value);
+
         $this->qosLevel = $value;
     }
 }

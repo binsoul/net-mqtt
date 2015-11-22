@@ -31,17 +31,8 @@ class SubscribeRequestPacket extends BasePacket
         $this->topic = $stream->readString();
         $this->qosLevel = $stream->readByte();
 
+        $this->assertValidQosLevel($this->qosLevel);
         $this->assertValidString($this->topic);
-        if ($this->qosLevel > 2) {
-            throw new MalformedPacketException(
-                sprintf(
-                    'Malformed quality of service level: type=%02x, flags=%02x, length=%02x',
-                    $this->packetType,
-                    $this->packetFlags,
-                    $this->remainingPacketLength
-                )
-            );
-        }
     }
 
     public function write(PacketStream $stream)
@@ -100,6 +91,8 @@ class SubscribeRequestPacket extends BasePacket
      */
     public function setQosLevel($value)
     {
+        $this->assertValidQosLevel($value);
+
         $this->qosLevel = $value;
     }
 }

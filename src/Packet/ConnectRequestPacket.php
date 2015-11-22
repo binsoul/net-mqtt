@@ -292,14 +292,7 @@ class ConnectRequestPacket extends BasePacket
             throw new \InvalidArgumentException('The message must not be empty.');
         }
 
-        if ($qosLevel < 0 || $qosLevel > 2) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Expected a quality of service level lower than 3 but got %d.',
-                    $qosLevel
-                )
-            );
-        }
+        $this->assertValidQosLevel($qosLevel);
 
         $this->willTopic = $topic;
         $this->willMessage = $message;
@@ -406,11 +399,7 @@ class ConnectRequestPacket extends BasePacket
     private function assertValidWill()
     {
         if ($this->hasWill()) {
-            if ($this->getWillQosLevel() == 3) {
-                throw new MalformedPacketException(
-                    'The quality of service level of the will has to be lower than 3.'
-                );
-            }
+            $this->assertValidQosLevel($this->getWillQosLevel());
         } else {
             if ($this->getWillQosLevel() > 0) {
                 throw new MalformedPacketException(

@@ -269,4 +269,21 @@ class BasePacket implements Packet
             );
         }
     }
+
+    /**
+     * Asserts that the given quality of service level is valid.
+     *
+     * @param $level
+     */
+    protected function assertValidQosLevel($level)
+    {
+        if ($level < 0 || $level > 2) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Expected a quality of service level between 0 and 2 but got %d.',
+                    $level
+                )
+            );
+        }
+    }
 }
