@@ -9,7 +9,7 @@ use BinSoul\Net\Mqtt\Packet;
 /**
  * Represents the base class for all packets.
  */
-class BasePacket implements Packet
+abstract class BasePacket implements Packet
 {
     /**
      * Type of the packet. See {@see Packet}.
