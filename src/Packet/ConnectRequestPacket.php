@@ -57,10 +57,6 @@ class ConnectRequestPacket extends BasePacket
             $this->password = $stream->readString();
         }
 
-        if ($this->flags & 1) {
-            throw new MalformedPacketException('The reserved bit of the connection flags has to be zero.');
-        }
-
         $this->assertValidWill();
         $this->assertValidString($this->clientID);
         $this->assertValidString($this->willTopic);
@@ -155,7 +151,7 @@ class ConnectRequestPacket extends BasePacket
             );
         }
 
-        if ($value != '' && !preg_match('/[0-9a-zA-Z]+/', $value)) {
+        if ($value != '' && !preg_match('/^[0-9a-zA-Z]+$/', $value)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Expected a client id containing characters 0-9, a-z or A-Z but got "%s".',
@@ -203,7 +199,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function isCleanSession()
     {
-        return $this->flags & 2;
+        return ($this->flags & 2) == 2;
     }
 
     /**
@@ -227,13 +223,13 @@ class ConnectRequestPacket extends BasePacket
      */
     public function hasWill()
     {
-        return $this->flags & 4;
+        return ($this->flags & 4) == 4;
     }
 
     /**
      * Returns the desired quality of service level of the will.
      *
-     * @return bool
+     * @return int
      */
     public function getWillQosLevel()
     {
@@ -247,7 +243,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function isWillRetained()
     {
-        return $this->flags & 32;
+        return ($this->flags & 32) == 32;
     }
 
     /**
