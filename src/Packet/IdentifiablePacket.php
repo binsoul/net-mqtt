@@ -21,7 +21,7 @@ trait IdentifiablePacket
     {
         if ($this->identifier <= 0) {
             ++self::$nextIdentifier;
-            self::$nextIdentifier = self::$nextIdentifier & 0xFFFF;
+            self::$nextIdentifier &= 0xFFFF;
 
             $this->identifier = self::$nextIdentifier;
         }

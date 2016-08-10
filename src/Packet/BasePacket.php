@@ -90,7 +90,7 @@ abstract class BasePacket implements Packet
             $encodedByte = $x % 128;
             $x = (int) ($x / 128);
             if ($x > 0) {
-                $encodedByte = $encodedByte | 128;
+                $encodedByte |= 128;
             }
 
             $stream->writeByte($encodedByte);
@@ -163,8 +163,8 @@ abstract class BasePacket implements Packet
     {
         $bytes = '';
         $ascii = '';
-        for ($n = 0; $n < strlen($string); ++$n) {
-            $char = substr($string, $n, 1);
+        for ($n = 0, $length = strlen($string); $n < $length; ++$n) {
+            $char = $string[$n];
             $byte = ord($char);
             $bytes .= str_pad(bin2hex($char), 3, ' ', STR_PAD_LEFT);
             if ($byte >= 32 && $byte <= 126) {
@@ -260,7 +260,7 @@ abstract class BasePacket implements Packet
             );
         }
 
-        if (preg_match('/[\xD8-\xDF][\x00-\xFF]|\x00\x00/xs', $value)) {
+        if (preg_match('/[\xD8-\xDF][\x00-\xFF]|\x00\x00/x', $value)) {
             throw new MalformedPacketException(
                 sprintf(
                     'The string "%s" contains invalid characters.',
@@ -274,11 +274,13 @@ abstract class BasePacket implements Packet
      * Asserts that the given quality of service level is valid.
      *
      * @param $level
+     *
+     * @throws MalformedPacketException
      */
     protected function assertValidQosLevel($level)
     {
         if ($level < 0 || $level > 2) {
-            throw new \InvalidArgumentException(
+            throw new MalformedPacketException(
                 sprintf(
                     'Expected a quality of service level between 0 and 2 but got %d.',
                     $level

@@ -151,7 +151,7 @@ class ConnectRequestPacket extends BasePacket
             );
         }
 
-        if ($value != '' && !preg_match('/^[0-9a-zA-Z]+$/', $value)) {
+        if ($value != '' && !ctype_alnum($value)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Expected a client id containing characters 0-9, a-z or A-Z but got "%s".',
@@ -210,9 +210,9 @@ class ConnectRequestPacket extends BasePacket
     public function setCleanSession($value)
     {
         if ($value) {
-            $this->flags = $this->flags | 2;
+            $this->flags |= 2;
         } else {
-            $this->flags = $this->flags & ~2;
+            $this->flags &= ~2;
         }
     }
 
@@ -279,12 +279,12 @@ class ConnectRequestPacket extends BasePacket
     public function setWill($topic, $message, $qosLevel = 0, $isRetained = false)
     {
         $this->assertValidString($topic);
-        if (strlen($topic) == 0) {
+        if ($topic == '') {
             throw new \InvalidArgumentException('The topic must not be empty.');
         }
 
         $this->assertValidStringLength($message);
-        if (strlen($message) == 0) {
+        if ($message == '') {
             throw new \InvalidArgumentException('The message must not be empty.');
         }
 
@@ -293,13 +293,13 @@ class ConnectRequestPacket extends BasePacket
         $this->willTopic = $topic;
         $this->willMessage = $message;
 
-        $this->flags = $this->flags | 4;
-        $this->flags = $this->flags | ($qosLevel << 3);
+        $this->flags |= 4;
+        $this->flags |= ($qosLevel << 3);
 
         if ($isRetained) {
-            $this->flags = $this->flags | 32;
+            $this->flags |= 32;
         } else {
-            $this->flags = $this->flags & ~32;
+            $this->flags &= ~32;
         }
     }
 
@@ -308,7 +308,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function removeWill()
     {
-        $this->flags = $this->flags & ~60;
+        $this->flags &= ~60;
         $this->willTopic = '';
         $this->willMessage = '';
     }
@@ -344,9 +344,9 @@ class ConnectRequestPacket extends BasePacket
 
         $this->username = $value;
         if ($this->username != '') {
-            $this->flags = $this->flags | 64;
+            $this->flags |= 64;
         } else {
-            $this->flags = $this->flags & ~64;
+            $this->flags &= ~64;
         }
     }
 
@@ -381,9 +381,9 @@ class ConnectRequestPacket extends BasePacket
 
         $this->password = $value;
         if ($this->password != '') {
-            $this->flags = $this->flags | 128;
+            $this->flags |= 128;
         } else {
-            $this->flags = $this->flags & ~128;
+            $this->flags &= ~128;
         }
     }
 
