@@ -43,6 +43,8 @@ trait IdentifiablePacket
      * Sets the identifier.
      *
      * @param int $value
+     *
+     * @throws \InvalidArgumentException
      */
     public function setIdentifier($value)
     {

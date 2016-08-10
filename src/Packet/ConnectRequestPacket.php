@@ -110,6 +110,8 @@ class ConnectRequestPacket extends BasePacket
      * Sets the protocol level.
      *
      * @param int $value
+     *
+     * @throws \InvalidArgumentException
      */
     public function setProtocolLevel($value)
     {
@@ -139,6 +141,8 @@ class ConnectRequestPacket extends BasePacket
      * Sets the client id.
      *
      * @param string $value
+     *
+     * @throws \InvalidArgumentException
      */
     public function setClientID($value)
     {
@@ -177,6 +181,8 @@ class ConnectRequestPacket extends BasePacket
      * Sets the keep alive time in seconds.
      *
      * @param int $value
+     *
+     * @throws \InvalidArgumentException
      */
     public function setKeepAlive($value)
     {
@@ -274,21 +280,21 @@ class ConnectRequestPacket extends BasePacket
      * @param int    $qosLevel
      * @param bool   $isRetained
      *
-     * @throws MalformedPacketException
+     * @throws \InvalidArgumentException
      */
     public function setWill($topic, $message, $qosLevel = 0, $isRetained = false)
     {
-        $this->assertValidString($topic);
+        $this->assertValidString($topic, false);
         if ($topic == '') {
             throw new \InvalidArgumentException('The topic must not be empty.');
         }
 
-        $this->assertValidStringLength($message);
+        $this->assertValidStringLength($message, false);
         if ($message == '') {
             throw new \InvalidArgumentException('The message must not be empty.');
         }
 
-        $this->assertValidQosLevel($qosLevel);
+        $this->assertValidQosLevel($qosLevel, false);
 
         $this->willTopic = $topic;
         $this->willMessage = $message;
@@ -337,10 +343,12 @@ class ConnectRequestPacket extends BasePacket
      * Sets the username.
      *
      * @param string $value
+     *
+     * @throws \InvalidArgumentException
      */
     public function setUsername($value)
     {
-        $this->assertValidString($value);
+        $this->assertValidString($value, false);
 
         $this->username = $value;
         if ($this->username != '') {
@@ -374,10 +382,12 @@ class ConnectRequestPacket extends BasePacket
      * Sets the password.
      *
      * @param string $value
+     *
+     * @throws \InvalidArgumentException
      */
     public function setPassword($value)
     {
-        $this->assertValidStringLength($value);
+        $this->assertValidStringLength($value, false);
 
         $this->password = $value;
         if ($this->password != '') {
@@ -395,19 +405,20 @@ class ConnectRequestPacket extends BasePacket
     private function assertValidWill()
     {
         if ($this->hasWill()) {
-            $this->assertValidQosLevel($this->getWillQosLevel());
+            $this->assertValidQosLevel($this->getWillQosLevel(), true);
         } else {
             if ($this->getWillQosLevel() > 0) {
-                throw new MalformedPacketException(
+                $this->throwException(
                     sprintf(
                         'Expected a will quality of service level of zero but got %d.',
                         $this->getWillQosLevel()
-                    )
+                    ),
+                    true
                 );
             }
 
             if ($this->isWillRetained()) {
-                throw new MalformedPacketException('There is not will but the will retain flag is set.');
+                $this->throwException('There is not will but the will retain flag is set.', true);
             }
         }
     }

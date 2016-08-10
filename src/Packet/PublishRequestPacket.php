@@ -69,10 +69,12 @@ class PublishRequestPacket extends BasePacket
      * Sets the topic.
      *
      * @param string $value
+     *
+     * @throws \InvalidArgumentException
      */
     public function setTopic($value)
     {
-        $this->assertValidString($value);
+        $this->assertValidString($value, false);
         if ($value == '') {
             throw new \InvalidArgumentException('The topic must not be empty.');
         }
@@ -162,10 +164,12 @@ class PublishRequestPacket extends BasePacket
      * Sets the quality of service level.
      *
      * @param int $value
+     *
+     * @throws \InvalidArgumentException
      */
     public function setQosLevel($value)
     {
-        $this->assertValidQosLevel($value);
+        $this->assertValidQosLevel($value, false);
 
         $this->packetFlags |= ($value & 3) << 1;
     }
