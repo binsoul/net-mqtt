@@ -72,7 +72,7 @@ abstract class BasePacket implements Packet
             $this->remainingPacketLength += ($encodedByte & 127) * $multiplier;
             $multiplier *= 128;
 
-            if ($multiplier > 128 * 128 * 128) {
+            if ($multiplier > 128 * 128 * 128 * 128) {
                 throw new MalformedPacketException('Malformed remaining length.');
             }
         } while (($encodedByte & 128) != 0);
