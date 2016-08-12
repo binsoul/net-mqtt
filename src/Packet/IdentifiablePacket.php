@@ -9,8 +9,8 @@ trait IdentifiablePacket
 {
     /** @var int */
     private static $nextIdentifier = 0;
-    /** @var int */
-    protected $identifier = 0;
+    /** @var int|null */
+    protected $identifier;
 
     /**
      * Returns the identifier or generates a new one.
@@ -19,7 +19,7 @@ trait IdentifiablePacket
      */
     protected function generateIdentifier()
     {
-        if ($this->identifier <= 0) {
+        if ($this->identifier === null) {
             ++self::$nextIdentifier;
             self::$nextIdentifier &= 0xFFFF;
 
@@ -32,23 +32,23 @@ trait IdentifiablePacket
     /**
      * Returns the identifier.
      *
-     * @return int
+     * @return int|null
      */
     public function getIdentifier()
     {
-        return $this->generateIdentifier();
+        return $this->identifier;
     }
 
     /**
      * Sets the identifier.
      *
-     * @param int $value
+     * @param int|null $value
      *
      * @throws \InvalidArgumentException
      */
     public function setIdentifier($value)
     {
-        if ($value < 0 || $value > 0xFFFF) {
+        if ($value !== null && ($value < 0 || $value > 0xFFFF)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Expected an identifier between 0x0000 and 0xFFFF but got %x',
