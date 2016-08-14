@@ -153,31 +153,6 @@ abstract class BasePacket implements Packet
     }
 
     /**
-     * Returns a readable output of the given byte string.
-     *
-     * @param string $string
-     *
-     * @return string
-     */
-    public static function debug($string)
-    {
-        $bytes = '';
-        $ascii = '';
-        for ($n = 0, $length = strlen($string); $n < $length; ++$n) {
-            $char = $string[$n];
-            $byte = ord($char);
-            $bytes .= str_pad(bin2hex($char), 3, ' ', STR_PAD_LEFT);
-            if ($byte >= 32 && $byte <= 126) {
-                $ascii .= str_pad($char, 3, ' ', STR_PAD_LEFT);
-            } else {
-                $ascii .= str_pad(bin2hex($char), 3, ' ', STR_PAD_LEFT);
-            }
-        }
-
-        return $bytes."\n".$ascii."\n";
-    }
-
-    /**
      * Asserts that the packet flags have a specific value.
      *
      * @param int  $value
