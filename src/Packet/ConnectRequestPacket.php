@@ -205,7 +205,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function isCleanSession()
     {
-        return ($this->flags & 2) == 2;
+        return ($this->flags & 2) === 2;
     }
 
     /**
@@ -249,7 +249,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function isWillRetained()
     {
-        return ($this->flags & 32) == 32;
+        return ($this->flags & 32) === 32;
     }
 
     /**

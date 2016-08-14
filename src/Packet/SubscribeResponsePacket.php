@@ -66,7 +66,7 @@ class SubscribeResponsePacket extends BasePacket
      */
     public function isError($returnCode)
     {
-        return $returnCode == 128;
+        return $returnCode === 128;
     }
 
     /**

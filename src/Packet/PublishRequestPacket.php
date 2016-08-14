@@ -109,7 +109,7 @@ class PublishRequestPacket extends BasePacket
      */
     public function isDuplicate()
     {
-        return $this->packetFlags & 8;
+        return ($this->packetFlags & 8) === 8;
     }
 
     /**
@@ -133,7 +133,7 @@ class PublishRequestPacket extends BasePacket
      */
     public function isRetained()
     {
-        return $this->packetFlags & 1;
+        return ($this->packetFlags & 1) === 1;
     }
 
     /**
