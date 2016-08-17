@@ -66,7 +66,7 @@ class SubscribeResponsePacket extends BasePacket
      */
     public function isError($returnCode)
     {
-        return $returnCode == 128;
+        return $returnCode === 128;
     }
 
     /**
@@ -99,11 +99,13 @@ class SubscribeResponsePacket extends BasePacket
      * Sets the return codes.
      *
      * @param int[] $value
+     *
+     * @throws \InvalidArgumentException
      */
     public function setReturnCodes(array $value)
     {
         foreach ($value as $returnCode) {
-            $this->assertValidReturnCode($returnCode);
+            $this->assertValidReturnCode($returnCode, false);
         }
 
         $this->returnCodes = $value;
@@ -112,15 +114,18 @@ class SubscribeResponsePacket extends BasePacket
     /**
      * Asserts that a return code is valid.
      *
-     * @param int $returnCode
+     * @param int  $returnCode
+     * @param bool $fromPacket
      *
      * @throws MalformedPacketException
+     * @throws \InvalidArgumentException
      */
-    private function assertValidReturnCode($returnCode)
+    private function assertValidReturnCode($returnCode, $fromPacket = true)
     {
         if (!in_array($returnCode, [0, 1, 2, 128])) {
-            throw new MalformedPacketException(
-                sprintf('Malformed return code %02x.', $returnCode)
+            $this->throwException(
+                sprintf('Malformed return code %02x.', $returnCode),
+                $fromPacket
             );
         }
     }

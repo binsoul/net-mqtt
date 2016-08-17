@@ -82,7 +82,7 @@ class ConnectResponsePacket extends BasePacket
      */
     public function isSuccess()
     {
-        return $this->returnCode == 0;
+        return $this->returnCode === 0;
     }
 
     /**

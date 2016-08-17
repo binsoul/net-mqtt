@@ -69,11 +69,13 @@ class PublishRequestPacket extends BasePacket
      * Sets the topic.
      *
      * @param string $value
+     *
+     * @throws \InvalidArgumentException
      */
     public function setTopic($value)
     {
-        $this->assertValidString($value);
-        if (strlen($value) == 0) {
+        $this->assertValidString($value, false);
+        if ($value == '') {
             throw new \InvalidArgumentException('The topic must not be empty.');
         }
 
@@ -107,7 +109,7 @@ class PublishRequestPacket extends BasePacket
      */
     public function isDuplicate()
     {
-        return $this->packetFlags & 8;
+        return ($this->packetFlags & 8) === 8;
     }
 
     /**
@@ -131,7 +133,7 @@ class PublishRequestPacket extends BasePacket
      */
     public function isRetained()
     {
-        return $this->packetFlags & 1;
+        return ($this->packetFlags & 1) === 1;
     }
 
     /**
@@ -162,10 +164,12 @@ class PublishRequestPacket extends BasePacket
      * Sets the quality of service level.
      *
      * @param int $value
+     *
+     * @throws \InvalidArgumentException
      */
     public function setQosLevel($value)
     {
-        $this->assertValidQosLevel($value);
+        $this->assertValidQosLevel($value, false);
 
         $this->packetFlags |= ($value & 3) << 1;
     }

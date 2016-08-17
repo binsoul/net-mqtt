@@ -72,7 +72,7 @@ abstract class BasePacket implements Packet
             $this->remainingPacketLength += ($encodedByte & 127) * $multiplier;
             $multiplier *= 128;
 
-            if ($multiplier > 128 * 128 * 128) {
+            if ($multiplier > 128 * 128 * 128 * 128) {
                 throw new MalformedPacketException('Malformed remaining length.');
             }
         } while (($encodedByte & 128) != 0);
@@ -90,7 +90,7 @@ abstract class BasePacket implements Packet
             $encodedByte = $x % 128;
             $x = (int) ($x / 128);
             if ($x > 0) {
-                $encodedByte = $encodedByte | 128;
+                $encodedByte |= 128;
             }
 
             $stream->writeByte($encodedByte);
@@ -153,46 +153,24 @@ abstract class BasePacket implements Packet
     }
 
     /**
-     * Returns a readable output of the given byte string.
-     *
-     * @param string $string
-     *
-     * @return string
-     */
-    public static function debug($string)
-    {
-        $bytes = '';
-        $ascii = '';
-        for ($n = 0; $n < strlen($string); ++$n) {
-            $char = substr($string, $n, 1);
-            $byte = ord($char);
-            $bytes .= str_pad(bin2hex($char), 3, ' ', STR_PAD_LEFT);
-            if ($byte >= 32 && $byte <= 126) {
-                $ascii .= str_pad($char, 3, ' ', STR_PAD_LEFT);
-            } else {
-                $ascii .= str_pad(bin2hex($char), 3, ' ', STR_PAD_LEFT);
-            }
-        }
-
-        return $bytes."\n".$ascii."\n";
-    }
-
-    /**
      * Asserts that the packet flags have a specific value.
      *
-     * @param int $value
+     * @param int  $value
+     * @param bool $fromPacket
      *
      * @throws MalformedPacketException
+     * @throws \InvalidArgumentException
      */
-    protected function assertPacketFlags($value)
+    protected function assertPacketFlags($value, $fromPacket = true)
     {
         if ($this->packetFlags != $value) {
-            throw new MalformedPacketException(
+            $this->throwException(
                 sprintf(
                     'Expected flags %02x but got %02x.',
                     $value,
                     $this->packetFlags
-                )
+                ),
+                $fromPacket
             );
         }
     }
@@ -200,23 +178,26 @@ abstract class BasePacket implements Packet
     /**
      * Asserts that the remaining length is greater than zero and has a specific value.
      *
-     * @param int|null $value value to test or null if any value greater than zero is valid
+     * @param int|null $value      value to test or null if any value greater than zero is valid
+     * @param bool     $fromPacket
      *
      * @throws MalformedPacketException
+     * @throws \InvalidArgumentException
      */
-    protected function assertRemainingPacketLength($value = null)
+    protected function assertRemainingPacketLength($value = null, $fromPacket = true)
     {
         if ($value === null && $this->remainingPacketLength == 0) {
-            throw new MalformedPacketException('Expected payload but remaining packet length is zero.');
+            $this->throwException('Expected payload but remaining packet length is zero.', $fromPacket);
         }
 
         if ($value !== null && $this->remainingPacketLength != $value) {
-            throw new MalformedPacketException(
+            $this->throwException(
                 sprintf(
                     'Expected remaining packet length of %d bytes but got %d.',
                     $value,
                     $this->remainingPacketLength
-                )
+                ),
+                $fromPacket
             );
         }
     }
@@ -224,18 +205,21 @@ abstract class BasePacket implements Packet
     /**
      * Asserts that the given string is a well-formed MQTT string.
      *
-     * @param $value
+     * @param string $value
+     * @param bool   $fromPacket
      *
      * @throws MalformedPacketException
+     * @throws \InvalidArgumentException
      */
-    protected function assertValidStringLength($value)
+    protected function assertValidStringLength($value, $fromPacket = true)
     {
         if (strlen($value) > 0xFFFF) {
-            throw new MalformedPacketException(
+            $this->throwException(
                 sprintf(
                     'The string "%s" is longer than 65535 byte.',
                     substr($value, 0, 50)
-                )
+                ),
+                $fromPacket
             );
         }
     }
@@ -243,29 +227,33 @@ abstract class BasePacket implements Packet
     /**
      * Asserts that the given string is a well-formed MQTT string.
      *
-     * @param $value
+     * @param string $value
+     * @param bool   $fromPacket
      *
      * @throws MalformedPacketException
+     * @throws \InvalidArgumentException
      */
-    protected function assertValidString($value)
+    protected function assertValidString($value, $fromPacket = true)
     {
-        $this->assertValidStringLength($value);
+        $this->assertValidStringLength($value, $fromPacket);
 
         if (!mb_check_encoding($value, 'UTF-8')) {
-            throw new MalformedPacketException(
+            $this->throwException(
                 sprintf(
                     'The string "%s" is not well-formed UTF-8.',
                     substr($value, 0, 50)
-                )
+                ),
+                $fromPacket
             );
         }
 
-        if (preg_match('/[\xD8-\xDF][\x00-\xFF]|\x00\x00/xs', $value)) {
-            throw new MalformedPacketException(
+        if (preg_match('/[\xD8-\xDF][\x00-\xFF]|\x00\x00/x', $value)) {
+            $this->throwException(
                 sprintf(
                     'The string "%s" contains invalid characters.',
                     substr($value, 0, 50)
-                )
+                ),
+                $fromPacket
             );
         }
     }
@@ -273,17 +261,40 @@ abstract class BasePacket implements Packet
     /**
      * Asserts that the given quality of service level is valid.
      *
-     * @param $level
+     * @param int  $level
+     * @param bool $fromPacket
+     *
+     * @throws MalformedPacketException
+     * @throws \InvalidArgumentException
      */
-    protected function assertValidQosLevel($level)
+    protected function assertValidQosLevel($level, $fromPacket = true)
     {
         if ($level < 0 || $level > 2) {
-            throw new \InvalidArgumentException(
+            $this->throwException(
                 sprintf(
                     'Expected a quality of service level between 0 and 2 but got %d.',
                     $level
-                )
+                ),
+                $fromPacket
             );
         }
+    }
+
+    /**
+     * Throws a MalformedPacketException for packet validation and an InvalidArgumentException otherwise.
+     *
+     * @param string $message
+     * @param bool   $fromPacket
+     *
+     * @throws MalformedPacketException
+     * @throws \InvalidArgumentException
+     */
+    protected function throwException($message, $fromPacket)
+    {
+        if ($fromPacket) {
+            throw new MalformedPacketException($message);
+        }
+
+        throw new \InvalidArgumentException($message);
     }
 }
