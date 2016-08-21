@@ -9,5 +9,5 @@ use BinSoul\Net\Mqtt\Packet;
  */
 class PublishCompletePacket extends IdentifierOnlyPacket
 {
-    protected $packetType = Packet::TYPE_PUBCOMP;
+    protected static $packetType = Packet::TYPE_PUBCOMP;
 }

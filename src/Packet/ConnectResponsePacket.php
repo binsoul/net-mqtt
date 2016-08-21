@@ -43,7 +43,7 @@ class ConnectResponsePacket extends BasePacket
     /** @var int */
     private $returnCode;
 
-    protected $packetType = Packet::TYPE_CONNACK;
+    protected static $packetType = Packet::TYPE_CONNACK;
     protected $remainingPacketLength = 2;
 
     public function read(PacketStream $stream)

@@ -9,7 +9,7 @@ use BinSoul\Net\Mqtt\Packet;
  */
 class PublishReleasePacket extends IdentifierOnlyPacket
 {
-    protected $packetType = Packet::TYPE_PUBREL;
+    protected static $packetType = Packet::TYPE_PUBREL;
     protected $packetFlags = 2;
 
     protected function getExpectedPacketFlags()

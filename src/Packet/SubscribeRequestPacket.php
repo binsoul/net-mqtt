@@ -17,7 +17,7 @@ class SubscribeRequestPacket extends BasePacket
     /** @var int */
     private $qosLevel;
 
-    protected $packetType = Packet::TYPE_SUBSCRIBE;
+    protected static $packetType = Packet::TYPE_SUBSCRIBE;
     protected $packetFlags = 2;
 
     public function read(PacketStream $stream)
@@ -68,7 +68,7 @@ class SubscribeRequestPacket extends BasePacket
     public function setTopic($value)
     {
         $this->assertValidString($value, false);
-        if ($value == '') {
+        if ($value === '') {
             throw new \InvalidArgumentException('The topic must not be empty.');
         }
 

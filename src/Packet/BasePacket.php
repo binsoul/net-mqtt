@@ -16,7 +16,7 @@ abstract class BasePacket implements Packet
      *
      * @var int
      */
-    protected $packetType = 0;
+    protected static $packetType = 0;
     /**
      * Flags of the packet.
      *
@@ -43,14 +43,23 @@ abstract class BasePacket implements Packet
     {
         $byte = $stream->readByte();
 
-        $this->packetType = $byte >> 4;
+        if ($byte >> 4 !== static::$packetType) {
+            throw new MalformedPacketException(
+                sprintf(
+                    'Expected packet type %02x but got %02x.',
+                    $byte >> 4,
+                    static::$packetType
+                )
+            );
+        }
+
         $this->packetFlags = $byte & 0x0F;
         $this->readRemainingLength($stream);
     }
 
     public function write(PacketStream $stream)
     {
-        $stream->writeByte((($this->packetType & 0x0F) << 4) + ($this->packetFlags & 0x0F));
+        $stream->writeByte(((static::$packetType & 0x0F) << 4) + ($this->packetFlags & 0x0F));
         $this->writeRemainingLength($stream);
     }
 
@@ -75,7 +84,7 @@ abstract class BasePacket implements Packet
             if ($multiplier > 128 * 128 * 128 * 128) {
                 throw new MalformedPacketException('Malformed remaining length.');
             }
-        } while (($encodedByte & 128) != 0);
+        } while (($encodedByte & 128) !== 0);
     }
 
     /**
@@ -99,17 +108,7 @@ abstract class BasePacket implements Packet
 
     public function getPacketType()
     {
-        return $this->packetType;
-    }
-
-    /**
-     * Sets the packet type.
-     *
-     * @param int $value
-     */
-    public function setPacketType($value)
-    {
-        $this->packetType = $value;
+        return static::$packetType;
     }
 
     /**
@@ -123,16 +122,6 @@ abstract class BasePacket implements Packet
     }
 
     /**
-     * Sets the packet flags.
-     *
-     * @param int $value
-     */
-    public function setPacketFlags($value)
-    {
-        $this->packetFlags = $value;
-    }
-
-    /**
      * Returns the remaining length.
      *
      * @return int
@@ -140,16 +129,6 @@ abstract class BasePacket implements Packet
     public function getRemainingPacketLength()
     {
         return $this->remainingPacketLength;
-    }
-
-    /**
-     * Sets the remaining length.
-     *
-     * @param int $value
-     */
-    public function setRemainingPacketLength($value)
-    {
-        $this->remainingPacketLength = $value;
     }
 
     /**
@@ -163,7 +142,7 @@ abstract class BasePacket implements Packet
      */
     protected function assertPacketFlags($value, $fromPacket = true)
     {
-        if ($this->packetFlags != $value) {
+        if ($this->packetFlags !== $value) {
             $this->throwException(
                 sprintf(
                     'Expected flags %02x but got %02x.',
@@ -186,11 +165,11 @@ abstract class BasePacket implements Packet
      */
     protected function assertRemainingPacketLength($value = null, $fromPacket = true)
     {
-        if ($value === null && $this->remainingPacketLength == 0) {
+        if ($value === null && $this->remainingPacketLength === 0) {
             $this->throwException('Expected payload but remaining packet length is zero.', $fromPacket);
         }
 
-        if ($value !== null && $this->remainingPacketLength != $value) {
+        if ($value !== null && $this->remainingPacketLength !== $value) {
             $this->throwException(
                 sprintf(
                     'Expected remaining packet length of %d bytes but got %d.',

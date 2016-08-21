@@ -17,7 +17,7 @@ class PublishRequestPacket extends BasePacket
     /** @var string */
     private $payload;
 
-    protected $packetType = Packet::TYPE_PUBLISH;
+    protected static $packetType = Packet::TYPE_PUBLISH;
 
     public function read(PacketStream $stream)
     {
@@ -75,7 +75,7 @@ class PublishRequestPacket extends BasePacket
     public function setTopic($value)
     {
         $this->assertValidString($value, false);
-        if ($value == '') {
+        if ($value === '') {
             throw new \InvalidArgumentException('The topic must not be empty.');
         }
 

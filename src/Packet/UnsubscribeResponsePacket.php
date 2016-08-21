@@ -9,5 +9,5 @@ use BinSoul\Net\Mqtt\Packet;
  */
 class UnsubscribeResponsePacket extends IdentifierOnlyPacket
 {
-    protected $packetType = Packet::TYPE_UNSUBACK;
+    protected static $packetType = Packet::TYPE_UNSUBACK;
 }
