@@ -68,7 +68,7 @@ class OutgoingPublishFlow extends AbstractFlow
 
         $packetType = $packet->getPacketType();
 
-        if ($this->message->getQosLevel() === 1 && $packetType === Packet::TYPE_PUBACK) {
+        if ($packetType === Packet::TYPE_PUBACK && $this->message->getQosLevel() === 1) {
             /* @var PublishAckPacket $packet */
             return $packet->getIdentifier() === $this->identifier;
         } elseif ($this->message->getQosLevel() === 2) {
