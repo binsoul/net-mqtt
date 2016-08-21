@@ -13,7 +13,7 @@ interface Connection
     public function getProtocol();
 
     /**
-     * @return int
+     * @return string
      */
     public function getClientID();
 
