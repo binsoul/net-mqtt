@@ -19,11 +19,6 @@ abstract class AbstractFlow implements Flow
     /** @var string */
     private $error = '';
 
-    public function start()
-    {
-        return;
-    }
-
     public function accept(Packet $packet)
     {
         return false;
@@ -31,7 +26,6 @@ abstract class AbstractFlow implements Flow
 
     public function next(Packet $packet)
     {
-        return;
     }
 
     public function isFinished()

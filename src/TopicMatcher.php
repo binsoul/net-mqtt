@@ -21,33 +21,33 @@ class TopicMatcher
     {
         // Created by Steffen (https://github.com/kernelguy)
         $tokens = explode('/', $filter);
-        $re = [];
-        $c = count($tokens);
-        for ($i = 0; $i < $c; ++$i) {
-            $t = $tokens[$i];
-            switch ($t) {
+        $parts = [];
+        for ($i = 0, $count = count($tokens); $i < $count; ++$i) {
+            $token = $tokens[$i];
+            switch ($token) {
                 case '+':
-                    $re[] = '[^/#\+]*';
-                    break;
+                    $parts[] = '[^/#\+]*';
 
+                    break;
                 case '#':
-                    if ($i == 0) {
-                        $re[] = '[^\+\$]*';
+                    if ($i === 0) {
+                        $parts[] = '[^\+\$]*';
                     } else {
-                        $re[] = '[^\+]*';
+                        $parts[] = '[^\+]*';
                     }
-                    break;
 
+                    break;
                 default:
-                    $re[] = str_replace('+', '\+', $t);
+                    $parts[] = str_replace('+', '\+', $token);
+
                     break;
             }
         }
 
-        $re = implode('/', $re);
-        $re = str_replace('$', '\$', $re);
-        $re = '^'.$re.'$';
+        $regex = implode('/', $parts);
+        $regex = str_replace('$', '\$', $regex);
+        $regex = ';^'.$regex.'$;';
 
-        return preg_match(';'.$re.';', $topic) === 1;
+        return preg_match($regex, $topic) === 1;
     }
 }
