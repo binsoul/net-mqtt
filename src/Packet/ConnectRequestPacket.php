@@ -155,7 +155,7 @@ class ConnectRequestPacket extends BasePacket
             );
         }
 
-        if ($value !== '' && !ctype_alnum($value)) {
+        if (preg_match('/^[a-zA-Z0-9_-]+$/', $value) === 0) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Expected a client id containing characters 0-9, a-z or A-Z but got "%s".',
