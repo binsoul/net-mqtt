@@ -15,7 +15,7 @@ class UnsubscribeRequestPacket extends BasePacket
     /** @var string */
     private $topic;
 
-    protected $packetType = Packet::TYPE_UNSUBSCRIBE;
+    protected static $packetType = Packet::TYPE_UNSUBSCRIBE;
     protected $packetFlags = 2;
 
     public function read(PacketStream $stream)

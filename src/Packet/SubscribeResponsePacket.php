@@ -23,7 +23,7 @@ class SubscribeResponsePacket extends BasePacket
     /** @var int[] */
     private $returnCodes;
 
-    protected $packetType = Packet::TYPE_SUBACK;
+    protected static $packetType = Packet::TYPE_SUBACK;
 
     public function read(PacketStream $stream)
     {

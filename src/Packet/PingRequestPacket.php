@@ -10,7 +10,7 @@ use BinSoul\Net\Mqtt\Packet;
  */
 class PingRequestPacket extends BasePacket
 {
-    protected $packetType = Packet::TYPE_PINGREQ;
+    protected static $packetType = Packet::TYPE_PINGREQ;
 
     public function read(PacketStream $stream)
     {

@@ -30,7 +30,7 @@ class ConnectRequestPacket extends BasePacket
     /** @var string */
     private $password = '';
 
-    protected $packetType = Packet::TYPE_CONNECT;
+    protected static $packetType = Packet::TYPE_CONNECT;
 
     public function read(PacketStream $stream)
     {
@@ -65,8 +65,8 @@ class ConnectRequestPacket extends BasePacket
 
     public function write(PacketStream $stream)
     {
-        if ($this->clientID == '') {
-            $this->clientID = 'BinSoul'.rand(100000, 999999);
+        if ($this->clientID === '') {
+            $this->clientID = 'BinSoul'.mt_rand(100000, 999999);
         }
 
         $data = new PacketStream();
@@ -120,9 +120,9 @@ class ConnectRequestPacket extends BasePacket
         }
 
         $this->protocolLevel = $value;
-        if ($this->protocolLevel == 3) {
+        if ($this->protocolLevel === 3) {
             $this->protocolName = 'MQIsdp';
-        } elseif ($this->protocolLevel == 4) {
+        } elseif ($this->protocolLevel === 4) {
             $this->protocolName = 'MQTT';
         }
     }
@@ -155,7 +155,7 @@ class ConnectRequestPacket extends BasePacket
             );
         }
 
-        if ($value != '' && !ctype_alnum($value)) {
+        if ($value !== '' && !ctype_alnum($value)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Expected a client id containing characters 0-9, a-z or A-Z but got "%s".',
@@ -229,7 +229,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function hasWill()
     {
-        return ($this->flags & 4) == 4;
+        return ($this->flags & 4) === 4;
     }
 
     /**
@@ -285,12 +285,12 @@ class ConnectRequestPacket extends BasePacket
     public function setWill($topic, $message, $qosLevel = 0, $isRetained = false)
     {
         $this->assertValidString($topic, false);
-        if ($topic == '') {
+        if ($topic === '') {
             throw new \InvalidArgumentException('The topic must not be empty.');
         }
 
         $this->assertValidStringLength($message, false);
-        if ($message == '') {
+        if ($message === '') {
             throw new \InvalidArgumentException('The message must not be empty.');
         }
 
@@ -351,7 +351,7 @@ class ConnectRequestPacket extends BasePacket
         $this->assertValidString($value, false);
 
         $this->username = $value;
-        if ($this->username != '') {
+        if ($this->username !== '') {
             $this->flags |= 64;
         } else {
             $this->flags &= ~64;
@@ -390,7 +390,7 @@ class ConnectRequestPacket extends BasePacket
         $this->assertValidStringLength($value, false);
 
         $this->password = $value;
-        if ($this->password != '') {
+        if ($this->password !== '') {
             $this->flags |= 128;
         } else {
             $this->flags &= ~128;

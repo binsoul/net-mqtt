@@ -9,5 +9,5 @@ use BinSoul\Net\Mqtt\Packet;
  */
 class PublishAckPacket extends IdentifierOnlyPacket
 {
-    protected $packetType = Packet::TYPE_PUBACK;
+    protected static $packetType = Packet::TYPE_PUBACK;
 }
