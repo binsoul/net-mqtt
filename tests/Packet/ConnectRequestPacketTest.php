@@ -172,24 +172,6 @@ class ConnectRequestPacketTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function test_cannot_set_too_long_client_id()
-    {
-        $packet = $this->createDefaultPacket();
-        $packet->setClientID('123456789123456789123456789');
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function test_cannot_set_invalid_client_id()
-    {
-        $packet = $this->createDefaultPacket();
-        $packet->setClientID('!fööbär!');
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function test_cannot_set_invalid_keepalive()
     {
         $packet = $this->createDefaultPacket();

@@ -18,7 +18,7 @@ class ConnectRequestPacket extends BasePacket
     /** @var int */
     private $flags = 2;
     /** @var string */
-    private $clientID = '';
+    protected $clientID = '';
     /** @var int */
     private $keepAlive = 60;
     /** @var string */
@@ -141,29 +141,9 @@ class ConnectRequestPacket extends BasePacket
      * Sets the client id.
      *
      * @param string $value
-     *
-     * @throws \InvalidArgumentException
      */
     public function setClientID($value)
     {
-        if (strlen($value) > 23) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Expected client id shorter than 24 bytes but got "%s".',
-                    $value
-                )
-            );
-        }
-
-        if ($value !== '' && !ctype_alnum($value)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Expected a client id containing characters 0-9, a-z or A-Z but got "%s".',
-                    $value
-                )
-            );
-        }
-
         $this->clientID = $value;
     }
 
