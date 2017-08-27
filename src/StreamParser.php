@@ -20,11 +20,17 @@ class StreamParser
 
     /**
      * Constructs an instance of this class.
+     *
+     * @param PacketFactory|null $factory
      */
-    public function __construct()
+    public function __construct(PacketFactory $factory = null)
     {
+        if ($factory !== null) {
+            $this->factory = $factory;
+        } else {
+            $this->factory = new PacketFactory();
+        }
         $this->buffer = new PacketStream();
-        $this->factory = new PacketFactory();
     }
 
     /**
