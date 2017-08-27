@@ -3,6 +3,7 @@
 namespace BinSoul\Net\Mqtt\Flow;
 
 use BinSoul\Net\Mqtt\Connection;
+use BinSoul\Net\Mqtt\Flow;
 use BinSoul\Net\Mqtt\IdentifierGenerator;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\ConnectRequestPacket;
@@ -33,7 +34,7 @@ class OutgoingConnectFlow extends AbstractFlow
 
     public function getCode()
     {
-        return 'connect';
+        return Flow::CODE_CONNECT;
     }
 
     public function start()

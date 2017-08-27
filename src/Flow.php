@@ -7,6 +7,15 @@ namespace BinSoul\Net\Mqtt;
  */
 interface Flow
 {
+    const CODE_PONG = 'pong';
+    const CODE_MESSAGE = 'message';
+    const CODE_CONNECT = 'connect';
+    const CODE_DISCONNECT = 'disconnect';
+    const CODE_PING = 'ping';
+    const CODE_PUBLISH = 'publish';
+    const CODE_SUBSCRIBE = 'subscribe';
+    const CODE_UNSUBSCRIBE = 'unsubscribe';
+
     /**
      * Returns the unique code.
      *

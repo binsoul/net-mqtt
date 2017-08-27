@@ -2,6 +2,7 @@
 
 namespace BinSoul\Net\Mqtt\Flow;
 
+use BinSoul\Net\Mqtt\Flow;
 use BinSoul\Net\Mqtt\Packet\PingResponsePacket;
 
 /**
@@ -11,7 +12,7 @@ class IncomingPingFlow extends AbstractFlow
 {
     public function getCode()
     {
-        return 'pong';
+        return Flow::CODE_PONG;
     }
 
     public function start()

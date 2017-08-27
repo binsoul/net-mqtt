@@ -2,6 +2,7 @@
 
 namespace BinSoul\Net\Mqtt\Flow;
 
+use BinSoul\Net\Mqtt\Flow;
 use BinSoul\Net\Mqtt\IdentifierGenerator;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\UnsubscribeRequestPacket;
@@ -32,7 +33,7 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
 
     public function getCode()
     {
-        return 'unsubscribe';
+        return Flow::CODE_UNSUBSCRIBE;
     }
 
     public function start()

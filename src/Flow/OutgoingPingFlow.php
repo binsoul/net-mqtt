@@ -2,6 +2,7 @@
 
 namespace BinSoul\Net\Mqtt\Flow;
 
+use BinSoul\Net\Mqtt\Flow;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\PingRequestPacket;
 
@@ -12,7 +13,7 @@ class OutgoingPingFlow extends AbstractFlow
 {
     public function getCode()
     {
-        return 'ping';
+        return Flow::CODE_PING;
     }
 
     public function start()

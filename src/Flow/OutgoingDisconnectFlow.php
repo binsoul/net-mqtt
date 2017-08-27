@@ -3,6 +3,7 @@
 namespace BinSoul\Net\Mqtt\Flow;
 
 use BinSoul\Net\Mqtt\Connection;
+use BinSoul\Net\Mqtt\Flow;
 use BinSoul\Net\Mqtt\Packet\DisconnectRequestPacket;
 
 /**
@@ -25,7 +26,7 @@ class OutgoingDisconnectFlow extends AbstractFlow
 
     public function getCode()
     {
-        return 'disconnect';
+        return Flow::CODE_DISCONNECT;
     }
 
     public function start()

@@ -2,6 +2,7 @@
 
 namespace BinSoul\Net\Mqtt\Flow;
 
+use BinSoul\Net\Mqtt\Flow;
 use BinSoul\Net\Mqtt\IdentifierGenerator;
 use BinSoul\Net\Mqtt\Message;
 use BinSoul\Net\Mqtt\Packet;
@@ -39,7 +40,7 @@ class OutgoingPublishFlow extends AbstractFlow
 
     public function getCode()
     {
-        return 'publish';
+        return Flow::CODE_PUBLISH;
     }
 
     public function start()
