@@ -4,8 +4,10 @@ namespace BinSoul\Test\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Packet\ConnectRequestPacket;
 use BinSoul\Net\Mqtt\PacketStream;
+use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
-class ConnectRequestPacketTest extends \PHPUnit_Framework_TestCase
+class ConnectRequestPacketTest extends TestCase
 {
     private function createDefaultPacket()
     {
@@ -160,47 +162,41 @@ class ConnectRequestPacketTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->getDefaultData(), (string) $packet);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
+
     public function test_cannot_invalid_protocol_level()
     {
+        $this->expectException(InvalidArgumentException::class);
         $packet = $this->createDefaultPacket();
         $packet->setProtocolLevel(2);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
+
     public function test_cannot_set_invalid_keepalive()
     {
+        $this->expectException(InvalidArgumentException::class);
         $packet = $this->createDefaultPacket();
         $packet->setKeepAlive(100000);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function test_cannot_set_invalid_will_topic()
     {
+        $this->expectException(InvalidArgumentException::class);
         $packet = $this->createDefaultPacket();
         $packet->setWill('', 'message', 0, false);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
+
     public function test_cannot_set_invalid_will_message()
     {
+        $this->expectException(InvalidArgumentException::class);
         $packet = $this->createDefaultPacket();
         $packet->setWill('topic', '', 0, false);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
+
     public function test_cannot_set_invalid_will_qos()
     {
+        $this->expectException(InvalidArgumentException::class);
         $packet = $this->createDefaultPacket();
         $packet->setWill('topic', 'message', 10, false);
     }

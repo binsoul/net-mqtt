@@ -3,12 +3,13 @@
 namespace BinSoul\Test\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\StreamParser;
+use PHPUnit\Framework\TestCase;
 
-class StreamParserTest extends \PHPUnit_Framework_TestCase
+class StreamParserTest extends TestCase
 {
     private $packets;
 
-    public function setUp()
+    public function setUp(): void
     {
         $packets = array_fill(1, 15, []);
 

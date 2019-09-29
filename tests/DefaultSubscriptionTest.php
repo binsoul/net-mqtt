@@ -3,8 +3,9 @@
 namespace BinSoul\Test\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\DefaultSubscription;
+use PHPUnit\Framework\TestCase;
 
-class DefaultSubscriptionTest extends \PHPUnit_Framework_TestCase
+class DefaultSubscriptionTest extends TestCase
 {
     public function test_returns_instance_with_different_filter()
     {
