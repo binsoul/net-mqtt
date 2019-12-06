@@ -3,8 +3,9 @@
 namespace BinSoul\Test\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\DefaultIdentifierGenerator;
+use PHPUnit\Framework\TestCase;
 
-class DefaultIdentifierGeneratorTest extends \PHPUnit_Framework_TestCase
+class DefaultIdentifierGeneratorTest extends TestCase
 {
     public function test_generates_packet_id()
     {

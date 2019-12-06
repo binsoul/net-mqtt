@@ -3,6 +3,7 @@
 namespace BinSoul\Test\Net\Mqtt\Helpers;
 
 use BinSoul\Net\Mqtt\TopicMatcher;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the TopicMatcher class.
@@ -11,7 +12,7 @@ use BinSoul\Net\Mqtt\TopicMatcher;
  *
  * @author      Alin Eugen Deac <ade@vestergaardcompany.com>
  */
-class TopicMatcherTest extends \PHPUnit_Framework_TestCase
+class TopicMatcherTest extends TestCase
 {
     /**
      * Instance of the topic matcher.
@@ -23,7 +24,7 @@ class TopicMatcherTest extends \PHPUnit_Framework_TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->matcher = new TopicMatcher();
     }

@@ -4,8 +4,9 @@ namespace BinSoul\Test\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\DefaultConnection;
 use BinSoul\Net\Mqtt\DefaultMessage;
+use PHPUnit\Framework\TestCase;
 
-class DefaultConnectionTest extends \PHPUnit_Framework_TestCase
+class DefaultConnectionTest extends TestCase
 {
     public function test_has_sane_defaults()
     {

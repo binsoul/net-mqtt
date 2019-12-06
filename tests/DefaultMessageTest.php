@@ -3,8 +3,9 @@
 namespace BinSoul\Test\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\DefaultMessage;
+use PHPUnit\Framework\TestCase;
 
-class DefaultMessageTest extends \PHPUnit_Framework_TestCase
+class DefaultMessageTest extends TestCase
 {
     public function test_returns_instance_with_different_topic()
     {
