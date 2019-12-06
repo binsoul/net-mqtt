@@ -3,7 +3,6 @@
 namespace BinSoul\Net\Mqtt\Flow;
 
 use BinSoul\Net\Mqtt\Packet;
-use BinSoul\Net\Mqtt\Packet\PingRequestPacket;
 
 /**
  * Represents a flow starting with an outgoing PING packet.
@@ -17,7 +16,7 @@ class OutgoingPingFlow extends AbstractFlow
 
     public function start()
     {
-        return new PingRequestPacket();
+        return $this->generatePacket(Packet::TYPE_PINGREQ);
     }
 
     public function accept(Packet $packet)

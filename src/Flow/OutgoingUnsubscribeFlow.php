@@ -5,6 +5,7 @@ namespace BinSoul\Net\Mqtt\Flow;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\UnsubscribeRequestPacket;
 use BinSoul\Net\Mqtt\Packet\UnsubscribeResponsePacket;
+use BinSoul\Net\Mqtt\PacketFactory;
 use BinSoul\Net\Mqtt\PacketIdentifierGenerator;
 use BinSoul\Net\Mqtt\Subscription;
 
@@ -21,11 +22,14 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
     /**
      * Constructs an instance of this class.
      *
-     * @param Subscription[]            $subscriptions
+     * @param PacketFactory $packetFactory
+     * @param Subscription[] $subscriptions
      * @param PacketIdentifierGenerator $generator
      */
-    public function __construct(array $subscriptions, PacketIdentifierGenerator $generator)
+    public function __construct(PacketFactory $packetFactory, array $subscriptions, PacketIdentifierGenerator $generator)
     {
+        parent::__construct($packetFactory);
+
         $this->subscriptions = array_values($subscriptions);
         $this->identifier = $generator->generatePacketIdentifier();
     }
@@ -37,7 +41,8 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
 
     public function start()
     {
-        $packet = new UnsubscribeRequestPacket();
+        /** @var UnsubscribeRequestPacket $packet */
+        $packet = $this->generatePacket(Packet::TYPE_UNSUBSCRIBE);
         $packet->setTopic($this->subscriptions[0]->getFilter());
         $packet->setIdentifier($this->identifier);
 

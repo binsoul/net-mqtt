@@ -4,6 +4,7 @@ namespace BinSoul\Net\Mqtt\Flow;
 
 use BinSoul\Net\Mqtt\Flow;
 use BinSoul\Net\Mqtt\Packet;
+use BinSoul\Net\Mqtt\PacketFactory;
 
 /**
  * Provides an abstract implementation of the {@see Flow} interface.
@@ -18,6 +19,18 @@ abstract class AbstractFlow implements Flow
     private $result;
     /** @var string */
     private $error = '';
+    /** @var PacketFactory */
+    private $packetFactory;
+
+    /**
+     * Constructs an instance of this class.
+     *
+     * @param PacketFactory $packetFactory
+     */
+    public function __construct(PacketFactory $packetFactory)
+    {
+        $this->packetFactory = $packetFactory;
+    }
 
     public function accept(Packet $packet)
     {
@@ -70,5 +83,15 @@ abstract class AbstractFlow implements Flow
         $this->isFinished = true;
         $this->isSuccess = false;
         $this->error = $error;
+    }
+
+    /**
+     * @param int $type
+     *
+     * @return Packet
+     */
+    protected function generatePacket($type)
+    {
+        return $this->packetFactory->build($type);
     }
 }

@@ -24,58 +24,65 @@ class DefaultFlowFactory implements FlowFactory
      * @var PacketIdentifierGenerator
      */
     private $packetIdentifierGenerator;
+    /**
+     * @var PacketFactory
+     */
+    private $packetFactory;
 
     /**
      * Constructs an instance of this class.
      *
      * @param ClientIdentifierGenerator $clientIdentifierGenerator
      * @param PacketIdentifierGenerator $packetIdentifierGenerator
+     * @param PacketFactory $packetFactory
      */
     public function __construct(
         ClientIdentifierGenerator $clientIdentifierGenerator,
-        PacketIdentifierGenerator $packetIdentifierGenerator
+        PacketIdentifierGenerator $packetIdentifierGenerator,
+        PacketFactory $packetFactory
     ) {
         $this->clientIdentifierGenerator = $clientIdentifierGenerator;
         $this->packetIdentifierGenerator = $packetIdentifierGenerator;
+        $this->packetFactory = $packetFactory;
     }
 
     public function buildIncomingPingFlow()
     {
-        return new IncomingPingFlow();
+        return new IncomingPingFlow($this->packetFactory);
     }
 
     public function buildIncomingPublishFlow(Message $message, $identifier = null)
     {
-        return new IncomingPublishFlow($message, $identifier);
+        return new IncomingPublishFlow($this->packetFactory, $message, $identifier);
     }
 
     public function buildOutgoingConnectFlow(Connection $connection)
     {
-        return new OutgoingConnectFlow($connection, $this->clientIdentifierGenerator);
+        return new OutgoingConnectFlow($this->packetFactory, $connection, $this->clientIdentifierGenerator);
     }
 
     public function buildOutgoingDisconnectFlow(Connection $connection)
     {
-        return new OutgoingDisconnectFlow($connection);
+        return new OutgoingDisconnectFlow($this->packetFactory, $connection);
     }
 
     public function buildOutgoingPingFlow()
     {
-        return new OutgoingPingFlow();
+        return new OutgoingPingFlow($this->packetFactory);
     }
 
     public function buildOutgoingPublishFlow(Message $message)
     {
-        return new OutgoingPublishFlow($message, $this->packetIdentifierGenerator);
+        return new OutgoingPublishFlow($this->packetFactory, $message, $this->packetIdentifierGenerator);
     }
 
     public function buildOutgoingSubscribeFlow(array $subscriptions)
     {
-        return new OutgoingSubscribeFlow($subscriptions, $this->packetIdentifierGenerator);
+        return new OutgoingSubscribeFlow($this->packetFactory, $subscriptions, $this->packetIdentifierGenerator);
     }
 
     public function buildOutgoingUnsubscribeFlow(array $subscriptions)
     {
-        return new OutgoingUnsubscribeFlow($subscriptions, $this->packetIdentifierGenerator);
+        return new OutgoingUnsubscribeFlow($this->packetFactory, $subscriptions, $this->packetIdentifierGenerator);
     }
 }

@@ -7,6 +7,7 @@ use BinSoul\Net\Mqtt\Connection;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\ConnectRequestPacket;
 use BinSoul\Net\Mqtt\Packet\ConnectResponsePacket;
+use BinSoul\Net\Mqtt\PacketFactory;
 
 /**
  * Represents a flow starting with an outgoing CONNECT packet.
@@ -19,11 +20,14 @@ class OutgoingConnectFlow extends AbstractFlow
     /**
      * Constructs an instance of this class.
      *
-     * @param Connection                $connection
+     * @param PacketFactory $packetFactory
+     * @param Connection $connection
      * @param ClientIdentifierGenerator $generator
      */
-    public function __construct(Connection $connection, ClientIdentifierGenerator $generator)
+    public function __construct(PacketFactory $packetFactory, Connection $connection, ClientIdentifierGenerator $generator)
     {
+        parent::__construct($packetFactory);
+
         $this->connection = $connection;
 
         if ($this->connection->getClientID() === '') {
@@ -38,7 +42,8 @@ class OutgoingConnectFlow extends AbstractFlow
 
     public function start()
     {
-        $packet = new ConnectRequestPacket();
+        /** @var ConnectRequestPacket $packet */
+        $packet = $this->generatePacket(Packet::TYPE_CONNECT);
         $packet->setProtocolLevel($this->connection->getProtocol());
         $packet->setKeepAlive($this->connection->getKeepAlive());
         $packet->setClientID($this->connection->getClientID());
