@@ -3,14 +3,14 @@
 namespace BinSoul\Net\Mqtt;
 
 /**
- * Provides a default implementation of the {@see IdentifierGenerator} interface.
+ * Provides a default implementation of the {@see PacketIdentifierGenerator} and the {@see ClientIdentifierGenerator} interface.
  */
-class DefaultIdentifierGenerator implements IdentifierGenerator
+class DefaultIdentifierGenerator implements PacketIdentifierGenerator, ClientIdentifierGenerator
 {
     /** @var int */
     private $currentIdentifier = 0;
 
-    public function generatePacketID()
+    public function generatePacketIdentifier()
     {
         ++$this->currentIdentifier;
         if ($this->currentIdentifier > 0xFFFF) {
@@ -20,7 +20,7 @@ class DefaultIdentifierGenerator implements IdentifierGenerator
         return $this->currentIdentifier;
     }
 
-    public function generateClientID()
+    public function generateClientIdentifier()
     {
         if (function_exists('random_bytes')) {
             $data = random_bytes(9);

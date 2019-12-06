@@ -159,7 +159,6 @@ class TopicMatcherTest extends TestCase
 
             // 31
             ['$BOB/bar', '$SYS/bar', false],
-
         ];
     }
 

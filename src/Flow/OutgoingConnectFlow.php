@@ -2,8 +2,8 @@
 
 namespace BinSoul\Net\Mqtt\Flow;
 
+use BinSoul\Net\Mqtt\ClientIdentifierGenerator;
 use BinSoul\Net\Mqtt\Connection;
-use BinSoul\Net\Mqtt\IdentifierGenerator;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\ConnectRequestPacket;
 use BinSoul\Net\Mqtt\Packet\ConnectResponsePacket;
@@ -19,15 +19,15 @@ class OutgoingConnectFlow extends AbstractFlow
     /**
      * Constructs an instance of this class.
      *
-     * @param Connection          $connection
-     * @param IdentifierGenerator $generator
+     * @param Connection                $connection
+     * @param ClientIdentifierGenerator $generator
      */
-    public function __construct(Connection $connection, IdentifierGenerator $generator)
+    public function __construct(Connection $connection, ClientIdentifierGenerator $generator)
     {
         $this->connection = $connection;
 
         if ($this->connection->getClientID() === '') {
-            $this->connection = $this->connection->withClientID($generator->generateClientID());
+            $this->connection = $this->connection->withClientID($generator->generateClientIdentifier());
         }
     }
 

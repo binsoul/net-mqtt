@@ -13,10 +13,10 @@ class DefaultIdentifierGeneratorTest extends TestCase
 
         $previous = '';
         for ($i = 1; $i < 10; ++$i) {
-            $current = $generator->generatePacketID();
+            $current = $generator->generatePacketIdentifier();
             $this->assertLessThanOrEqual(0xFFFF, $current);
             if ($i === 1) {
-                $previous = $generator->generatePacketID();
+                $previous = $generator->generatePacketIdentifier();
                 $this->assertLessThanOrEqual(0xFFFF, $previous);
             }
 
@@ -30,10 +30,10 @@ class DefaultIdentifierGeneratorTest extends TestCase
         $generator = new DefaultIdentifierGenerator();
 
         for ($i = 1; $i <= 0xFFFF; ++$i) {
-            $generator->generatePacketID();
+            $generator->generatePacketIdentifier();
         }
 
-        $this->assertEquals(1, $generator->generatePacketID());
+        $this->assertEquals(1, $generator->generatePacketIdentifier());
     }
 
     public function test_generates_client_id()
@@ -42,10 +42,10 @@ class DefaultIdentifierGeneratorTest extends TestCase
 
         $previous = '';
         for ($i = 1; $i < 10; ++$i) {
-            $current = $generator->generateClientID();
+            $current = $generator->generateClientIdentifier();
             $this->assertLessThanOrEqual(23, strlen($current));
             if ($i === 1) {
-                $previous = $generator->generateClientID();
+                $previous = $generator->generateClientIdentifier();
                 $this->assertLessThanOrEqual(23, strlen($previous));
             }
 

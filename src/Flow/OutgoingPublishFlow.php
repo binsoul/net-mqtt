@@ -2,7 +2,6 @@
 
 namespace BinSoul\Net\Mqtt\Flow;
 
-use BinSoul\Net\Mqtt\IdentifierGenerator;
 use BinSoul\Net\Mqtt\Message;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\PublishAckPacket;
@@ -10,6 +9,7 @@ use BinSoul\Net\Mqtt\Packet\PublishCompletePacket;
 use BinSoul\Net\Mqtt\Packet\PublishReceivedPacket;
 use BinSoul\Net\Mqtt\Packet\PublishReleasePacket;
 use BinSoul\Net\Mqtt\Packet\PublishRequestPacket;
+use BinSoul\Net\Mqtt\PacketIdentifierGenerator;
 
 /**
  * Represents a flow starting with an outgoing PUBLISH packet.
@@ -26,14 +26,14 @@ class OutgoingPublishFlow extends AbstractFlow
     /**
      * Constructs an instance of this class.
      *
-     * @param Message             $message
-     * @param IdentifierGenerator $generator
+     * @param Message                   $message
+     * @param PacketIdentifierGenerator $generator
      */
-    public function __construct(Message $message, IdentifierGenerator $generator)
+    public function __construct(Message $message, PacketIdentifierGenerator $generator)
     {
         $this->message = $message;
         if ($this->message->getQosLevel() > 0) {
-            $this->identifier = $generator->generatePacketID();
+            $this->identifier = $generator->generatePacketIdentifier();
         }
     }
 
