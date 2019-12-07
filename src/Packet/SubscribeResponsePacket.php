@@ -129,7 +129,7 @@ class SubscribeResponsePacket extends BasePacket
      */
     private function assertValidReturnCode($returnCode, $fromPacket = true)
     {
-        if (!in_array($returnCode, [0, 1, 2, 128])) {
+        if (!in_array($returnCode, [0, 1, 2, 128], true)) {
             $this->throwException(
                 sprintf('Malformed return code %02x.', $returnCode),
                 $fromPacket
