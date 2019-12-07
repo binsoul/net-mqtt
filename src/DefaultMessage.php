@@ -14,7 +14,7 @@ class DefaultMessage implements Message
     /** @var bool */
     private $isRetained;
     /** @var bool */
-    private $isDuplicate = false;
+    private $isDuplicate;
     /** @var int */
     private $qosLevel;
 
