@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Packet;
@@ -60,7 +62,7 @@ class PublishRequestPacket extends BasePacket
      *
      * @return string
      */
-    public function getTopic()
+    public function getTopic(): string
     {
         return $this->topic;
     }
@@ -89,7 +91,7 @@ class PublishRequestPacket extends BasePacket
      *
      * @return string
      */
-    public function getPayload()
+    public function getPayload(): string
     {
         return $this->payload;
     }
@@ -111,7 +113,7 @@ class PublishRequestPacket extends BasePacket
      *
      * @return bool
      */
-    public function isDuplicate()
+    public function isDuplicate(): bool
     {
         return ($this->packetFlags & 8) === 8;
     }
@@ -137,7 +139,7 @@ class PublishRequestPacket extends BasePacket
      *
      * @return bool
      */
-    public function isRetained()
+    public function isRetained(): bool
     {
         return ($this->packetFlags & 1) === 1;
     }
@@ -163,7 +165,7 @@ class PublishRequestPacket extends BasePacket
      *
      * @return int
      */
-    public function getQosLevel()
+    public function getQosLevel(): int
     {
         return ($this->packetFlags & 6) >> 1;
     }

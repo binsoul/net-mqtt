@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt\Flow;
 
 use BinSoul\Net\Mqtt\Message;
@@ -35,7 +37,7 @@ class IncomingPublishFlow extends AbstractFlow
         $this->identifier = $identifier;
     }
 
-    public function getCode()
+    public function getCode(): string
     {
         return 'message';
     }
@@ -63,7 +65,7 @@ class IncomingPublishFlow extends AbstractFlow
         return $packet;
     }
 
-    public function accept(Packet $packet)
+    public function accept(Packet $packet): bool
     {
         if ($this->message->getQosLevel() !== 2 || $packet->getPacketType() !== Packet::TYPE_PUBREL) {
             return false;

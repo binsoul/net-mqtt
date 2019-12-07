@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Packet;
@@ -70,7 +72,7 @@ class ConnectResponsePacket extends BasePacket
      *
      * @return int
      */
-    public function getReturnCode()
+    public function getReturnCode(): int
     {
         return $this->returnCode;
     }
@@ -80,7 +82,7 @@ class ConnectResponsePacket extends BasePacket
      *
      * @return bool
      */
-    public function isSuccess()
+    public function isSuccess(): bool
     {
         return $this->returnCode === 0;
     }
@@ -90,7 +92,7 @@ class ConnectResponsePacket extends BasePacket
      *
      * @return bool
      */
-    public function isError()
+    public function isError(): bool
     {
         return $this->returnCode > 0;
     }
@@ -100,7 +102,7 @@ class ConnectResponsePacket extends BasePacket
      *
      * @return string
      */
-    public function getErrorName()
+    public function getErrorName(): string
     {
         if (isset(self::$returnCodes[$this->returnCode])) {
             return self::$returnCodes[$this->returnCode][0];

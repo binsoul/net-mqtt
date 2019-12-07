@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\Exception\UnknownPacketTypeException;
@@ -45,7 +47,7 @@ class DefaultPacketFactory implements PacketFactory
         Packet::TYPE_DISCONNECT => DisconnectRequestPacket::class,
     ];
 
-    public function build($type)
+    public function build(int $type): Packet
     {
         if (!isset(self::$mapping[$type])) {
             throw new UnknownPacketTypeException(sprintf('Unknown packet type %d.', $type));

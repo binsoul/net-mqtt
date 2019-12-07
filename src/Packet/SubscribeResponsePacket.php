@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
@@ -67,7 +69,7 @@ class SubscribeResponsePacket extends BasePacket
      *
      * @return bool
      */
-    public function isError($returnCode)
+    public function isError($returnCode): bool
     {
         return $returnCode === 128;
     }
@@ -79,7 +81,7 @@ class SubscribeResponsePacket extends BasePacket
      *
      * @return string
      */
-    public function getReturnCodeName($returnCode)
+    public function getReturnCodeName($returnCode): string
     {
         if (isset(self::$qosLevels[$returnCode])) {
             return self::$qosLevels[$returnCode][0];
@@ -93,7 +95,7 @@ class SubscribeResponsePacket extends BasePacket
      *
      * @return int[]
      */
-    public function getReturnCodes()
+    public function getReturnCodes(): array
     {
         return $this->returnCodes;
     }

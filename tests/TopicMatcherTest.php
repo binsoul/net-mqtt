@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Test\Net\Mqtt\Helpers;
 
 use BinSoul\Net\Mqtt\TopicMatcher;
@@ -40,7 +42,7 @@ class TopicMatcherTest extends TestCase
      *
      * @return array
      */
-    public function patternsAndTopics()
+    public function patternsAndTopics(): array
     {
         // Test cases inspired by (https://github.com/eclipse/mosquitto) package
         // @see https://github.com/eclipse/mosquitto/blob/master/test/broker/03-pattern-matching.py

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt\Flow;
 
 use BinSoul\Net\Mqtt\Flow;
@@ -32,7 +34,7 @@ abstract class AbstractFlow implements Flow
         $this->packetFactory = $packetFactory;
     }
 
-    public function accept(Packet $packet)
+    public function accept(Packet $packet): bool
     {
         return false;
     }
@@ -42,12 +44,12 @@ abstract class AbstractFlow implements Flow
         return null;
     }
 
-    public function isFinished()
+    public function isFinished(): bool
     {
         return $this->isFinished;
     }
 
-    public function isSuccess()
+    public function isSuccess(): bool
     {
         return $this->isFinished && $this->isSuccess;
     }
@@ -57,7 +59,7 @@ abstract class AbstractFlow implements Flow
         return $this->result;
     }
 
-    public function getErrorMessage()
+    public function getErrorMessage(): string
     {
         return $this->error;
     }
@@ -95,7 +97,7 @@ abstract class AbstractFlow implements Flow
      *
      * @return Packet
      */
-    protected function generatePacket($type)
+    protected function generatePacket($type): Packet
     {
         return $this->packetFactory->build($type);
     }

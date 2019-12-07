@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\Exception\EndOfStreamException;
@@ -26,7 +28,7 @@ class StreamParser
     public function __construct(PacketFactory $packetFactory = null)
     {
         $this->buffer = new PacketStream();
-        $this->factory = $packetFactory !== null ? $packetFactory : new DefaultPacketFactory();
+        $this->factory = $packetFactory ?? new DefaultPacketFactory();
     }
 
     /**
@@ -48,7 +50,7 @@ class StreamParser
      *
      * @return Packet[]
      */
-    public function push($data)
+    public function push($data): array
     {
         $this->buffer->write($data);
 

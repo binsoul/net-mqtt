@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt;
 
 /**
@@ -17,7 +19,7 @@ class TopicMatcher
      *
      * @return bool true if topic matches the pattern
      */
-    public function matches($filter, $topic)
+    public function matches(string $filter, string $topic): bool
     {
         // Created by Steffen (https://github.com/kernelguy)
         $tokens = explode('/', $filter);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt\Flow;
 
 use BinSoul\Net\Mqtt\Packet;
@@ -34,7 +36,7 @@ class OutgoingSubscribeFlow extends AbstractFlow
         $this->identifier = $generator->generatePacketIdentifier();
     }
 
-    public function getCode()
+    public function getCode(): string
     {
         return 'subscribe';
     }
@@ -50,7 +52,7 @@ class OutgoingSubscribeFlow extends AbstractFlow
         return $packet;
     }
 
-    public function accept(Packet $packet)
+    public function accept(Packet $packet): bool
     {
         if ($packet->getPacketType() !== Packet::TYPE_SUBACK) {
             return false;
@@ -62,7 +64,16 @@ class OutgoingSubscribeFlow extends AbstractFlow
 
     public function next(Packet $packet)
     {
-        /** @var SubscribeResponsePacket $packet */
+        if (!($packet instanceof SubscribeResponsePacket)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'SUBACK: Expected packet of class %s but got %s.',
+                    SubscribeResponsePacket::class,
+                    get_class($packet)
+                )
+            );
+        }
+
         $returnCodes = $packet->getReturnCodes();
         if (count($returnCodes) !== count($this->subscriptions)) {
             throw new \LogicException(

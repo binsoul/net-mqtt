@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\Exception\UnknownPacketTypeException;
@@ -18,5 +20,5 @@ interface PacketFactory
      *
      * @return Packet
      */
-    public function build($type);
+    public function build(int $type): Packet;
 }

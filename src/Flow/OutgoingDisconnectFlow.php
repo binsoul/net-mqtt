@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt\Flow;
 
 use BinSoul\Net\Mqtt\Connection;
@@ -27,7 +29,7 @@ class OutgoingDisconnectFlow extends AbstractFlow
         $this->connection = $connection;
     }
 
-    public function getCode()
+    public function getCode(): string
     {
         return 'disconnect';
     }

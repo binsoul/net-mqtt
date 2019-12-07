@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt\Flow;
 
 use BinSoul\Net\Mqtt\Packet;
@@ -9,7 +11,7 @@ use BinSoul\Net\Mqtt\Packet;
  */
 class IncomingPingFlow extends AbstractFlow
 {
-    public function getCode()
+    public function getCode(): string
     {
         return 'pong';
     }

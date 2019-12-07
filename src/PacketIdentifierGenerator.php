@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt;
 
 /**
@@ -12,5 +14,5 @@ interface PacketIdentifierGenerator
      *
      * @return int
      */
-    public function generatePacketIdentifier();
+    public function generatePacketIdentifier(): int;
 }

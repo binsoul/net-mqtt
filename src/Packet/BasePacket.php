@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
@@ -31,7 +33,7 @@ abstract class BasePacket implements Packet
      */
     protected $remainingPacketLength = 0;
 
-    public function __toString()
+    public function __toString(): string
     {
         $output = new PacketStream();
         $this->write($output);
@@ -110,7 +112,7 @@ abstract class BasePacket implements Packet
         } while ($x > 0);
     }
 
-    public function getPacketType()
+    public function getPacketType(): int
     {
         return static::$packetType;
     }
@@ -120,7 +122,7 @@ abstract class BasePacket implements Packet
      *
      * @return int
      */
-    public function getPacketFlags()
+    public function getPacketFlags(): int
     {
         return $this->packetFlags;
     }
@@ -130,7 +132,7 @@ abstract class BasePacket implements Packet
      *
      * @return int
      */
-    public function getRemainingPacketLength()
+    public function getRemainingPacketLength(): int
     {
         return $this->remainingPacketLength;
     }

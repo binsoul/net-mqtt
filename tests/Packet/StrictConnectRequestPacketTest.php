@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Test\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
@@ -9,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class StrictConnectRequestPacketTest extends TestCase
 {
-    private function createDefaultPacket()
+    private function createDefaultPacket(): StrictConnectRequestPacket
     {
         $packet = new StrictConnectRequestPacket();
         $packet->setProtocolLevel(4);

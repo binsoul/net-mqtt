@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
@@ -26,7 +28,7 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
      *
      * @throws \InvalidArgumentException
      */
-    public function setClientID($value)
+    public function setClientID(string $value)
     {
         $this->assertValidClientID($value, false);
 

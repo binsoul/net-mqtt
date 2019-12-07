@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt\Flow;
 
 use BinSoul\Net\Mqtt\ClientIdentifierGenerator;
@@ -35,7 +37,7 @@ class OutgoingConnectFlow extends AbstractFlow
         }
     }
 
-    public function getCode()
+    public function getCode(): string
     {
         return 'connect';
     }
@@ -58,7 +60,7 @@ class OutgoingConnectFlow extends AbstractFlow
         return $packet;
     }
 
-    public function accept(Packet $packet)
+    public function accept(Packet $packet): bool
     {
         return $packet->getPacketType() === Packet::TYPE_CONNACK;
     }

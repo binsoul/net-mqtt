@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Packet;
@@ -53,7 +55,7 @@ class SubscribeRequestPacket extends BasePacket
      *
      * @return string
      */
-    public function getTopic()
+    public function getTopic(): string
     {
         return $this->topic;
     }
@@ -82,7 +84,7 @@ class SubscribeRequestPacket extends BasePacket
      *
      * @return int
      */
-    public function getQosLevel()
+    public function getQosLevel(): int
     {
         return $this->qosLevel;
     }

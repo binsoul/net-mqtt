@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
@@ -66,7 +68,11 @@ class ConnectRequestPacket extends BasePacket
     public function write(PacketStream $stream)
     {
         if ($this->clientID === '') {
-            $this->clientID = 'BinSoul'.mt_rand(100000, 999999);
+            try {
+                $this->clientID = 'BinSoul'.random_int(100000, 999999);
+            } catch (\Exception $e) {
+                $this->clientID = 'BinSoul'.mt_rand(100000, 999999);
+            }
         }
 
         $data = new PacketStream();
@@ -101,7 +107,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return int
      */
-    public function getProtocolLevel()
+    public function getProtocolLevel(): int
     {
         return $this->protocolLevel;
     }
@@ -115,7 +121,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @throws \InvalidArgumentException
      */
-    public function setProtocolLevel($value)
+    public function setProtocolLevel(int $value)
     {
         if ($value < 3 || $value > 4) {
             throw new \InvalidArgumentException(sprintf('Unknown protocol level %d.', $value));
@@ -134,7 +140,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return string
      */
-    public function getClientID()
+    public function getClientID(): string
     {
         return $this->clientID;
     }
@@ -146,7 +152,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return void
      */
-    public function setClientID($value)
+    public function setClientID(string $value)
     {
         $this->clientID = $value;
     }
@@ -156,7 +162,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return int
      */
-    public function getKeepAlive()
+    public function getKeepAlive(): int
     {
         return $this->keepAlive;
     }
@@ -170,7 +176,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @throws \InvalidArgumentException
      */
-    public function setKeepAlive($value)
+    public function setKeepAlive(int $value)
     {
         if ($value > 65535) {
             throw new \InvalidArgumentException(
@@ -189,7 +195,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return bool
      */
-    public function isCleanSession()
+    public function isCleanSession(): bool
     {
         return ($this->flags & 2) === 2;
     }
@@ -201,7 +207,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return void
      */
-    public function setCleanSession($value)
+    public function setCleanSession(bool $value)
     {
         if ($value) {
             $this->flags |= 2;
@@ -215,7 +221,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return bool
      */
-    public function hasWill()
+    public function hasWill(): bool
     {
         return ($this->flags & 4) === 4;
     }
@@ -225,7 +231,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return int
      */
-    public function getWillQosLevel()
+    public function getWillQosLevel(): int
     {
         return ($this->flags & 24) >> 3;
     }
@@ -235,7 +241,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return bool
      */
-    public function isWillRetained()
+    public function isWillRetained(): bool
     {
         return ($this->flags & 32) === 32;
     }
@@ -245,7 +251,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return string
      */
-    public function getWillTopic()
+    public function getWillTopic(): string
     {
         return $this->willTopic;
     }
@@ -255,7 +261,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return string
      */
-    public function getWillMessage()
+    public function getWillMessage(): string
     {
         return $this->willMessage;
     }
@@ -265,14 +271,14 @@ class ConnectRequestPacket extends BasePacket
      *
      * @param string $topic
      * @param string $message
-     * @param int $qosLevel
-     * @param bool $isRetained
+     * @param int    $qosLevel
+     * @param bool   $isRetained
      *
      * @return void
      *
      * @throws \InvalidArgumentException
      */
-    public function setWill($topic, $message, $qosLevel = 0, $isRetained = false)
+    public function setWill(string $topic, string $message, int $qosLevel = 0, bool $isRetained = false)
     {
         $this->assertValidString($topic, false);
         if ($topic === '') {
@@ -316,7 +322,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return bool
      */
-    public function hasUsername()
+    public function hasUsername(): bool
     {
         return (bool) ($this->flags & 64);
     }
@@ -326,7 +332,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return string
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -338,7 +344,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return void
      */
-    public function setUsername($value)
+    public function setUsername(string $value)
     {
         $this->assertValidString($value, false);
 
@@ -355,7 +361,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return bool
      */
-    public function hasPassword()
+    public function hasPassword(): bool
     {
         return (bool) ($this->flags & 128);
     }
@@ -365,7 +371,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -377,7 +383,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @return void
      */
-    public function setPassword($value)
+    public function setPassword(string $value)
     {
         $this->assertValidStringLength($value, false);
 

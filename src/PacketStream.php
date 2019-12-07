@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\Exception\EndOfStreamException;
@@ -42,7 +44,7 @@ class PacketStream
      *
      * @return string
      */
-    public function read($count)
+    public function read($count): string
     {
         $contentLength = strlen($this->data);
         if ($this->position > $contentLength || $count > $contentLength - $this->position) {
@@ -68,7 +70,7 @@ class PacketStream
      *
      * @return int
      */
-    public function readByte()
+    public function readByte(): int
     {
         return ord($this->read(1));
     }
@@ -78,7 +80,7 @@ class PacketStream
      *
      * @return int
      */
-    public function readWord()
+    public function readWord(): int
     {
         return ($this->readByte() << 8) + $this->readByte();
     }
@@ -88,7 +90,7 @@ class PacketStream
      *
      * @return string
      */
-    public function readString()
+    public function readString(): string
     {
         $length = $this->readWord();
 
@@ -150,7 +152,7 @@ class PacketStream
      *
      * @return int
      */
-    public function length()
+    public function length(): int
     {
         return strlen($this->data);
     }
@@ -160,7 +162,7 @@ class PacketStream
      *
      * @return int
      */
-    public function getRemainingBytes()
+    public function getRemainingBytes(): int
     {
         return $this->length() - $this->position;
     }
@@ -170,7 +172,7 @@ class PacketStream
      *
      * @return string
      */
-    public function getData()
+    public function getData(): string
     {
         return $this->data;
     }
@@ -192,7 +194,7 @@ class PacketStream
      *
      * @return int
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->position;
     }

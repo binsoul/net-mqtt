@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Test\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Packet\ConnectRequestPacket;
@@ -8,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class ConnectRequestPacketTest extends TestCase
 {
-    private function createDefaultPacket()
+    private function createDefaultPacket(): ConnectRequestPacket
     {
         $packet = new ConnectRequestPacket();
         $packet->setProtocolLevel(4);
@@ -19,7 +21,7 @@ class ConnectRequestPacketTest extends TestCase
         return $packet;
     }
 
-    private function getDefaultData()
+    private function getDefaultData(): string
     {
         return "\x10\x12\x00\x04MQTT\x04\x02\x00\x0a\x00\x06foobar";
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt\Flow;
 
 use BinSoul\Net\Mqtt\Packet;
@@ -34,7 +36,7 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
         $this->identifier = $generator->generatePacketIdentifier();
     }
 
-    public function getCode()
+    public function getCode(): string
     {
         return 'unsubscribe';
     }
@@ -49,7 +51,7 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
         return $packet;
     }
 
-    public function accept(Packet $packet)
+    public function accept(Packet $packet): bool
     {
         if ($packet->getPacketType() !== Packet::TYPE_UNSUBACK) {
             return false;

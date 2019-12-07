@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\Flow\IncomingPingFlow;
@@ -19,7 +21,7 @@ interface FlowFactory
     /**
      * @return IncomingPingFlow
      */
-    public function buildIncomingPingFlow();
+    public function buildIncomingPingFlow(): IncomingPingFlow;
 
     /**
      * @param Message  $message
@@ -27,45 +29,45 @@ interface FlowFactory
      *
      * @return IncomingPublishFlow
      */
-    public function buildIncomingPublishFlow(Message $message, $identifier = null);
+    public function buildIncomingPublishFlow(Message $message, int $identifier = null): IncomingPublishFlow;
 
     /**
      * @param Connection $connection
      *
      * @return OutgoingConnectFlow
      */
-    public function buildOutgoingConnectFlow(Connection $connection);
+    public function buildOutgoingConnectFlow(Connection $connection): OutgoingConnectFlow;
 
     /**
      * @param Connection $connection
      *
      * @return OutgoingDisconnectFlow
      */
-    public function buildOutgoingDisconnectFlow(Connection $connection);
+    public function buildOutgoingDisconnectFlow(Connection $connection): OutgoingDisconnectFlow;
 
     /**
      * @return OutgoingPingFlow
      */
-    public function buildOutgoingPingFlow();
+    public function buildOutgoingPingFlow(): OutgoingPingFlow;
 
     /**
      * @param Message $message
      *
      * @return OutgoingPublishFlow
      */
-    public function buildOutgoingPublishFlow(Message $message);
+    public function buildOutgoingPublishFlow(Message $message): OutgoingPublishFlow;
 
     /**
      * @param Subscription[] $subscriptions
      *
      * @return OutgoingSubscribeFlow
      */
-    public function buildOutgoingSubscribeFlow(array $subscriptions);
+    public function buildOutgoingSubscribeFlow(array $subscriptions): OutgoingSubscribeFlow;
 
     /**
      * @param Subscription[] $subscriptions
      *
      * @return OutgoingUnsubscribeFlow
      */
-    public function buildOutgoingUnsubscribeFlow(array $subscriptions);
+    public function buildOutgoingUnsubscribeFlow(array $subscriptions): OutgoingUnsubscribeFlow;
 }

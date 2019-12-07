@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BinSoul\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\Exception\EndOfStreamException;
@@ -30,7 +32,7 @@ interface Packet
      *
      * @return int
      */
-    public function getPacketType();
+    public function getPacketType(): int;
 
     /**
      * Reads the packet from the given stream.
@@ -58,5 +60,5 @@ interface Packet
      *
      * @return string
      */
-    public function __toString();
+    public function __toString(): string;
 }
