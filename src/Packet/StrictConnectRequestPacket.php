@@ -42,7 +42,6 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
      */
     private function assertValidClientID($value, $fromPacket)
     {
-
         if (strlen($value) > 23) {
             $this->throwException(
                 sprintf(

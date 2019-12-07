@@ -22,7 +22,7 @@ interface FlowFactory
     public function buildIncomingPingFlow();
 
     /**
-     * @param Message $message
+     * @param Message  $message
      * @param int|null $identifier
      *
      * @return IncomingPublishFlow

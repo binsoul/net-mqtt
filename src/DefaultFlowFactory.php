@@ -34,7 +34,7 @@ class DefaultFlowFactory implements FlowFactory
      *
      * @param ClientIdentifierGenerator $clientIdentifierGenerator
      * @param PacketIdentifierGenerator $packetIdentifierGenerator
-     * @param PacketFactory $packetFactory
+     * @param PacketFactory             $packetFactory
      */
     public function __construct(
         ClientIdentifierGenerator $clientIdentifierGenerator,

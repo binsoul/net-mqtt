@@ -3,8 +3,8 @@
 namespace BinSoul\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
-use BinSoul\Net\Mqtt\PacketStream;
 use BinSoul\Net\Mqtt\Packet;
+use BinSoul\Net\Mqtt\PacketStream;
 
 /**
  * Represents the CONNECT packet.

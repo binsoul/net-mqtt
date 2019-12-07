@@ -24,8 +24,8 @@ class IncomingPublishFlow extends AbstractFlow
      * Constructs an instance of this class.
      *
      * @param PacketFactory $packetFactory
-     * @param Message $message
-     * @param int|null $identifier
+     * @param Message       $message
+     * @param int|null      $identifier
      */
     public function __construct(PacketFactory $packetFactory, Message $message, $identifier = null)
     {

@@ -22,8 +22,8 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
     /**
      * Constructs an instance of this class.
      *
-     * @param PacketFactory $packetFactory
-     * @param Subscription[] $subscriptions
+     * @param PacketFactory             $packetFactory
+     * @param Subscription[]            $subscriptions
      * @param PacketIdentifierGenerator $generator
      */
     public function __construct(PacketFactory $packetFactory, array $subscriptions, PacketIdentifierGenerator $generator)
