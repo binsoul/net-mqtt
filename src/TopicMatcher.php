@@ -22,15 +22,14 @@ class TopicMatcher
         // Created by Steffen (https://github.com/kernelguy)
         $tokens = explode('/', $filter);
         $parts = [];
-        for ($i = 0, $count = count($tokens); $i < $count; ++$i) {
-            $token = $tokens[$i];
+        foreach ($tokens as $index => $token) {
             switch ($token) {
                 case '+':
                     $parts[] = '[^/#\+]*';
 
                     break;
                 case '#':
-                    if ($i === 0) {
+                    if ($index === 0) {
                         $parts[] = '[^\+\$]*';
                     } else {
                         $parts[] = '[^\+]*';
