@@ -56,11 +56,7 @@ class PacketStream
             );
         }
 
-        $chunk = substr($this->data, $this->position, $count);
-        if ($chunk === false) {
-            $chunk = '';
-        }
-
+        $chunk = (string) substr($this->data, $this->position, $count);
         $readBytes = strlen($chunk);
         $this->position += $readBytes;
 
@@ -220,11 +216,7 @@ class PacketStream
      */
     public function cut()
     {
-        $this->data = substr($this->data, $this->position);
-        if ($this->data === false) {
-            $this->data = '';
-        }
-
+        $this->data = (string) substr($this->data, $this->position);
         $this->position = 0;
     }
 }
