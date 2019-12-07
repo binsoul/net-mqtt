@@ -2,6 +2,9 @@
 
 namespace BinSoul\Net\Mqtt;
 
+use BinSoul\Net\Mqtt\Exception\EndOfStreamException;
+use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
+
 /**
  * Represent a packet of the MQTT protocol.
  */
@@ -33,6 +36,9 @@ interface Packet
      * Reads the packet from the given stream.
      *
      * @param PacketStream $stream
+     *
+     * @throws MalformedPacketException
+     * @throws EndOfStreamException
      */
     public function read(PacketStream $stream);
 
