@@ -103,6 +103,8 @@ class PacketStream
      * Appends the given value.
      *
      * @param string $value
+     *
+     * @return void
      */
     public function write($value)
     {
@@ -113,6 +115,8 @@ class PacketStream
      * Appends a single byte.
      *
      * @param int $value
+     *
+     * @return void
      */
     public function writeByte($value)
     {
@@ -123,6 +127,8 @@ class PacketStream
      * Appends a single word.
      *
      * @param int $value
+     *
+     * @return void
      */
     public function writeWord($value)
     {
@@ -134,6 +140,8 @@ class PacketStream
      * Appends a length prefixed string.
      *
      * @param string $string
+     *
+     * @return void
      */
     public function writeString($string)
     {
@@ -175,6 +183,8 @@ class PacketStream
      * Changes the internal position of the stream relative to the current position.
      *
      * @param int $offset
+     *
+     * @return void
      */
     public function seek($offset)
     {
@@ -195,6 +205,8 @@ class PacketStream
      * Sets the internal position of the stream.
      *
      * @param int $value
+     *
+     * @return void
      */
     public function setPosition($value)
     {
@@ -203,6 +215,8 @@ class PacketStream
 
     /**
      * Removes all bytes from the beginning to the current position.
+     *
+     * @return void
      */
     public function cut()
     {

@@ -33,6 +33,8 @@ class StreamParser
      * Registers an error callback.
      *
      * @param callable $callback
+     *
+     * @return void
      */
     public function onError($callback)
     {
@@ -81,6 +83,8 @@ class StreamParser
      * Executes the registered error callback.
      *
      * @param \Throwable $exception
+     *
+     * @return void
      */
     private function handleError($exception)
     {

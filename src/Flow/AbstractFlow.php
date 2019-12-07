@@ -39,6 +39,7 @@ abstract class AbstractFlow implements Flow
 
     public function next(Packet $packet)
     {
+        return null;
     }
 
     public function isFinished()
@@ -65,6 +66,8 @@ abstract class AbstractFlow implements Flow
      * Marks the flow as successful and sets the result.
      *
      * @param mixed|null $result
+     *
+     * @return void
      */
     protected function succeed($result = null)
     {
@@ -77,6 +80,8 @@ abstract class AbstractFlow implements Flow
      * Marks the flow as failed and sets the error message.
      *
      * @param string $error
+     *
+     * @return void
      */
     protected function fail($error = '')
     {

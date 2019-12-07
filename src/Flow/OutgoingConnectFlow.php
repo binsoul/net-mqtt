@@ -71,5 +71,7 @@ class OutgoingConnectFlow extends AbstractFlow
         } else {
             $this->fail($packet->getErrorName());
         }
+
+        return null;
     }
 }

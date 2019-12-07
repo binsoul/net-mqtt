@@ -22,6 +22,8 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
      *
      * @param string $value
      *
+     * @return void
+     *
      * @throws \InvalidArgumentException
      */
     public function setClientID($value)
@@ -36,6 +38,8 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
      *
      * @param string $value
      * @param bool   $fromPacket
+     *
+     * @return void
      *
      * @throws MalformedPacketException
      * @throws \InvalidArgumentException

@@ -13,6 +13,9 @@ class SubscribeResponsePacket extends BasePacket
 {
     use IdentifiablePacket;
 
+    /**
+     * @var string[][]
+     */
     private static $qosLevels = [
         0 => ['Maximum QoS 0'],
         1 => ['Maximum QoS 1'],
@@ -74,7 +77,7 @@ class SubscribeResponsePacket extends BasePacket
      *
      * @param int $returnCode
      *
-     * @return bool
+     * @return string
      */
     public function getReturnCodeName($returnCode)
     {
@@ -100,6 +103,8 @@ class SubscribeResponsePacket extends BasePacket
      *
      * @param int[] $value
      *
+     * @return void
+     *
      * @throws \InvalidArgumentException
      */
     public function setReturnCodes(array $value)
@@ -116,6 +121,8 @@ class SubscribeResponsePacket extends BasePacket
      *
      * @param int  $returnCode
      * @param bool $fromPacket
+     *
+     * @return void
      *
      * @throws MalformedPacketException
      * @throws \InvalidArgumentException

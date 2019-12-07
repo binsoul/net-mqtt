@@ -111,6 +111,8 @@ class ConnectRequestPacket extends BasePacket
      *
      * @param int $value
      *
+     * @return void
+     *
      * @throws \InvalidArgumentException
      */
     public function setProtocolLevel($value)
@@ -141,6 +143,8 @@ class ConnectRequestPacket extends BasePacket
      * Sets the client id.
      *
      * @param string $value
+     *
+     * @return void
      */
     public function setClientID($value)
     {
@@ -161,6 +165,8 @@ class ConnectRequestPacket extends BasePacket
      * Sets the keep alive time in seconds.
      *
      * @param int $value
+     *
+     * @return void
      *
      * @throws \InvalidArgumentException
      */
@@ -192,6 +198,8 @@ class ConnectRequestPacket extends BasePacket
      * Changes the clean session flag.
      *
      * @param bool $value
+     *
+     * @return void
      */
     public function setCleanSession($value)
     {
@@ -257,8 +265,10 @@ class ConnectRequestPacket extends BasePacket
      *
      * @param string $topic
      * @param string $message
-     * @param int    $qosLevel
-     * @param bool   $isRetained
+     * @param int $qosLevel
+     * @param bool $isRetained
+     *
+     * @return void
      *
      * @throws \InvalidArgumentException
      */
@@ -291,6 +301,8 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Removes the will.
+     *
+     * @return void
      */
     public function removeWill()
     {
@@ -306,7 +318,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function hasUsername()
     {
-        return $this->flags & 64;
+        return (bool) ($this->flags & 64);
     }
 
     /**
@@ -324,7 +336,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @param string $value
      *
-     * @throws \InvalidArgumentException
+     * @return void
      */
     public function setUsername($value)
     {
@@ -345,7 +357,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function hasPassword()
     {
-        return $this->flags & 128;
+        return (bool) ($this->flags & 128);
     }
 
     /**
@@ -363,7 +375,7 @@ class ConnectRequestPacket extends BasePacket
      *
      * @param string $value
      *
-     * @throws \InvalidArgumentException
+     * @return void
      */
     public function setPassword($value)
     {
@@ -379,6 +391,8 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Asserts that all will flags and quality of service are correct.
+     *
+     * @return void
      *
      * @throws MalformedPacketException
      */

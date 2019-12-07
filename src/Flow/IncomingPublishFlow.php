@@ -69,7 +69,7 @@ class IncomingPublishFlow extends AbstractFlow
             return false;
         }
 
-        /* @var PublishReleasePacket $packet */
+        /** @var PublishReleasePacket $packet */
         return $packet->getIdentifier() === $this->identifier;
     }
 

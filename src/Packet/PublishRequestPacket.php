@@ -70,6 +70,8 @@ class PublishRequestPacket extends BasePacket
      *
      * @param string $value
      *
+     * @return void
+     *
      * @throws \InvalidArgumentException
      */
     public function setTopic($value)
@@ -96,6 +98,8 @@ class PublishRequestPacket extends BasePacket
      * Sets the payload.
      *
      * @param string $value
+     *
+     * @return void
      */
     public function setPayload($value)
     {
@@ -116,6 +120,8 @@ class PublishRequestPacket extends BasePacket
      * Marks the packet as duplicate.
      *
      * @param bool $value
+     *
+     * @return void
      */
     public function setDuplicate($value)
     {
@@ -140,6 +146,8 @@ class PublishRequestPacket extends BasePacket
      * Marks the packet as retained.
      *
      * @param bool $value
+     *
+     * @return void
      */
     public function setRetained($value)
     {
@@ -164,6 +172,8 @@ class PublishRequestPacket extends BasePacket
      * Sets the quality of service level.
      *
      * @param int $value
+     *
+     * @return void
      *
      * @throws \InvalidArgumentException
      */

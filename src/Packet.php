@@ -37,6 +37,8 @@ interface Packet
      *
      * @param PacketStream $stream
      *
+     * @return void
+     *
      * @throws MalformedPacketException
      * @throws EndOfStreamException
      */
@@ -46,6 +48,8 @@ interface Packet
      * Writes the packet to the given stream.
      *
      * @param PacketStream $stream
+     *
+     * @return void
      */
     public function write(PacketStream $stream);
 

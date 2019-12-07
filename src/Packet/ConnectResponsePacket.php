@@ -98,7 +98,7 @@ class ConnectResponsePacket extends BasePacket
     /**
      * Returns a string representation of the returned error code.
      *
-     * @return int
+     * @return string
      */
     public function getErrorName()
     {

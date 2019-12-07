@@ -56,13 +56,13 @@ class OutgoingSubscribeFlow extends AbstractFlow
             return false;
         }
 
-        /* @var SubscribeResponsePacket $packet */
+        /** @var SubscribeResponsePacket $packet */
         return $packet->getIdentifier() === $this->identifier;
     }
 
     public function next(Packet $packet)
     {
-        /* @var SubscribeResponsePacket $packet */
+        /** @var SubscribeResponsePacket $packet */
         $returnCodes = $packet->getReturnCodes();
         if (count($returnCodes) !== count($this->subscriptions)) {
             throw new \LogicException(
@@ -78,10 +78,12 @@ class OutgoingSubscribeFlow extends AbstractFlow
             if ($packet->isError($code)) {
                 $this->fail(sprintf('Failed to subscribe to "%s".', $this->subscriptions[$index]->getFilter()));
 
-                return;
+                return null;
             }
         }
 
         $this->succeed($this->subscriptions[0]);
+
+        return null;
     }
 }

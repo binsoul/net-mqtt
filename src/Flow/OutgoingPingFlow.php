@@ -27,5 +27,7 @@ class OutgoingPingFlow extends AbstractFlow
     public function next(Packet $packet)
     {
         $this->succeed();
+
+        return null;
     }
 }

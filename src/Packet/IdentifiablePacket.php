@@ -44,7 +44,7 @@ trait IdentifiablePacket
      *
      * @param int|null $value
      *
-     * @throws \InvalidArgumentException
+     * @return void
      */
     public function setIdentifier($value)
     {

@@ -63,6 +63,8 @@ class SubscribeRequestPacket extends BasePacket
      *
      * @param string $value
      *
+     * @return void
+     *
      * @throws \InvalidArgumentException
      */
     public function setTopic($value)
@@ -89,6 +91,8 @@ class SubscribeRequestPacket extends BasePacket
      * Sets the quality of service level.
      *
      * @param int $value
+     *
+     * @return void
      *
      * @throws \InvalidArgumentException
      */

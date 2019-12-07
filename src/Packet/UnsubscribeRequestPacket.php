@@ -60,6 +60,8 @@ class UnsubscribeRequestPacket extends BasePacket
      * Sets the topic.
      *
      * @param string $value
+     *
+     * @return void
      */
     public function setTopic($value)
     {

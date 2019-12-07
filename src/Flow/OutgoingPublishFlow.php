@@ -74,18 +74,18 @@ class OutgoingPublishFlow extends AbstractFlow
         $packetType = $packet->getPacketType();
 
         if ($packetType === Packet::TYPE_PUBACK && $this->message->getQosLevel() === 1) {
-            /* @var PublishAckPacket $packet */
+            /** @var PublishAckPacket $packet */
             return $packet->getIdentifier() === $this->identifier;
         }
 
         if ($this->message->getQosLevel() === 2) {
             if ($packetType === Packet::TYPE_PUBREC) {
-                /* @var PublishReceivedPacket $packet */
+                /** @var PublishReceivedPacket $packet */
                 return $packet->getIdentifier() === $this->identifier;
             }
 
             if ($this->receivedPubRec && $packetType === Packet::TYPE_PUBCOMP) {
-                /* @var PublishCompletePacket $packet */
+                /** @var PublishCompletePacket $packet */
                 return $packet->getIdentifier() === $this->identifier;
             }
         }

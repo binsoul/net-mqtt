@@ -55,12 +55,14 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
             return false;
         }
 
-        /* @var UnsubscribeResponsePacket $packet */
+        /** @var UnsubscribeResponsePacket $packet */
         return $packet->getIdentifier() === $this->identifier;
     }
 
     public function next(Packet $packet)
     {
         $this->succeed($this->subscriptions[0]);
+
+        return null;
     }
 }
