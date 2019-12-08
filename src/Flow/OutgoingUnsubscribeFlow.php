@@ -45,8 +45,13 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
     {
         /** @var UnsubscribeRequestPacket $packet */
         $packet = $this->generatePacket(Packet::TYPE_UNSUBSCRIBE);
-        $packet->setTopic($this->subscriptions[0]->getFilter());
         $packet->setIdentifier($this->identifier);
+
+        $topics = [];
+        foreach ($this->subscriptions as $subscription) {
+            $topics[] = $subscription->getFilter();
+        }
+        $packet->setTopics($topics);
 
         return $packet;
     }
