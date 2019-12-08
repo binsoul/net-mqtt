@@ -12,20 +12,20 @@ use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
  */
 interface Packet
 {
-    const TYPE_CONNECT = 1;
-    const TYPE_CONNACK = 2;
-    const TYPE_PUBLISH = 3;
-    const TYPE_PUBACK = 4;
-    const TYPE_PUBREC = 5;
-    const TYPE_PUBREL = 6;
-    const TYPE_PUBCOMP = 7;
-    const TYPE_SUBSCRIBE = 8;
-    const TYPE_SUBACK = 9;
-    const TYPE_UNSUBSCRIBE = 10;
-    const TYPE_UNSUBACK = 11;
-    const TYPE_PINGREQ = 12;
-    const TYPE_PINGRESP = 13;
-    const TYPE_DISCONNECT = 14;
+    public const TYPE_CONNECT = 1;
+    public const TYPE_CONNACK = 2;
+    public const TYPE_PUBLISH = 3;
+    public const TYPE_PUBACK = 4;
+    public const TYPE_PUBREC = 5;
+    public const TYPE_PUBREL = 6;
+    public const TYPE_PUBCOMP = 7;
+    public const TYPE_SUBSCRIBE = 8;
+    public const TYPE_SUBACK = 9;
+    public const TYPE_UNSUBSCRIBE = 10;
+    public const TYPE_UNSUBACK = 11;
+    public const TYPE_PINGREQ = 12;
+    public const TYPE_PINGRESP = 13;
+    public const TYPE_DISCONNECT = 14;
 
     /**
      * Returns the type of the packet.
@@ -44,7 +44,7 @@ interface Packet
      * @throws MalformedPacketException
      * @throws EndOfStreamException
      */
-    public function read(PacketStream $stream);
+    public function read(PacketStream $stream): void;
 
     /**
      * Writes the packet to the given stream.
@@ -53,7 +53,7 @@ interface Packet
      *
      * @return void
      */
-    public function write(PacketStream $stream);
+    public function write(PacketStream $stream): void;
 
     /**
      * Returns the serialized form of the packet.

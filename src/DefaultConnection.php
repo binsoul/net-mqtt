@@ -78,7 +78,7 @@ class DefaultConnection implements Connection
         return $this->password;
     }
 
-    public function getWill()
+    public function getWill(): ?Message
     {
         return $this->will;
     }

@@ -16,7 +16,7 @@ class IncomingPingFlow extends AbstractFlow
         return 'pong';
     }
 
-    public function start()
+    public function start(): ?Packet
     {
         $this->succeed();
 

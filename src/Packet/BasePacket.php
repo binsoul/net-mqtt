@@ -7,6 +7,7 @@ namespace BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
+use InvalidArgumentException;
 
 /**
  * Represents the base class for all packets.
@@ -41,7 +42,7 @@ abstract class BasePacket implements Packet
         return $output->getData();
     }
 
-    public function read(PacketStream $stream)
+    public function read(PacketStream $stream): void
     {
         $byte = $stream->readByte();
 
@@ -59,7 +60,7 @@ abstract class BasePacket implements Packet
         $this->readRemainingLength($stream);
     }
 
-    public function write(PacketStream $stream)
+    public function write(PacketStream $stream): void
     {
         $stream->writeByte(((static::$packetType & 0x0F) << 4) + ($this->packetFlags & 0x0F));
         $this->writeRemainingLength($stream);
@@ -74,7 +75,7 @@ abstract class BasePacket implements Packet
      *
      * @throws MalformedPacketException
      */
-    private function readRemainingLength(PacketStream $stream)
+    private function readRemainingLength(PacketStream $stream): void
     {
         $this->remainingPacketLength = 0;
         $multiplier = 1;
@@ -98,7 +99,7 @@ abstract class BasePacket implements Packet
      *
      * @return void
      */
-    private function writeRemainingLength(PacketStream $stream)
+    private function writeRemainingLength(PacketStream $stream): void
     {
         $x = $this->remainingPacketLength;
         do {
@@ -146,9 +147,9 @@ abstract class BasePacket implements Packet
      * @return void
      *
      * @throws MalformedPacketException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    protected function assertPacketFlags($value, $fromPacket = true)
+    protected function assertPacketFlags(int $value, bool $fromPacket = true): void
     {
         if ($this->packetFlags !== $value) {
             $this->throwException(
@@ -171,9 +172,9 @@ abstract class BasePacket implements Packet
      * @return void
      *
      * @throws MalformedPacketException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    protected function assertRemainingPacketLength($value = null, $fromPacket = true)
+    protected function assertRemainingPacketLength(?int $value = null, bool $fromPacket = true): void
     {
         if ($value === null && $this->remainingPacketLength === 0) {
             $this->throwException('Expected payload but remaining packet length is zero.', $fromPacket);
@@ -200,9 +201,9 @@ abstract class BasePacket implements Packet
      * @return void
      *
      * @throws MalformedPacketException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    protected function assertValidStringLength($value, $fromPacket = true)
+    protected function assertValidStringLength(string $value, bool $fromPacket = true): void
     {
         if (strlen($value) > 0xFFFF) {
             $this->throwException(
@@ -224,9 +225,9 @@ abstract class BasePacket implements Packet
      * @return void
      *
      * @throws MalformedPacketException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    protected function assertValidString($value, $fromPacket = true)
+    protected function assertValidString(string $value, bool $fromPacket = true): void
     {
         $this->assertValidStringLength($value, $fromPacket);
 
@@ -260,9 +261,9 @@ abstract class BasePacket implements Packet
      * @return void
      *
      * @throws MalformedPacketException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    protected function assertValidQosLevel($level, $fromPacket = true)
+    protected function assertValidQosLevel(int $level, bool $fromPacket = true): void
     {
         if ($level < 0 || $level > 2) {
             $this->throwException(
@@ -284,14 +285,14 @@ abstract class BasePacket implements Packet
      * @return void
      *
      * @throws MalformedPacketException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    protected function throwException($message, $fromPacket)
+    protected function throwException(string $message, bool $fromPacket): void
     {
         if ($fromPacket) {
             throw new MalformedPacketException($message);
         }
 
-        throw new \InvalidArgumentException($message);
+        throw new InvalidArgumentException($message);
     }
 }

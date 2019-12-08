@@ -34,7 +34,7 @@ class OutgoingDisconnectFlow extends AbstractFlow
         return 'disconnect';
     }
 
-    public function start()
+    public function start(): ?Packet
     {
         $this->succeed($this->connection);
 

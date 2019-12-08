@@ -48,7 +48,7 @@ class ConnectResponsePacket extends BasePacket
     protected static $packetType = Packet::TYPE_CONNACK;
     protected $remainingPacketLength = 2;
 
-    public function read(PacketStream $stream)
+    public function read(PacketStream $stream): void
     {
         parent::read($stream);
         $this->assertPacketFlags(0);
@@ -58,7 +58,7 @@ class ConnectResponsePacket extends BasePacket
         $this->returnCode = $stream->readByte();
     }
 
-    public function write(PacketStream $stream)
+    public function write(PacketStream $stream): void
     {
         $this->remainingPacketLength = 2;
         parent::write($stream);

@@ -21,7 +21,7 @@ class PacketStream
      *
      * @param string $data initial data of the stream
      */
-    public function __construct($data = '')
+    public function __construct(string $data = '')
     {
         $this->data = $data;
         $this->position = 0;
@@ -44,7 +44,7 @@ class PacketStream
      *
      * @return string
      */
-    public function read($count): string
+    public function read(int $count): string
     {
         $contentLength = strlen($this->data);
         if ($this->position > $contentLength || $count > $contentLength - $this->position) {
@@ -69,6 +69,8 @@ class PacketStream
      * Returns a single byte.
      *
      * @return int
+     *
+     * @throws EndOfStreamException
      */
     public function readByte(): int
     {
@@ -89,6 +91,8 @@ class PacketStream
      * Returns a length prefixed string.
      *
      * @return string
+     *
+     * @throws EndOfStreamException
      */
     public function readString(): string
     {
@@ -104,7 +108,7 @@ class PacketStream
      *
      * @return void
      */
-    public function write($value)
+    public function write(string $value): void
     {
         $this->data .= $value;
     }
@@ -116,7 +120,7 @@ class PacketStream
      *
      * @return void
      */
-    public function writeByte($value)
+    public function writeByte(int $value): void
     {
         $this->write(chr($value));
     }
@@ -128,7 +132,7 @@ class PacketStream
      *
      * @return void
      */
-    public function writeWord($value)
+    public function writeWord(int $value): void
     {
         $this->write(chr(($value & 0xFFFF) >> 8));
         $this->write(chr($value & 0xFF));
@@ -141,7 +145,7 @@ class PacketStream
      *
      * @return void
      */
-    public function writeString($string)
+    public function writeString(string $string): void
     {
         $this->writeWord(strlen($string));
         $this->write($string);
@@ -184,7 +188,7 @@ class PacketStream
      *
      * @return void
      */
-    public function seek($offset)
+    public function seek(int $offset): void
     {
         $this->position += $offset;
     }
@@ -206,7 +210,7 @@ class PacketStream
      *
      * @return void
      */
-    public function setPosition($value)
+    public function setPosition(int $value): void
     {
         $this->position = $value;
     }
@@ -216,7 +220,7 @@ class PacketStream
      *
      * @return void
      */
-    public function cut()
+    public function cut(): void
     {
         $this->data = (string) substr($this->data, $this->position);
         $this->position = 0;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt\Flow;
 
+use BinSoul\Net\Mqtt\Exception\UnknownPacketTypeException;
 use BinSoul\Net\Mqtt\Flow;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketFactory;
@@ -39,7 +40,7 @@ abstract class AbstractFlow implements Flow
         return false;
     }
 
-    public function next(Packet $packet)
+    public function next(Packet $packet): ?Packet
     {
         return null;
     }
@@ -71,7 +72,7 @@ abstract class AbstractFlow implements Flow
      *
      * @return void
      */
-    protected function succeed($result = null)
+    protected function succeed($result = null): void
     {
         $this->isFinished = true;
         $this->isSuccess = true;
@@ -85,7 +86,7 @@ abstract class AbstractFlow implements Flow
      *
      * @return void
      */
-    protected function fail($error = '')
+    protected function fail(string $error = ''): void
     {
         $this->isFinished = true;
         $this->isSuccess = false;
@@ -96,8 +97,10 @@ abstract class AbstractFlow implements Flow
      * @param int $type
      *
      * @return Packet
+     *
+     * @throws UnknownPacketTypeException
      */
-    protected function generatePacket($type): Packet
+    protected function generatePacket(int $type): Packet
     {
         return $this->packetFactory->build($type);
     }

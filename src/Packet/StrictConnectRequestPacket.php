@@ -6,13 +6,14 @@ namespace BinSoul\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\PacketStream;
+use InvalidArgumentException;
 
 /**
  * Represents the CONNECT packet with strict rules for client ids.
  */
 class StrictConnectRequestPacket extends ConnectRequestPacket
 {
-    public function read(PacketStream $stream)
+    public function read(PacketStream $stream): void
     {
         parent::read($stream);
 
@@ -26,9 +27,9 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
      *
      * @return void
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function setClientID(string $value)
+    public function setClientID(string $value): void
     {
         $this->assertValidClientID($value, false);
 
@@ -44,9 +45,9 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
      * @return void
      *
      * @throws MalformedPacketException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    private function assertValidClientID($value, $fromPacket)
+    private function assertValidClientID(string $value, bool $fromPacket): void
     {
         if (strlen($value) > 23) {
             $this->throwException(

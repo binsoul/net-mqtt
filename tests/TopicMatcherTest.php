@@ -175,7 +175,7 @@ class TopicMatcherTest extends TestCase
      *
      * @dataProvider patternsAndTopics
      */
-    public function test_can_match_topic($pattern, $topic, $expectedResult)
+    public function test_can_match_topic(string $pattern, string $topic, bool $expectedResult)
     {
         $result = $this->matcher->matches($pattern, $topic);
 

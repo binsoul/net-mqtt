@@ -41,7 +41,7 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
         return 'unsubscribe';
     }
 
-    public function start()
+    public function start(): ?Packet
     {
         /** @var UnsubscribeRequestPacket $packet */
         $packet = $this->generatePacket(Packet::TYPE_UNSUBSCRIBE);
@@ -61,7 +61,7 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
         return $packet->getIdentifier() === $this->identifier;
     }
 
-    public function next(Packet $packet)
+    public function next(Packet $packet): ?Packet
     {
         $this->succeed($this->subscriptions[0]);
 

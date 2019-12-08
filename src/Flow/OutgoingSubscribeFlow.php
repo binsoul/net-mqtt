@@ -10,6 +10,8 @@ use BinSoul\Net\Mqtt\Packet\SubscribeResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
 use BinSoul\Net\Mqtt\PacketIdentifierGenerator;
 use BinSoul\Net\Mqtt\Subscription;
+use LogicException;
+use RuntimeException;
 
 /**
  * Represents a flow starting with an outgoing SUBSCRIBE packet.
@@ -41,7 +43,7 @@ class OutgoingSubscribeFlow extends AbstractFlow
         return 'subscribe';
     }
 
-    public function start()
+    public function start(): ?Packet
     {
         /** @var SubscribeRequestPacket $packet */
         $packet = $this->generatePacket(Packet::TYPE_SUBSCRIBE);
@@ -62,10 +64,10 @@ class OutgoingSubscribeFlow extends AbstractFlow
         return $packet->getIdentifier() === $this->identifier;
     }
 
-    public function next(Packet $packet)
+    public function next(Packet $packet): ?Packet
     {
         if (!($packet instanceof SubscribeResponsePacket)) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf(
                     'SUBACK: Expected packet of class %s but got %s.',
                     SubscribeResponsePacket::class,
@@ -76,7 +78,7 @@ class OutgoingSubscribeFlow extends AbstractFlow
 
         $returnCodes = $packet->getReturnCodes();
         if (count($returnCodes) !== count($this->subscriptions)) {
-            throw new \LogicException(
+            throw new LogicException(
                 sprintf(
                     'SUBACK: Expected %d return codes but got %d.',
                     count($this->subscriptions),

@@ -20,7 +20,7 @@ class UnsubscribeRequestPacket extends BasePacket
     protected static $packetType = Packet::TYPE_UNSUBSCRIBE;
     protected $packetFlags = 2;
 
-    public function read(PacketStream $stream)
+    public function read(PacketStream $stream): void
     {
         parent::read($stream);
 
@@ -35,7 +35,7 @@ class UnsubscribeRequestPacket extends BasePacket
         } while (($stream->getPosition() - $originalPosition) <= $this->remainingPacketLength);
     }
 
-    public function write(PacketStream $stream)
+    public function write(PacketStream $stream): void
     {
         $data = new PacketStream();
 
@@ -65,7 +65,7 @@ class UnsubscribeRequestPacket extends BasePacket
      *
      * @return void
      */
-    public function setTopic(string $value)
+    public function setTopic(string $value): void
     {
         $this->topic = $value;
     }

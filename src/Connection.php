@@ -37,7 +37,7 @@ interface Connection
     /**
      * @return Message|null
      */
-    public function getWill();
+    public function getWill(): ?Message;
 
     /**
      * @return int

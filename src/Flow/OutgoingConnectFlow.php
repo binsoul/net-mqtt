@@ -42,7 +42,7 @@ class OutgoingConnectFlow extends AbstractFlow
         return 'connect';
     }
 
-    public function start()
+    public function start(): ?Packet
     {
         /** @var ConnectRequestPacket $packet */
         $packet = $this->generatePacket(Packet::TYPE_CONNECT);
@@ -65,7 +65,7 @@ class OutgoingConnectFlow extends AbstractFlow
         return $packet->getPacketType() === Packet::TYPE_CONNACK;
     }
 
-    public function next(Packet $packet)
+    public function next(Packet $packet): ?Packet
     {
         /** @var ConnectResponsePacket $packet */
         if ($packet->isSuccess()) {

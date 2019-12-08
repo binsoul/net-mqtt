@@ -6,6 +6,7 @@ namespace BinSoul\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
+use InvalidArgumentException;
 
 /**
  * Represents the SUBSCRIBE packet.
@@ -22,7 +23,7 @@ class SubscribeRequestPacket extends BasePacket
     protected static $packetType = Packet::TYPE_SUBSCRIBE;
     protected $packetFlags = 2;
 
-    public function read(PacketStream $stream)
+    public function read(PacketStream $stream): void
     {
         parent::read($stream);
         $this->assertPacketFlags(2);
@@ -36,7 +37,7 @@ class SubscribeRequestPacket extends BasePacket
         $this->assertValidString($this->topic);
     }
 
-    public function write(PacketStream $stream)
+    public function write(PacketStream $stream): void
     {
         $data = new PacketStream();
 
@@ -67,13 +68,13 @@ class SubscribeRequestPacket extends BasePacket
      *
      * @return void
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function setTopic($value)
+    public function setTopic(string $value): void
     {
         $this->assertValidString($value, false);
         if ($value === '') {
-            throw new \InvalidArgumentException('The topic must not be empty.');
+            throw new InvalidArgumentException('The topic must not be empty.');
         }
 
         $this->topic = $value;
@@ -96,9 +97,9 @@ class SubscribeRequestPacket extends BasePacket
      *
      * @return void
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function setQosLevel($value)
+    public function setQosLevel(int $value): void
     {
         $this->assertValidQosLevel($value, false);
 

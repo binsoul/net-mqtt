@@ -14,7 +14,7 @@ class DisconnectRequestPacket extends BasePacket
 {
     protected static $packetType = Packet::TYPE_DISCONNECT;
 
-    public function read(PacketStream $stream)
+    public function read(PacketStream $stream): void
     {
         parent::read($stream);
 

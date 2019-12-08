@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt;
 
+use Exception;
+
 /**
  * Represents a sequence of packages exchanged between clients and brokers.
  */
@@ -21,9 +23,9 @@ interface Flow
      *
      * @return Packet|null First packet of the flow
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function start();
+    public function start(): ?Packet;
 
     /**
      * Indicates if the flow can handle the given packet.
@@ -41,7 +43,7 @@ interface Flow
      *
      * @return Packet|null Next packet of the flow
      */
-    public function next(Packet $packet);
+    public function next(Packet $packet): ?Packet;
 
     /**
      * Indicates if the flow is finished.

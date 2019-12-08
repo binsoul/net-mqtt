@@ -14,7 +14,7 @@ class PingRequestPacket extends BasePacket
 {
     protected static $packetType = Packet::TYPE_PINGREQ;
 
-    public function read(PacketStream $stream)
+    public function read(PacketStream $stream): void
     {
         parent::read($stream);
 

@@ -7,6 +7,7 @@ namespace BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
+use InvalidArgumentException;
 
 /**
  * Represents the SUBACK packet.
@@ -30,7 +31,7 @@ class SubscribeResponsePacket extends BasePacket
 
     protected static $packetType = Packet::TYPE_SUBACK;
 
-    public function read(PacketStream $stream)
+    public function read(PacketStream $stream): void
     {
         parent::read($stream);
         $this->assertPacketFlags(0);
@@ -47,7 +48,7 @@ class SubscribeResponsePacket extends BasePacket
         }
     }
 
-    public function write(PacketStream $stream)
+    public function write(PacketStream $stream): void
     {
         $data = new PacketStream();
 
@@ -69,7 +70,7 @@ class SubscribeResponsePacket extends BasePacket
      *
      * @return bool
      */
-    public function isError($returnCode): bool
+    public function isError(int $returnCode): bool
     {
         return $returnCode === 128;
     }
@@ -81,7 +82,7 @@ class SubscribeResponsePacket extends BasePacket
      *
      * @return string
      */
-    public function getReturnCodeName($returnCode): string
+    public function getReturnCodeName(int $returnCode): string
     {
         if (isset(self::$qosLevels[$returnCode])) {
             return self::$qosLevels[$returnCode][0];
@@ -107,9 +108,9 @@ class SubscribeResponsePacket extends BasePacket
      *
      * @return void
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function setReturnCodes(array $value)
+    public function setReturnCodes(array $value): void
     {
         foreach ($value as $returnCode) {
             $this->assertValidReturnCode($returnCode, false);
@@ -127,9 +128,9 @@ class SubscribeResponsePacket extends BasePacket
      * @return void
      *
      * @throws MalformedPacketException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    private function assertValidReturnCode($returnCode, $fromPacket = true)
+    private function assertValidReturnCode(int $returnCode, bool $fromPacket = true): void
     {
         if (!in_array($returnCode, [0, 1, 2, 128], true)) {
             $this->throwException(

@@ -6,6 +6,7 @@ namespace BinSoul\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
+use InvalidArgumentException;
 
 /**
  * Represents the PUBLISH packet.
@@ -21,7 +22,7 @@ class PublishRequestPacket extends BasePacket
 
     protected static $packetType = Packet::TYPE_PUBLISH;
 
-    public function read(PacketStream $stream)
+    public function read(PacketStream $stream): void
     {
         parent::read($stream);
         $this->assertRemainingPacketLength();
@@ -40,7 +41,7 @@ class PublishRequestPacket extends BasePacket
         $this->assertValidString($this->topic);
     }
 
-    public function write(PacketStream $stream)
+    public function write(PacketStream $stream): void
     {
         $data = new PacketStream();
 
@@ -74,13 +75,13 @@ class PublishRequestPacket extends BasePacket
      *
      * @return void
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function setTopic($value)
+    public function setTopic(string $value): void
     {
         $this->assertValidString($value, false);
         if ($value === '') {
-            throw new \InvalidArgumentException('The topic must not be empty.');
+            throw new InvalidArgumentException('The topic must not be empty.');
         }
 
         $this->topic = $value;
@@ -103,7 +104,7 @@ class PublishRequestPacket extends BasePacket
      *
      * @return void
      */
-    public function setPayload($value)
+    public function setPayload(string $value): void
     {
         $this->payload = $value;
     }
@@ -125,7 +126,7 @@ class PublishRequestPacket extends BasePacket
      *
      * @return void
      */
-    public function setDuplicate($value)
+    public function setDuplicate(bool $value): void
     {
         if ($value) {
             $this->packetFlags |= 8;
@@ -151,7 +152,7 @@ class PublishRequestPacket extends BasePacket
      *
      * @return void
      */
-    public function setRetained($value)
+    public function setRetained(bool $value): void
     {
         if ($value) {
             $this->packetFlags |= 1;
@@ -177,9 +178,9 @@ class PublishRequestPacket extends BasePacket
      *
      * @return void
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function setQosLevel($value)
+    public function setQosLevel(int $value): void
     {
         $this->assertValidQosLevel($value, false);
 

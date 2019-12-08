@@ -29,7 +29,7 @@ class DefaultMessage implements Message
      * @param bool   $retain
      * @param bool   $isDuplicate
      */
-    public function __construct($topic, $payload = '', $qosLevel = 0, $retain = false, $isDuplicate = false)
+    public function __construct(string $topic, string $payload = '', int $qosLevel = 0, bool $retain = false, bool $isDuplicate = false)
     {
         $this->topic = $topic;
         $this->payload = $payload;

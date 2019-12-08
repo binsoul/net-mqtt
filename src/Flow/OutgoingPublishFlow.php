@@ -48,7 +48,7 @@ class OutgoingPublishFlow extends AbstractFlow
         return 'publish';
     }
 
-    public function start()
+    public function start(): ?Packet
     {
         /** @var PublishRequestPacket $packet */
         $packet = $this->generatePacket(Packet::TYPE_PUBLISH);
@@ -95,7 +95,7 @@ class OutgoingPublishFlow extends AbstractFlow
         return false;
     }
 
-    public function next(Packet $packet)
+    public function next(Packet $packet): ?Packet
     {
         $packetType = $packet->getPacketType();
 

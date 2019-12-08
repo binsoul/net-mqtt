@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt;
 
+use Exception;
+
 /**
  * Provides a default implementation of the {@see PacketIdentifierGenerator} and the {@see ClientIdentifierGenerator} interface.
  */
@@ -26,7 +28,7 @@ class DefaultIdentifierGenerator implements PacketIdentifierGenerator, ClientIde
     {
         try {
             $data = random_bytes(9);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $data = '';
             for ($i = 1; $i <= 8; ++$i) {
                 $data = chr(mt_rand(0, 255)).$data;

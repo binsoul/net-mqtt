@@ -20,7 +20,7 @@ class DefaultSubscription implements Subscription
      * @param string $filter
      * @param int    $qosLevel
      */
-    public function __construct($filter, $qosLevel = 0)
+    public function __construct(string $filter, int $qosLevel = 0)
     {
         $this->filter = $filter;
         $this->qosLevel = $qosLevel;

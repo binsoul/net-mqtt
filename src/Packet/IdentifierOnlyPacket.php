@@ -15,7 +15,7 @@ abstract class IdentifierOnlyPacket extends BasePacket
 
     protected $remainingPacketLength = 2;
 
-    public function read(PacketStream $stream)
+    public function read(PacketStream $stream): void
     {
         parent::read($stream);
         $this->assertPacketFlags($this->getExpectedPacketFlags());
@@ -24,7 +24,7 @@ abstract class IdentifierOnlyPacket extends BasePacket
         $this->identifier = $stream->readWord();
     }
 
-    public function write(PacketStream $stream)
+    public function write(PacketStream $stream): void
     {
         $this->remainingPacketLength = 2;
         parent::write($stream);

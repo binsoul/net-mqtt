@@ -7,6 +7,7 @@ namespace BinSoul\Net\Mqtt;
 use BinSoul\Net\Mqtt\Exception\EndOfStreamException;
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Exception\UnknownPacketTypeException;
+use Throwable;
 
 /**
  * Provides methods to parse a stream of bytes into packets.
@@ -38,7 +39,7 @@ class StreamParser
      *
      * @return void
      */
-    public function onError($callback)
+    public function onError(callable $callback): void
     {
         $this->errorCallback = $callback;
     }
@@ -50,7 +51,7 @@ class StreamParser
      *
      * @return Packet[]
      */
-    public function push($data): array
+    public function push(string $data): array
     {
         $this->buffer->write($data);
 
@@ -84,11 +85,11 @@ class StreamParser
     /**
      * Executes the registered error callback.
      *
-     * @param \Throwable $exception
+     * @param Throwable $exception
      *
      * @return void
      */
-    private function handleError($exception)
+    private function handleError(Throwable $exception): void
     {
         if ($this->errorCallback !== null) {
             $callback = $this->errorCallback;

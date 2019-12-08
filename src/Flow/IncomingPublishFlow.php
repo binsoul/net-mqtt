@@ -42,7 +42,7 @@ class IncomingPublishFlow extends AbstractFlow
         return 'message';
     }
 
-    public function start()
+    public function start(): ?Packet
     {
         $packet = null;
         $emit = true;
@@ -75,7 +75,7 @@ class IncomingPublishFlow extends AbstractFlow
         return $packet->getIdentifier() === $this->identifier;
     }
 
-    public function next(Packet $packet)
+    public function next(Packet $packet): ?Packet
     {
         $this->succeed($this->message);
 

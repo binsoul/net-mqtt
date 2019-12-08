@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt\Packet;
 
+use InvalidArgumentException;
+
 /**
  * Provides methods for packets with an identifier.
  */
@@ -36,7 +38,7 @@ trait IdentifiablePacket
      *
      * @return int|null
      */
-    public function getIdentifier()
+    public function getIdentifier(): ?int
     {
         return $this->identifier;
     }
@@ -48,10 +50,10 @@ trait IdentifiablePacket
      *
      * @return void
      */
-    public function setIdentifier($value)
+    public function setIdentifier(?int $value): void
     {
         if ($value !== null && ($value < 0 || $value > 0xFFFF)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'Expected an identifier between 0x0000 and 0xFFFF but got %x',
                     $value

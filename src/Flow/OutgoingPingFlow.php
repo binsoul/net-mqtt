@@ -16,7 +16,7 @@ class OutgoingPingFlow extends AbstractFlow
         return 'ping';
     }
 
-    public function start()
+    public function start(): ?Packet
     {
         return $this->generatePacket(Packet::TYPE_PINGREQ);
     }
@@ -26,7 +26,7 @@ class OutgoingPingFlow extends AbstractFlow
         return $packet->getPacketType() === Packet::TYPE_PINGRESP;
     }
 
-    public function next(Packet $packet)
+    public function next(Packet $packet): ?Packet
     {
         $this->succeed();
 
