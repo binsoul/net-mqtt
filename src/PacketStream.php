@@ -81,6 +81,8 @@ class PacketStream
      * Returns a single word.
      *
      * @return int
+     *
+     * @throws EndOfStreamException
      */
     public function readWord(): int
     {
