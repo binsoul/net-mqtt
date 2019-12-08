@@ -424,7 +424,7 @@ class ConnectRequestPacket extends BasePacket
             $this->assertValidQosLevel($this->getWillQosLevel());
         } else {
             if ($this->getWillQosLevel() > 0) {
-                new MalformedPacketException(
+                throw new MalformedPacketException(
                     sprintf(
                         'Expected a will quality of service level of zero but got %d.',
                         $this->getWillQosLevel()
@@ -433,7 +433,7 @@ class ConnectRequestPacket extends BasePacket
             }
 
             if ($this->isWillRetained()) {
-                new MalformedPacketException('There is not will but the will retain flag is set.');
+                throw new MalformedPacketException('There is not will but the will retain flag is set.');
             }
         }
     }

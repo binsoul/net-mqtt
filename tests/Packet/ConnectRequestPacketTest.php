@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BinSoul\Test\Net\Mqtt\Packet;
 
+use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet\ConnectRequestPacket;
 use BinSoul\Net\Mqtt\PacketStream;
 use InvalidArgumentException;
@@ -183,7 +184,25 @@ class ConnectRequestPacketTest extends TestCase
         $this->assertEquals($this->getDefaultData(), (string) $packet);
     }
 
-    public function test_cannot_invalid_protocol_level()
+    public function test_packet_with_without_will_but_will_qos(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\x10\"\x00\x04MQTT\x04\x18\x00\x0a\x00\x06foobar\x00\x05topic\x00\x07message";
+        $stream = new PacketStream($data);
+        $packet = new ConnectRequestPacket();
+        $packet->read($stream);
+    }
+
+    public function test_packet_with_without_will_but_will_retained(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\x10\"\x00\x04MQTT\x04\x20\x00\x0a\x00\x06foobar\x00\x05topic\x00\x07message";
+        $stream = new PacketStream($data);
+        $packet = new ConnectRequestPacket();
+        $packet->read($stream);
+    }
+
+    public function test_cannot_set_invalid_protocol_level()
     {
         $this->expectException(InvalidArgumentException::class);
 
