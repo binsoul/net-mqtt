@@ -57,4 +57,18 @@ class PublishCompletePacketTest extends TestCase
 
         $this->assertEquals(Packet::TYPE_PUBCOMP, $packet->getPacketType());
     }
+
+    public function test_can_read_what_it_writes()
+    {
+        $packet = new PublishCompletePacket();
+        $packet->setIdentifier(0);
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+        $stream->setPosition(0);
+
+        $packet = new PublishCompletePacket();
+        $packet->read($stream);
+        $this->assertEquals($this->getDefaultData(), $stream->getData());
+    }
 }

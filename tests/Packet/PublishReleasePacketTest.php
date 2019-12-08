@@ -57,4 +57,18 @@ class PublishReleasePacketTest extends TestCase
 
         $this->assertEquals(Packet::TYPE_PUBREL, $packet->getPacketType());
     }
+
+    public function test_can_read_what_it_writes()
+    {
+        $packet = new PublishReleasePacket();
+        $packet->setIdentifier(0);
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+        $stream->setPosition(0);
+
+        $packet = new PublishReleasePacket();
+        $packet->read($stream);
+        $this->assertEquals($this->getDefaultData(), $stream->getData());
+    }
 }

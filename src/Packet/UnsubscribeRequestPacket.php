@@ -17,7 +17,7 @@ class UnsubscribeRequestPacket extends BasePacket
     use IdentifiablePacket;
 
     /** @var string[] */
-    private $topics;
+    private $topics = [];
 
     protected static $packetType = Packet::TYPE_UNSUBSCRIBE;
     protected $packetFlags = 2;

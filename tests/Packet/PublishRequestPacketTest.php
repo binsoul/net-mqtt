@@ -181,4 +181,23 @@ class PublishRequestPacketTest extends TestCase
         $this->assertFalse($packet->isRetained());
         $this->assertEquals('message', $packet->getPayload());
     }
+
+    public function test_can_read_what_it_writes()
+    {
+        $packet = new PublishRequestPacket();
+        $packet->setIdentifier(0);
+        $packet->setTopic('topic');
+        $packet->setQosLevel(0);
+        $packet->setDuplicate(false);
+        $packet->setRetained(false);
+        $packet->setPayload('message');
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+        $stream->setPosition(0);
+
+        $packet = new PublishRequestPacket();
+        $packet->read($stream);
+        $this->assertEquals($this->getDefaultData(), $stream->getData());
+    }
 }

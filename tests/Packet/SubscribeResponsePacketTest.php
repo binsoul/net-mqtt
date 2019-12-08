@@ -83,4 +83,19 @@ class SubscribeResponsePacketTest extends TestCase
 
         $this->assertEquals(Packet::TYPE_SUBACK, $packet->getPacketType());
     }
+
+    public function test_can_read_what_it_writes()
+    {
+        $packet = new SubscribeResponsePacket();
+        $packet->setIdentifier(0);
+        $packet->setReturnCodes([0]);
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+        $stream->setPosition(0);
+
+        $packet = new SubscribeResponsePacket();
+        $packet->read($stream);
+        $this->assertEquals($this->getDefaultData(), $stream->getData());
+    }
 }

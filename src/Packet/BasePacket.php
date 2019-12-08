@@ -45,12 +45,12 @@ abstract class BasePacket implements Packet
     public function read(PacketStream $stream): void
     {
         $byte = $stream->readByte();
-
-        if ($byte >> 4 !== static::$packetType) {
+        $packetType = $byte >> 4;
+        if ($packetType !== static::$packetType) {
             throw new MalformedPacketException(
                 sprintf(
                     'Expected packet type %02x but got %02x.',
-                    $byte >> 4,
+                    $packetType,
                     static::$packetType
                 )
             );

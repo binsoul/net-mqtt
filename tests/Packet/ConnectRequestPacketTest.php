@@ -264,4 +264,20 @@ class ConnectRequestPacketTest extends TestCase
         $packet = $this->createDefaultPacket();
         $packet->setWill('topic', 'message', 10, false);
     }
+
+    public function test_can_read_what_it_writes()
+    {
+        $packet = $this->createDefaultPacket();
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+        $stream->setPosition(0);
+
+        $packet = new ConnectRequestPacket();
+        $packet->read($stream);
+        $this->assertEquals(4, $packet->getProtocolLevel());
+        $this->assertTrue($packet->isCleanSession());
+        $this->assertEquals(10, $packet->getKeepAlive());
+        $this->assertEquals('foobar', $packet->getClientID());
+    }
 }

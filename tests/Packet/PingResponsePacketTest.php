@@ -33,4 +33,17 @@ class PingResponsePacketTest extends TestCase
 
         $this->assertEquals(Packet::TYPE_PINGRESP, $packet->getPacketType());
     }
+
+    public function test_can_read_what_it_writes()
+    {
+        $packet = new PingResponsePacket();
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+        $stream->setPosition(0);
+
+        $packet = new PingResponsePacket();
+        $packet->read($stream);
+        $this->assertEquals($this->getDefaultData(), $stream->getData());
+    }
 }

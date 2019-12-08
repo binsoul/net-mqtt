@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt;
 
+use InvalidArgumentException;
+
 /**
  * Provides a default implementation of the {@see Message} interface.
  */
@@ -31,6 +33,8 @@ class DefaultMessage implements Message
      */
     public function __construct(string $topic, string $payload = '', int $qosLevel = 0, bool $retain = false, bool $isDuplicate = false)
     {
+        $this->assertValidQosLevel($qosLevel);
+
         $this->topic = $topic;
         $this->payload = $payload;
         $this->isRetained = $retain;
@@ -117,5 +121,26 @@ class DefaultMessage implements Message
         $result->isDuplicate = false;
 
         return $result;
+    }
+
+    /**
+     * Asserts that the given quality of service level is valid.
+     *
+     * @param int  $level
+     *
+     * @return void
+     *
+     * @throws InvalidArgumentException
+     */
+    private function assertValidQosLevel(int $level): void
+    {
+        if ($level < 0 || $level > 2) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Expected a quality of service level between 0 and 2 but got %d.',
+                    $level
+                )
+            );
+        }
     }
 }

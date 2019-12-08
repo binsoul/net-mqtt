@@ -109,8 +109,22 @@ class ConnectResponsePacketTest extends TestCase
     {
         $this->expectException(MalformedPacketException::class);
 
-        $stream = new PacketStream("\x02\x00\x00\x00");
+        $stream = new PacketStream("\xf0\x02\x00\x00");
         $packet = new ConnectResponsePacket();
         $packet->read($stream);
+    }
+
+    public function test_can_read_what_it_writes()
+    {
+        $packet = $this->createDefaultPacket();
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+        $stream->setPosition(0);
+
+        $packet = new ConnectResponsePacket();
+        $packet->read($stream);
+        $this->assertEquals(0, $packet->getReturnCode());
+        $this->assertFalse($packet->isSessionPresent());
     }
 }

@@ -86,4 +86,20 @@ class SubscribeRequestPacketTest extends TestCase
 
         $this->assertEquals(Packet::TYPE_SUBSCRIBE, $packet->getPacketType());
     }
+
+    public function test_can_read_what_it_writes()
+    {
+        $packet = new SubscribeRequestPacket();
+        $packet->setIdentifier(1);
+        $packet->setTopic('#');
+        $packet->setQosLevel(0);
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+        $stream->setPosition(0);
+
+        $packet = new SubscribeRequestPacket();
+        $packet->read($stream);
+        $this->assertEquals($this->getDefaultData(), $stream->getData());
+    }
 }

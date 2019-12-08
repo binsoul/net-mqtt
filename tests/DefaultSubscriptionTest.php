@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BinSoul\Test\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\DefaultSubscription;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class DefaultSubscriptionTest extends TestCase
@@ -14,8 +15,9 @@ class DefaultSubscriptionTest extends TestCase
         $original = new DefaultSubscription('foo', 1);
         $clone = $original->withFilter('bar');
 
-        self::assertEquals('bar', $clone->getFilter());
-        self::assertEquals($original->getQosLevel(), $clone->getQosLevel());
+        $this->assertNotEquals($original, $clone);
+        $this->assertEquals('bar', $clone->getFilter());
+        $this->assertEquals($original->getQosLevel(), $clone->getQosLevel());
     }
 
     public function test_returns_instance_with_different_qos()
@@ -23,7 +25,20 @@ class DefaultSubscriptionTest extends TestCase
         $original = new DefaultSubscription('foo', 1);
         $clone = $original->withQosLevel(2);
 
-        self::assertEquals($original->getFilter(), $clone->getFilter());
-        self::assertEquals(2, $clone->getQosLevel());
+        $this->assertNotEquals($original, $clone);
+        $this->assertEquals($original->getFilter(), $clone->getFilter());
+        $this->assertEquals(2, $clone->getQosLevel());
+    }
+
+    public function test_negative_qos_level()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new DefaultSubscription('topic', -1);
+    }
+
+    public function test_too_large_qos_level()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new DefaultSubscription('topic', 10);
     }
 }

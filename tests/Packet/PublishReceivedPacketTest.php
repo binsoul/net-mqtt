@@ -57,4 +57,18 @@ class PublishReceivedPacketTest extends TestCase
 
         $this->assertEquals(Packet::TYPE_PUBREC, $packet->getPacketType());
     }
+
+    public function test_can_read_what_it_writes()
+    {
+        $packet = new PublishReceivedPacket();
+        $packet->setIdentifier(0);
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+        $stream->setPosition(0);
+
+        $packet = new PublishReceivedPacket();
+        $packet->read($stream);
+        $this->assertEquals($this->getDefaultData(), $stream->getData());
+    }
 }

@@ -27,7 +27,7 @@ class SubscribeResponsePacket extends BasePacket
     ];
 
     /** @var int[] */
-    private $returnCodes;
+    private $returnCodes = [];
 
     protected static $packetType = Packet::TYPE_SUBACK;
 

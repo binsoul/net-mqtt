@@ -33,4 +33,17 @@ class DisconnectRequestPacketTest extends TestCase
 
         $this->assertEquals(Packet::TYPE_DISCONNECT, $packet->getPacketType());
     }
+
+    public function test_can_read_what_it_writes()
+    {
+        $packet = new DisconnectRequestPacket();
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+        $stream->setPosition(0);
+
+        $packet = new DisconnectRequestPacket();
+        $packet->read($stream);
+        $this->assertEquals($this->getDefaultData(), $stream->getData());
+    }
 }

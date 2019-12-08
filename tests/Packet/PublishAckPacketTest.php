@@ -57,4 +57,18 @@ class PublishAckPacketTest extends TestCase
 
         $this->assertEquals(Packet::TYPE_PUBACK, $packet->getPacketType());
     }
+
+    public function test_can_read_what_it_writes()
+    {
+        $packet = new PublishAckPacket();
+        $packet->setIdentifier(0);
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+        $stream->setPosition(0);
+
+        $packet = new PublishAckPacket();
+        $packet->read($stream);
+        $this->assertEquals($this->getDefaultData(), $stream->getData());
+    }
 }

@@ -84,4 +84,19 @@ class UnsubscribeRequestPacketTest extends TestCase
 
         $this->assertEquals(Packet::TYPE_UNSUBSCRIBE, $packet->getPacketType());
     }
+
+    public function test_can_read_what_it_writes()
+    {
+        $packet = new UnsubscribeRequestPacket();
+        $packet->setIdentifier(1);
+        $packet->setTopics(['#']);
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+        $stream->setPosition(0);
+
+        $packet = new UnsubscribeRequestPacket();
+        $packet->read($stream);
+        $this->assertEquals($this->getDefaultData(), $stream->getData());
+    }
 }
