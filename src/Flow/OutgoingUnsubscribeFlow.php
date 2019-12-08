@@ -32,7 +32,7 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
     {
         parent::__construct($packetFactory);
 
-        $this->subscriptions = array_values($subscriptions);
+        $this->subscriptions = $subscriptions;
         $this->identifier = $generator->generatePacketIdentifier();
     }
 
@@ -68,7 +68,7 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
 
     public function next(Packet $packet): ?Packet
     {
-        $this->succeed($this->subscriptions[0]);
+        $this->succeed($this->subscriptions);
 
         return null;
     }
