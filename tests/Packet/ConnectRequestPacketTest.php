@@ -104,6 +104,7 @@ class ConnectRequestPacketTest extends TestCase
         $packet = new ConnectRequestPacket();
         $packet->read($stream);
 
+        $this->assertTrue($packet->hasUsername());
         $this->assertEquals('üsername', $packet->getUsername());
 
         $this->assertEquals($data, (string) $packet);
@@ -111,9 +112,13 @@ class ConnectRequestPacketTest extends TestCase
         $packet = $this->createDefaultPacket();
         $packet->setUsername('üsername');
 
+        $this->assertTrue($packet->hasUsername());
+        $this->assertEquals('üsername', $packet->getUsername());
         $this->assertEquals($data, (string) $packet);
 
         $packet->setUsername('');
+        $this->assertFalse($packet->hasUsername());
+        $this->assertEquals('', $packet->getUsername());
         $this->assertEquals($this->getDefaultData(), (string) $packet);
     }
 
