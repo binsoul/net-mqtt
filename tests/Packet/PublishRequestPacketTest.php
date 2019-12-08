@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace BinSoul\Test\Net\Mqtt\Packet;
 
-use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\PublishRequestPacket;
-use BinSoul\Net\Mqtt\Packet\UnsubscribeRequestPacket;
-use BinSoul\Net\Mqtt\Packet\UnsubscribeResponsePacket;
 use BinSoul\Net\Mqtt\PacketStream;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -139,6 +136,22 @@ class PublishRequestPacketTest extends TestCase
         $packet->write($stream);
 
         $this->assertNotNull($packet->getIdentifier());
+    }
+
+    public function test_write_large_payload(): void
+    {
+        $packet = new PublishRequestPacket();
+        $packet->setIdentifier(10);
+        $packet->setTopic('topic');
+        $packet->setQosLevel(0);
+        $packet->setDuplicate(false);
+        $packet->setRetained(false);
+        $packet->setPayload(str_repeat('x', 1024*1024));
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+
+        $this->assertGreaterThan(1024*1024, $stream->length());
     }
 
     public function test_read_qos_level0(): void

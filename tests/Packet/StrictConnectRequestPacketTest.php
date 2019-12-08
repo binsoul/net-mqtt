@@ -22,6 +22,19 @@ class StrictConnectRequestPacketTest extends TestCase
         return $packet;
     }
 
+    public function test_defaults()
+    {
+        $packet = $this->createDefaultPacket();
+        $stream = new PacketStream();
+        $packet->write($stream);
+
+        $stream->setPosition(0);
+        $packet = new StrictConnectRequestPacket();
+        $packet->read($stream);
+
+        $this->assertEquals('foobar', $packet->getClientID());
+    }
+
     public function test_too_long_client_id_in_packet()
     {
         $this->expectException(MalformedPacketException::class);

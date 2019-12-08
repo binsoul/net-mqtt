@@ -123,11 +123,25 @@ class ConnectRequestPacketTest extends TestCase
         $this->assertEquals($this->getDefaultData(), (string) $packet);
     }
 
-    public function test_cannot_set_invalid_username()
+    public function test_cannot_set_too_large_username()
     {
         $this->expectException(InvalidArgumentException::class);
         $packet = $this->createDefaultPacket();
         $packet->setUsername(str_repeat('x', 0x10000));
+    }
+
+    public function test_cannot_set_invalid_utf8()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $packet = $this->createDefaultPacket();
+        $packet->setUsername("\xfe\xfe\xff\xff");
+    }
+
+    public function test_cannot_set_out_of_range_utf8()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $packet = $this->createDefaultPacket();
+        $packet->setUsername("abc\x00\x00");
     }
 
     public function test_packet_with_password()
@@ -184,7 +198,7 @@ class ConnectRequestPacketTest extends TestCase
         $this->assertEquals($this->getDefaultData(), (string) $packet);
     }
 
-    public function test_packet_with_without_will_but_will_qos(): void
+    public function test_packet_without_will_but_will_qos(): void
     {
         $this->expectException(MalformedPacketException::class);
         $data = "\x10\"\x00\x04MQTT\x04\x18\x00\x0a\x00\x06foobar\x00\x05topic\x00\x07message";
@@ -193,10 +207,19 @@ class ConnectRequestPacketTest extends TestCase
         $packet->read($stream);
     }
 
-    public function test_packet_with_without_will_but_will_retained(): void
+    public function test_packet_without_will_but_will_retained(): void
     {
         $this->expectException(MalformedPacketException::class);
         $data = "\x10\"\x00\x04MQTT\x04\x20\x00\x0a\x00\x06foobar\x00\x05topic\x00\x07message";
+        $stream = new PacketStream($data);
+        $packet = new ConnectRequestPacket();
+        $packet->read($stream);
+    }
+
+    public function test_packet_without_remaining_length(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\x10\x00\x00\x04MQTT\x04\x02\x00\x0a\x00\x06foobar";
         $stream = new PacketStream($data);
         $packet = new ConnectRequestPacket();
         $packet->read($stream);

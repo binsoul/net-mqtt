@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BinSoul\Test\Net\Mqtt\Packet;
 
+use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet\ConnectResponsePacket;
 use BinSoul\Net\Mqtt\PacketStream;
 use PHPUnit\Framework\TestCase;
@@ -75,5 +76,41 @@ class ConnectResponsePacketTest extends TestCase
         $this->assertTrue($packet->isSuccess());
         $this->assertFalse($packet->isError());
         $this->assertEquals('Connection accepted', $packet->getErrorName());
+    }
+
+    public function test_remaining_length(): void
+    {
+        $stream = new PacketStream("\x20\x02\x00\x00");
+        $packet = new ConnectResponsePacket();
+        $packet->read($stream);
+
+        $this->assertEquals(2, $packet->getRemainingPacketLength());
+    }
+
+    public function test_packet_without_remaining_length(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+
+        $stream = new PacketStream("\x20\x00\x00\x00");
+        $packet = new ConnectResponsePacket();
+        $packet->read($stream);
+    }
+
+    public function test_packet_huge_remaining_length(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+
+        $stream = new PacketStream("\x20\xff\xff\xff\xff\xff\x00\x00");
+        $packet = new ConnectResponsePacket();
+        $packet->read($stream);
+    }
+
+    public function test_packet_with_wrong_type(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+
+        $stream = new PacketStream("\x02\x00\x00\x00");
+        $packet = new ConnectResponsePacket();
+        $packet->read($stream);
     }
 }

@@ -173,7 +173,7 @@ abstract class BasePacket implements Packet
     protected function assertRemainingPacketLength(?int $value = null): void
     {
         if ($value === null && $this->remainingPacketLength === 0) {
-            new MalformedPacketException('Expected payload but remaining packet length is zero.');
+            throw new MalformedPacketException('Expected payload but remaining packet length is zero.');
         }
 
         if ($value !== null && $this->remainingPacketLength !== $value) {
@@ -222,7 +222,7 @@ abstract class BasePacket implements Packet
         $this->assertValidStringLength($value);
 
         if (!mb_check_encoding($value, 'UTF-8')) {
-            new MalformedPacketException(
+            throw new MalformedPacketException(
                 sprintf(
                     'The string "%s" is not well-formed UTF-8.',
                     substr($value, 0, 50)
@@ -231,7 +231,7 @@ abstract class BasePacket implements Packet
         }
 
         if (preg_match('/[\xD8-\xDF][\x00-\xFF]|\x00\x00/x', $value)) {
-            new MalformedPacketException(
+            throw new MalformedPacketException(
                 sprintf(
                     'The string "%s" contains invalid characters.',
                     substr($value, 0, 50)
