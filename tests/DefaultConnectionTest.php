@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class DefaultConnectionTest extends TestCase
 {
-    public function test_has_sane_defaults()
+    public function test_has_sane_defaults(): void
     {
         $conn = new DefaultConnection();
 
@@ -23,7 +23,7 @@ class DefaultConnectionTest extends TestCase
         self::assertTrue($conn->isCleanSession());
     }
 
-    public function test_returns_instance_with_different_credentials()
+    public function test_returns_instance_with_different_credentials(): void
     {
         $original = new DefaultConnection('foo', 'bar');
         $clone = $original->withCredentials('username', 'password');
@@ -33,7 +33,7 @@ class DefaultConnectionTest extends TestCase
         self::assertEquals('password', $clone->getPassword());
     }
 
-    public function test_returns_instance_with_different_will()
+    public function test_returns_instance_with_different_will(): void
     {
         $will = new DefaultMessage('topic');
         $original = new DefaultConnection();
@@ -43,7 +43,7 @@ class DefaultConnectionTest extends TestCase
         self::assertSame($will, $clone->getWill());
     }
 
-    public function test_returns_instance_with_different_client_id()
+    public function test_returns_instance_with_different_client_id(): void
     {
         $original = new DefaultConnection();
         $clone = $original->withClientID('clientid');
@@ -52,7 +52,7 @@ class DefaultConnectionTest extends TestCase
         self::assertEquals('clientid', $clone->getClientID());
     }
 
-    public function test_returns_instance_with_different_protocol()
+    public function test_returns_instance_with_different_protocol(): void
     {
         $original = new DefaultConnection();
         $clone = $original->withProtocol(3);
@@ -61,7 +61,7 @@ class DefaultConnectionTest extends TestCase
         self::assertEquals(3, $clone->getProtocol());
     }
 
-    public function test_returns_instance_with_different_keepalive()
+    public function test_returns_instance_with_different_keepalive(): void
     {
         $original = new DefaultConnection();
         $clone = $original->withKeepAlive(30);

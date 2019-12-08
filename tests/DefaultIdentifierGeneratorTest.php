@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class DefaultIdentifierGeneratorTest extends TestCase
 {
-    public function test_generates_packet_id()
+    public function test_generates_packet_id(): void
     {
         $generator = new DefaultIdentifierGenerator();
 
@@ -27,7 +27,7 @@ class DefaultIdentifierGeneratorTest extends TestCase
         }
     }
 
-    public function test_wraps_packet_ids()
+    public function test_wraps_packet_ids(): void
     {
         $generator = new DefaultIdentifierGenerator();
 
@@ -38,7 +38,7 @@ class DefaultIdentifierGeneratorTest extends TestCase
         $this->assertEquals(1, $generator->generatePacketIdentifier());
     }
 
-    public function test_generates_client_id()
+    public function test_generates_client_id(): void
     {
         $generator = new DefaultIdentifierGenerator();
 

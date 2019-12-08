@@ -68,7 +68,7 @@ class PublishRequestPacketTest extends TestCase
         $packet->setTopic('');
     }
 
-    public function test_cannot_set_too_large_topic()
+    public function test_cannot_set_too_large_topic(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $packet = new PublishRequestPacket();
@@ -182,7 +182,7 @@ class PublishRequestPacketTest extends TestCase
         $this->assertEquals('message', $packet->getPayload());
     }
 
-    public function test_can_read_what_it_writes()
+    public function test_can_read_what_it_writes(): void
     {
         $packet = new PublishRequestPacket();
         $packet->setIdentifier(0);

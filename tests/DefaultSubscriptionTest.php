@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class DefaultSubscriptionTest extends TestCase
 {
-    public function test_returns_instance_with_different_filter()
+    public function test_returns_instance_with_different_filter(): void
     {
         $original = new DefaultSubscription('foo', 1);
         $clone = $original->withFilter('bar');
@@ -20,7 +20,7 @@ class DefaultSubscriptionTest extends TestCase
         $this->assertEquals($original->getQosLevel(), $clone->getQosLevel());
     }
 
-    public function test_returns_instance_with_different_qos()
+    public function test_returns_instance_with_different_qos(): void
     {
         $original = new DefaultSubscription('foo', 1);
         $clone = $original->withQosLevel(2);
@@ -30,13 +30,13 @@ class DefaultSubscriptionTest extends TestCase
         $this->assertEquals(2, $clone->getQosLevel());
     }
 
-    public function test_negative_qos_level()
+    public function test_negative_qos_level(): void
     {
         $this->expectException(InvalidArgumentException::class);
         new DefaultSubscription('topic', -1);
     }
 
-    public function test_too_large_qos_level()
+    public function test_too_large_qos_level(): void
     {
         $this->expectException(InvalidArgumentException::class);
         new DefaultSubscription('topic', 10);

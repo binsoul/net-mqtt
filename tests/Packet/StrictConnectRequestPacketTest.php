@@ -7,6 +7,7 @@ namespace BinSoul\Test\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet\StrictConnectRequestPacket;
 use BinSoul\Net\Mqtt\PacketStream;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class StrictConnectRequestPacketTest extends TestCase
@@ -22,7 +23,7 @@ class StrictConnectRequestPacketTest extends TestCase
         return $packet;
     }
 
-    public function test_defaults()
+    public function test_defaults(): void
     {
         $packet = $this->createDefaultPacket();
         $stream = new PacketStream();
@@ -35,7 +36,7 @@ class StrictConnectRequestPacketTest extends TestCase
         $this->assertEquals('foobar', $packet->getClientID());
     }
 
-    public function test_too_long_client_id_in_packet()
+    public function test_too_long_client_id_in_packet(): void
     {
         $this->expectException(MalformedPacketException::class);
 
@@ -44,7 +45,7 @@ class StrictConnectRequestPacketTest extends TestCase
         $packet->read($stream);
     }
 
-    public function test_invalid_client_id_in_packet()
+    public function test_invalid_client_id_in_packet(): void
     {
         $this->expectException(MalformedPacketException::class);
 
@@ -53,17 +54,17 @@ class StrictConnectRequestPacketTest extends TestCase
         $packet->read($stream);
     }
 
-    public function test_cannot_set_too_long_client_id()
+    public function test_cannot_set_too_long_client_id(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $packet = $this->createDefaultPacket();
         $packet->setClientID('123456789123456789123456789');
     }
 
-    public function test_cannot_set_invalid_client_id()
+    public function test_cannot_set_invalid_client_id(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $packet = $this->createDefaultPacket();
         $packet->setClientID('!fööbär!');

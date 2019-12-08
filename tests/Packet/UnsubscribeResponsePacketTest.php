@@ -58,7 +58,7 @@ class UnsubscribeResponsePacketTest extends TestCase
         $this->assertEquals(Packet::TYPE_UNSUBACK, $packet->getPacketType());
     }
 
-    public function test_can_read_what_it_writes()
+    public function test_can_read_what_it_writes(): void
     {
         $packet = new UnsubscribeResponsePacket();
         $packet->setIdentifier(0);

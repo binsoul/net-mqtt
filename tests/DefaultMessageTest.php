@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class DefaultMessageTest extends TestCase
 {
-    public function test_returns_instance_with_different_topic()
+    public function test_returns_instance_with_different_topic(): void
     {
         $original = new DefaultMessage('foo', 'payload', 1, true, true);
         $clone = $original->withTopic('bar');
@@ -23,7 +23,7 @@ class DefaultMessageTest extends TestCase
         $this->assertTrue($clone->isDuplicate());
     }
 
-    public function test_returns_instance_with_different_payload()
+    public function test_returns_instance_with_different_payload(): void
     {
         $original = new DefaultMessage('topic', 'foo', 1, true, true);
         $clone = $original->withPayload('bar');
@@ -36,7 +36,7 @@ class DefaultMessageTest extends TestCase
         $this->assertTrue($clone->isDuplicate());
     }
 
-    public function test_returns_instance_with_different_qos()
+    public function test_returns_instance_with_different_qos(): void
     {
         $original = new DefaultMessage('topic', 'foo', 1, true, true);
         $clone = $original->withQosLevel(2);
@@ -49,7 +49,7 @@ class DefaultMessageTest extends TestCase
         $this->assertTrue($clone->isDuplicate());
     }
 
-    public function test_returns_instance_with_retain_flag()
+    public function test_returns_instance_with_retain_flag(): void
     {
         $original = new DefaultMessage('topic', 'payload', 1, false, true);
         $clone = $original->retain();
@@ -62,7 +62,7 @@ class DefaultMessageTest extends TestCase
         $this->assertTrue($clone->isDuplicate());
     }
 
-    public function test_returns_instance_without_retain_flag()
+    public function test_returns_instance_without_retain_flag(): void
     {
         $original = new DefaultMessage('topic', 'payload', 1, true, true);
         $clone = $original->release();
@@ -75,7 +75,7 @@ class DefaultMessageTest extends TestCase
         $this->assertTrue($clone->isDuplicate());
     }
 
-    public function test_returns_instance_with_duplicate_flag()
+    public function test_returns_instance_with_duplicate_flag(): void
     {
         $original = new DefaultMessage('topic', 'payload', 1, true, false);
         $clone = $original->duplicate();
@@ -88,7 +88,7 @@ class DefaultMessageTest extends TestCase
         $this->assertTrue($clone->isDuplicate());
     }
 
-    public function test_returns_instance_without_duplicate_flag()
+    public function test_returns_instance_without_duplicate_flag(): void
     {
         $original = new DefaultMessage('topic', 'payload', 1, true, true);
         $clone = $original->original();
@@ -101,13 +101,13 @@ class DefaultMessageTest extends TestCase
         $this->assertFalse($clone->isDuplicate());
     }
 
-    public function test_negative_qos_level()
+    public function test_negative_qos_level(): void
     {
         $this->expectException(InvalidArgumentException::class);
         new DefaultMessage('topic', 'payload', -1, true, true);
     }
 
-    public function test_too_large_qos_level()
+    public function test_too_large_qos_level(): void
     {
         $this->expectException(InvalidArgumentException::class);
         new DefaultMessage('topic', 'payload', 10, true, true);

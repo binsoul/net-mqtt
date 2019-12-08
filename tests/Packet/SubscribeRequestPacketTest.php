@@ -51,14 +51,14 @@ class SubscribeRequestPacketTest extends TestCase
         $packet->setTopic('');
     }
 
-    public function test_cannot_set_too_large_topic()
+    public function test_cannot_set_too_large_topic(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $packet = new SubscribeRequestPacket();
         $packet->setTopic(str_repeat('x', 0x10000));
     }
 
-    public function test_cannot_set_invalid_qos_level()
+    public function test_cannot_set_invalid_qos_level(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $packet = new SubscribeRequestPacket();
@@ -87,7 +87,7 @@ class SubscribeRequestPacketTest extends TestCase
         $this->assertEquals(Packet::TYPE_SUBSCRIBE, $packet->getPacketType());
     }
 
-    public function test_can_read_what_it_writes()
+    public function test_can_read_what_it_writes(): void
     {
         $packet = new SubscribeRequestPacket();
         $packet->setIdentifier(1);

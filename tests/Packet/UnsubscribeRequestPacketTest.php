@@ -48,7 +48,7 @@ class UnsubscribeRequestPacketTest extends TestCase
         $packet->setTopics(['']);
     }
 
-    public function test_cannot_set_too_large_topic()
+    public function test_cannot_set_too_large_topic(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $packet = new UnsubscribeRequestPacket();
@@ -85,7 +85,7 @@ class UnsubscribeRequestPacketTest extends TestCase
         $this->assertEquals(Packet::TYPE_UNSUBSCRIBE, $packet->getPacketType());
     }
 
-    public function test_can_read_what_it_writes()
+    public function test_can_read_what_it_writes(): void
     {
         $packet = new UnsubscribeRequestPacket();
         $packet->setIdentifier(1);

@@ -46,7 +46,7 @@ class StreamParserTest extends TestCase
         $this->packets = $packets;
     }
 
-    public function test_returns_expected_packets()
+    public function test_returns_expected_packets(): void
     {
         $parser = new StreamParser();
         foreach ($this->packets as $type => $packets) {
@@ -59,11 +59,11 @@ class StreamParserTest extends TestCase
         }
     }
 
-    public function test_detects_unknown_packets()
+    public function test_detects_unknown_packets(): void
     {
         $parser = new StreamParser();
         $called = 0;
-        $parser->onError(function () use (&$called) {
+        $parser->onError(static function () use (&$called) {
             ++$called;
         });
 
@@ -73,11 +73,11 @@ class StreamParserTest extends TestCase
         $this->assertEquals(2, $called);
     }
 
-    public function test_handles_malformed_packets()
+    public function test_handles_malformed_packets(): void
     {
         $parser = new StreamParser();
         $called = 0;
-        $parser->onError(function () use (&$called) {
+        $parser->onError(static function () use (&$called) {
             ++$called;
         });
 
@@ -85,22 +85,22 @@ class StreamParserTest extends TestCase
         $this->assertEquals(1, $called);
     }
 
-    public function test_handles_fragmented_packets()
+    public function test_handles_fragmented_packets(): void
     {
         $parser = new StreamParser();
         $called = 0;
-        $parser->onError(function () use (&$called) {
+        $parser->onError(static function () use (&$called) {
             ++$called;
         });
 
         $packets = $parser->push("0\x0d");
-        $this->assertEquals(0, count($packets));
+        $this->assertCount(0, $packets);
         $packets = $parser->push("\x00\x06TopicAqos 1");
-        $this->assertEquals(1, count($packets));
+        $this->assertCount(1, $packets);
 
         $packets = $parser->push("0\x0d\x00\x06TopicA");
-        $this->assertEquals(0, count($packets));
+        $this->assertCount(0, $packets);
         $packets = $parser->push('qos 1');
-        $this->assertEquals(1, count($packets));
+        $this->assertCount(1, $packets);
     }
 }

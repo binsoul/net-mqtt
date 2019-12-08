@@ -28,7 +28,7 @@ class ConnectRequestPacketTest extends TestCase
         return "\x10\x12\x00\x04MQTT\x04\x02\x00\x0a\x00\x06foobar";
     }
 
-    public function test_generates_client_id_on_write()
+    public function test_generates_client_id_on_write(): void
     {
         $packet = new ConnectRequestPacket();
         $this->assertEquals('', $packet->getClientID());
@@ -36,7 +36,7 @@ class ConnectRequestPacketTest extends TestCase
         $this->assertNotEquals('', $packet->getClientID());
     }
 
-    public function test_minimal_packet()
+    public function test_minimal_packet(): void
     {
         $stream = new PacketStream($this->getDefaultData());
         $packet = new ConnectRequestPacket();
@@ -64,7 +64,7 @@ class ConnectRequestPacketTest extends TestCase
         $this->assertEquals($this->getDefaultData(), (string) $packet);
     }
 
-    public function test_packet_with_protocol_level_3()
+    public function test_packet_with_protocol_level_3(): void
     {
         $data = "\x10\x14\x00\x06MQIsdp\x03\x02\x00\x0a\x00\x06foobar";
         $stream = new PacketStream($data);
@@ -81,7 +81,7 @@ class ConnectRequestPacketTest extends TestCase
         $this->assertEquals($data, (string) $packet);
     }
 
-    public function test_with_existing_session()
+    public function test_with_existing_session(): void
     {
         $data = "\x10\x12\x00\x04MQTT\x04\x00\x00\x0a\x00\x06foobar";
         $stream = new PacketStream($data);
@@ -98,7 +98,7 @@ class ConnectRequestPacketTest extends TestCase
         $this->assertEquals($data, (string) $packet);
     }
 
-    public function test_packet_with_username()
+    public function test_packet_with_username(): void
     {
         $data = "\x10\x1d\x00\x04MQTT\x04B\x00\x0a\x00\x06foobar\x00\x09üsername";
         $stream = new PacketStream($data);
@@ -123,28 +123,28 @@ class ConnectRequestPacketTest extends TestCase
         $this->assertEquals($this->getDefaultData(), (string) $packet);
     }
 
-    public function test_cannot_set_too_large_username()
+    public function test_cannot_set_too_large_username(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $packet = $this->createDefaultPacket();
         $packet->setUsername(str_repeat('x', 0x10000));
     }
 
-    public function test_cannot_set_invalid_utf8()
+    public function test_cannot_set_invalid_utf8(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $packet = $this->createDefaultPacket();
         $packet->setUsername("\xfe\xfe\xff\xff");
     }
 
-    public function test_cannot_set_out_of_range_utf8()
+    public function test_cannot_set_out_of_range_utf8(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $packet = $this->createDefaultPacket();
         $packet->setUsername("abc\x00\x00");
     }
 
-    public function test_packet_with_password()
+    public function test_packet_with_password(): void
     {
         $data = "\x10\x1e\x00\x04MQTT\x04\x82\x00\x0a\x00\x06foobar\x00\x0ap\xc3\xa4ssw\xc3\xb6rd";
         $stream = new PacketStream($data);
@@ -164,14 +164,14 @@ class ConnectRequestPacketTest extends TestCase
         $this->assertEquals($this->getDefaultData(), (string) $packet);
     }
 
-    public function test_cannot_set_invalid_password()
+    public function test_cannot_set_invalid_password(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $packet = $this->createDefaultPacket();
         $packet->setPassword(str_repeat('x', 0x10000));
     }
 
-    public function test_packet_with_will()
+    public function test_packet_with_will(): void
     {
         $data = "\x10\"\x00\x04MQTT\x046\x00\x0a\x00\x06foobar\x00\x05topic\x00\x07message";
         $stream = new PacketStream($data);
@@ -225,7 +225,7 @@ class ConnectRequestPacketTest extends TestCase
         $packet->read($stream);
     }
 
-    public function test_cannot_set_invalid_protocol_level()
+    public function test_cannot_set_invalid_protocol_level(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -233,7 +233,7 @@ class ConnectRequestPacketTest extends TestCase
         $packet->setProtocolLevel(2);
     }
 
-    public function test_cannot_set_invalid_keepalive()
+    public function test_cannot_set_invalid_keepalive(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -241,7 +241,7 @@ class ConnectRequestPacketTest extends TestCase
         $packet->setKeepAlive(100000);
     }
 
-    public function test_cannot_set_invalid_will_topic()
+    public function test_cannot_set_invalid_will_topic(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -249,7 +249,7 @@ class ConnectRequestPacketTest extends TestCase
         $packet->setWill('', 'message', 0, false);
     }
 
-    public function test_cannot_set_invalid_will_message()
+    public function test_cannot_set_invalid_will_message(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -257,7 +257,7 @@ class ConnectRequestPacketTest extends TestCase
         $packet->setWill('topic', '', 0, false);
     }
 
-    public function test_cannot_set_invalid_will_qos()
+    public function test_cannot_set_invalid_will_qos(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -265,7 +265,7 @@ class ConnectRequestPacketTest extends TestCase
         $packet->setWill('topic', 'message', 10, false);
     }
 
-    public function test_can_read_what_it_writes()
+    public function test_can_read_what_it_writes(): void
     {
         $packet = $this->createDefaultPacket();
 

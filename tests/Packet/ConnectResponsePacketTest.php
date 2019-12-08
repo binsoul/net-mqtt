@@ -114,7 +114,7 @@ class ConnectResponsePacketTest extends TestCase
         $packet->read($stream);
     }
 
-    public function test_can_read_what_it_writes()
+    public function test_can_read_what_it_writes(): void
     {
         $packet = $this->createDefaultPacket();
 
