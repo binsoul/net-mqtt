@@ -282,17 +282,21 @@ class ConnectRequestPacket extends BasePacket
      */
     public function setWill(string $topic, string $message, int $qosLevel = 0, bool $isRetained = false): void
     {
-        $this->assertValidString($topic, false);
         if ($topic === '') {
             throw new InvalidArgumentException('The topic must not be empty.');
         }
 
-        $this->assertValidStringLength($message, false);
         if ($message === '') {
             throw new InvalidArgumentException('The message must not be empty.');
         }
 
-        $this->assertValidQosLevel($qosLevel, false);
+        try {
+            $this->assertValidString($topic);
+            $this->assertValidStringLength($message);
+            $this->assertValidQosLevel($qosLevel);
+        } catch (MalformedPacketException $e) {
+            throw new InvalidArgumentException($e->getMessage());
+        }
 
         $this->willTopic = $topic;
         $this->willMessage = $message;
@@ -348,7 +352,11 @@ class ConnectRequestPacket extends BasePacket
      */
     public function setUsername(string $value): void
     {
-        $this->assertValidString($value, false);
+        try {
+            $this->assertValidString($value);
+        } catch (MalformedPacketException $e){
+            throw new InvalidArgumentException($e->getMessage());
+        }
 
         $this->username = $value;
         if ($this->username !== '') {
@@ -384,10 +392,16 @@ class ConnectRequestPacket extends BasePacket
      * @param string $value
      *
      * @return void
+     *
+     * @throws InvalidArgumentException
      */
     public function setPassword(string $value): void
     {
-        $this->assertValidStringLength($value, false);
+        try {
+            $this->assertValidStringLength($value);
+        } catch (MalformedPacketException $e) {
+            throw new InvalidArgumentException($e->getMessage());
+        }
 
         $this->password = $value;
         if ($this->password !== '') {
@@ -407,20 +421,19 @@ class ConnectRequestPacket extends BasePacket
     private function assertValidWill(): void
     {
         if ($this->hasWill()) {
-            $this->assertValidQosLevel($this->getWillQosLevel(), true);
+            $this->assertValidQosLevel($this->getWillQosLevel());
         } else {
             if ($this->getWillQosLevel() > 0) {
-                $this->throwException(
+                new MalformedPacketException(
                     sprintf(
                         'Expected a will quality of service level of zero but got %d.',
                         $this->getWillQosLevel()
-                    ),
-                    true
+                    )
                 );
             }
 
             if ($this->isWillRetained()) {
-                $this->throwException('There is not will but the will retain flag is set.', true);
+                new MalformedPacketException('There is not will but the will retain flag is set.');
             }
         }
     }

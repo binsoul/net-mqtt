@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt\Packet;
 
+use BinSoul\Net\Mqtt\Exception\EndOfStreamException;
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
-use InvalidArgumentException;
 
 /**
  * Represents the base class for all packets.
@@ -74,6 +74,7 @@ abstract class BasePacket implements Packet
      * @return void
      *
      * @throws MalformedPacketException
+     * @throws EndOfStreamException
      */
     private function readRemainingLength(PacketStream $stream): void
     {
@@ -142,23 +143,20 @@ abstract class BasePacket implements Packet
      * Asserts that the packet flags have a specific value.
      *
      * @param int  $value
-     * @param bool $fromPacket
      *
      * @return void
      *
      * @throws MalformedPacketException
-     * @throws InvalidArgumentException
      */
-    protected function assertPacketFlags(int $value, bool $fromPacket = true): void
+    protected function assertPacketFlags(int $value): void
     {
         if ($this->packetFlags !== $value) {
-            $this->throwException(
+            throw new MalformedPacketException(
                 sprintf(
                     'Expected flags %02x but got %02x.',
                     $value,
                     $this->packetFlags
-                ),
-                $fromPacket
+                )
             );
         }
     }
@@ -167,27 +165,24 @@ abstract class BasePacket implements Packet
      * Asserts that the remaining length is greater than zero and has a specific value.
      *
      * @param int|null $value      value to test or null if any value greater than zero is valid
-     * @param bool     $fromPacket
      *
      * @return void
      *
      * @throws MalformedPacketException
-     * @throws InvalidArgumentException
      */
-    protected function assertRemainingPacketLength(?int $value = null, bool $fromPacket = true): void
+    protected function assertRemainingPacketLength(?int $value = null): void
     {
         if ($value === null && $this->remainingPacketLength === 0) {
-            $this->throwException('Expected payload but remaining packet length is zero.', $fromPacket);
+            new MalformedPacketException('Expected payload but remaining packet length is zero.');
         }
 
         if ($value !== null && $this->remainingPacketLength !== $value) {
-            $this->throwException(
+            throw new MalformedPacketException(
                 sprintf(
                     'Expected remaining packet length of %d bytes but got %d.',
                     $value,
                     $this->remainingPacketLength
-                ),
-                $fromPacket
+                )
             );
         }
     }
@@ -196,22 +191,19 @@ abstract class BasePacket implements Packet
      * Asserts that the given string is a well-formed MQTT string.
      *
      * @param string $value
-     * @param bool   $fromPacket
      *
      * @return void
      *
      * @throws MalformedPacketException
-     * @throws InvalidArgumentException
      */
-    protected function assertValidStringLength(string $value, bool $fromPacket = true): void
+    protected function assertValidStringLength(string $value): void
     {
         if (strlen($value) > 0xFFFF) {
-            $this->throwException(
+            throw new MalformedPacketException(
                 sprintf(
                     'The string "%s" is longer than 65535 byte.',
                     substr($value, 0, 50)
-                ),
-                $fromPacket
+                )
             );
         }
     }
@@ -220,34 +212,30 @@ abstract class BasePacket implements Packet
      * Asserts that the given string is a well-formed MQTT string.
      *
      * @param string $value
-     * @param bool   $fromPacket
      *
      * @return void
      *
      * @throws MalformedPacketException
-     * @throws InvalidArgumentException
      */
-    protected function assertValidString(string $value, bool $fromPacket = true): void
+    protected function assertValidString(string $value): void
     {
-        $this->assertValidStringLength($value, $fromPacket);
+        $this->assertValidStringLength($value);
 
         if (!mb_check_encoding($value, 'UTF-8')) {
-            $this->throwException(
+            new MalformedPacketException(
                 sprintf(
                     'The string "%s" is not well-formed UTF-8.',
                     substr($value, 0, 50)
-                ),
-                $fromPacket
+                )
             );
         }
 
         if (preg_match('/[\xD8-\xDF][\x00-\xFF]|\x00\x00/x', $value)) {
-            $this->throwException(
+            new MalformedPacketException(
                 sprintf(
                     'The string "%s" contains invalid characters.',
                     substr($value, 0, 50)
-                ),
-                $fromPacket
+                )
             );
         }
     }
@@ -256,43 +244,20 @@ abstract class BasePacket implements Packet
      * Asserts that the given quality of service level is valid.
      *
      * @param int  $level
-     * @param bool $fromPacket
      *
      * @return void
      *
      * @throws MalformedPacketException
-     * @throws InvalidArgumentException
      */
-    protected function assertValidQosLevel(int $level, bool $fromPacket = true): void
+    protected function assertValidQosLevel(int $level): void
     {
         if ($level < 0 || $level > 2) {
-            $this->throwException(
+            throw new MalformedPacketException(
                 sprintf(
                     'Expected a quality of service level between 0 and 2 but got %d.',
                     $level
-                ),
-                $fromPacket
+                )
             );
         }
-    }
-
-    /**
-     * Throws a MalformedPacketException for packet validation and an InvalidArgumentException otherwise.
-     *
-     * @param string $message
-     * @param bool   $fromPacket
-     *
-     * @return void
-     *
-     * @throws MalformedPacketException
-     * @throws InvalidArgumentException
-     */
-    protected function throwException(string $message, bool $fromPacket): void
-    {
-        if ($fromPacket) {
-            throw new MalformedPacketException($message);
-        }
-
-        throw new InvalidArgumentException($message);
     }
 }

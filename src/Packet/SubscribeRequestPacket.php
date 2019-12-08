@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt\Packet;
 
+use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
 use InvalidArgumentException;
@@ -72,9 +73,14 @@ class SubscribeRequestPacket extends BasePacket
      */
     public function setTopic(string $value): void
     {
-        $this->assertValidString($value, false);
         if ($value === '') {
             throw new InvalidArgumentException('The topic must not be empty.');
+        }
+
+        try {
+            $this->assertValidString($value);
+        } catch (MalformedPacketException $e){
+            throw new InvalidArgumentException($e->getMessage());
         }
 
         $this->topic = $value;
@@ -101,7 +107,11 @@ class SubscribeRequestPacket extends BasePacket
      */
     public function setQosLevel(int $value): void
     {
-        $this->assertValidQosLevel($value, false);
+        try {
+            $this->assertValidQosLevel($value);
+        } catch (MalformedPacketException $e) {
+            throw new InvalidArgumentException($e->getMessage());
+        }
 
         $this->qosLevel = $value;
     }

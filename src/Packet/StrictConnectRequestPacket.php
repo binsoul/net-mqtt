@@ -17,7 +17,7 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
     {
         parent::read($stream);
 
-        $this->assertValidClientID($this->clientID, true);
+        $this->assertValidClientID($this->clientID);
     }
 
     /**
@@ -31,7 +31,11 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
      */
     public function setClientID(string $value): void
     {
-        $this->assertValidClientID($value, false);
+        try {
+            $this->assertValidClientID($value);
+        } catch (MalformedPacketException $e) {
+            throw new InvalidArgumentException($e->getMessage());
+        }
 
         $this->clientID = $value;
     }
@@ -40,32 +44,28 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
      * Asserts that a client id is shorter than 24 bytes and only contains characters 0-9, a-z or A-Z.
      *
      * @param string $value
-     * @param bool   $fromPacket
      *
      * @return void
      *
      * @throws MalformedPacketException
-     * @throws InvalidArgumentException
      */
-    private function assertValidClientID(string $value, bool $fromPacket): void
+    private function assertValidClientID(string $value): void
     {
         if (strlen($value) > 23) {
-            $this->throwException(
+            throw new MalformedPacketException(
                 sprintf(
                     'Expected client id shorter than 24 bytes but got "%s".',
                     $value
-                ),
-                $fromPacket
+                )
             );
         }
 
         if ($value !== '' && !ctype_alnum($value)) {
-            $this->throwException(
+            throw new MalformedPacketException(
                 sprintf(
                     'Expected a client id containing characters 0-9, a-z or A-Z but got "%s".',
                     $value
-                ),
-                $fromPacket
+                )
             );
         }
     }
