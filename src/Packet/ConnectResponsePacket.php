@@ -78,6 +78,16 @@ class ConnectResponsePacket extends BasePacket
     }
 
     /**
+     * Sets the return code.
+     *
+     * @param int $value
+     */
+    public function setReturnCode(int $value): void
+    {
+        $this->returnCode = $value;
+    }
+
+    /**
      * Indicates if the connection was successful.
      *
      * @return bool
@@ -95,6 +105,32 @@ class ConnectResponsePacket extends BasePacket
     public function isError(): bool
     {
         return $this->returnCode > 0;
+    }
+
+    /**
+     * Indicates if the server has a stored session for this client.
+     *
+     * @return bool
+     */
+    public function isSessionPresent(): bool
+    {
+        return (bool) ($this->flags & 0x1);
+    }
+
+    /**
+     * Changes the session present flag.
+     *
+     * @param bool $value
+     *
+     * @return void
+     */
+    public function setSessionPresent(bool $value): void
+    {
+        if ($value) {
+            $this->flags |= 1;
+        } else {
+            $this->flags &= ~1;
+        }
     }
 
     /**
