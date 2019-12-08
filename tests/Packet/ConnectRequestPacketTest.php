@@ -122,6 +122,13 @@ class ConnectRequestPacketTest extends TestCase
         $this->assertEquals($this->getDefaultData(), (string) $packet);
     }
 
+    public function test_cannot_set_invalid_username()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $packet = $this->createDefaultPacket();
+        $packet->setUsername(str_repeat('x', 0x10000));
+    }
+
     public function test_packet_with_password()
     {
         $data = "\x10\x1e\x00\x04MQTT\x04\x82\x00\x0a\x00\x06foobar\x00\x0ap\xc3\xa4ssw\xc3\xb6rd";
@@ -140,6 +147,13 @@ class ConnectRequestPacketTest extends TestCase
 
         $packet->setPassword('');
         $this->assertEquals($this->getDefaultData(), (string) $packet);
+    }
+
+    public function test_cannot_set_invalid_password()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $packet = $this->createDefaultPacket();
+        $packet->setPassword(str_repeat('x', 0x10000));
     }
 
     public function test_packet_with_will()
