@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BinSoul\Test\Net\Mqtt;
 
+use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\StreamParser;
 use PHPUnit\Framework\TestCase;
 
@@ -15,28 +16,32 @@ class StreamParserTest extends TestCase
     {
         $packets = array_fill(1, 15, []);
 
-        $packets[1][] = "\x10\x1a\x00\x04MQTT\x04\x02\x00<\x00\x0eBinSoul-000000";
-        $packets[2][] = " \x02\x00\x00";
-        $packets[9][] = "\x90\x03\x00\x01\x00";
-        $packets[8][] = "\x82\x06\x00\x01\x00\x01#\x00";
-        $packets[3][] = "0\x0d\x00\x06TopicAqos 0";
-        $packets[3][] = "0\x0d\x00\x06TopicAqos 1";
-        $packets[3][] = "0\x0d\x00\x06TopicAqos 2";
-        $packets[3][] = "0\x0f\x00\x08TopicA/Bqos 0";
-        $packets[3][] = "0\x0e\x00\x07Topic/Cqos 1";
-        $packets[3][] = "0\x0f\x00\x08TopicA/Cqos 2";
-        $packets[3][] = "0\x0a\x00\x08TopicA/B";
-        $packets[3][] = "0\x09\x00\x07Topic/C";
-        $packets[3][] = "0\x0a\x00\x08TopicA/C";
-        $packets[3][] = "0\x0f\x00\x08TopicA/Bqos 0";
-        $packets[3][] = "0\x0e\x00\x07Topic/Cqos 1";
-        $packets[3][] = "0\x0f\x00\x08TopicA/Cqos 2";
-        $packets[3][] = "0 \x00\x07Topic/Cclient not disconnected";
-        $packets[3][] = "0#\x00\x08TopicA/Coverlapping topic filters";
-        $packets[3][] = "0\x19\x00\x07/TopicAkeepalive expiry";
-        $packets[3][] = "0\x0a\x00\x08TopicA/B";
-        $packets[3][] = "0\x0a\x00\x08TopicA/C";
-        $packets[13][] = "\xd0\x00";
+        $packets[Packet::TYPE_CONNECT][] = "\x10\x1a\x00\x04MQTT\x04\x02\x00<\x00\x0eBinSoul-000000";
+        $packets[Packet::TYPE_CONNACK][] = "\x20\x02\x00\x00";
+        $packets[Packet::TYPE_SUBACK][] = "\x90\x03\x00\x01\x00";
+        $packets[Packet::TYPE_SUBSCRIBE][] = "\x82\x06\x00\x01\x00\x01#\x00";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x0d\x00\x06TopicAqos 0";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x0d\x00\x06TopicAqos 1";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x0d\x00\x06TopicAqos 2";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x0f\x00\x08TopicA/Bqos 0";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x0e\x00\x07Topic/Cqos 1";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x0f\x00\x08TopicA/Cqos 2";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x0a\x00\x08TopicA/B";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x09\x00\x07Topic/C";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x0a\x00\x08TopicA/C";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x0f\x00\x08TopicA/Bqos 0";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x0e\x00\x07Topic/Cqos 1";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x0f\x00\x08TopicA/Cqos 2";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x20\x00\x07Topic/Cclient not disconnected";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30#\x00\x08TopicA/Coverlapping topic filters";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x19\x00\x07/TopicAkeepalive expiry";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x0a\x00\x08TopicA/B";
+        $packets[Packet::TYPE_PUBLISH][] = "\x30\x0a\x00\x08TopicA/C";
+        $packets[Packet::TYPE_PINGREQ][] = "\xc0\x00";
+        $packets[Packet::TYPE_PINGRESP][] = "\xd0\x00";
+        $packets[Packet::TYPE_PUBACK][] = "\x40\x02\x00\x00";
+        $packets[Packet::TYPE_PUBCOMP][] = "\x70\x02\x00\x00";
+        $packets[Packet::TYPE_PUBREL][] = "\x60\x02\x00\x00";
 
         $this->packets = $packets;
     }
