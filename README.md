@@ -3,6 +3,7 @@
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
 [![Total Downloads][ico-downloads]][link-downloads]
+[![Build Status](https://travis-ci.org/binsoul/net-mqtt.svg?branch=master)](https://travis-ci.org/binsoul/net-mqtt)
 
 MQTT is a machine-to-machine (M2M) / Internet of Things (IoT) connectivity protocol. It provides a lightweight method of carrying out messaging using a publish/subscribe model.
 
