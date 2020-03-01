@@ -4,14 +4,7 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt;
 
-use BinSoul\Net\Mqtt\Flow\IncomingPingFlow;
-use BinSoul\Net\Mqtt\Flow\IncomingPublishFlow;
-use BinSoul\Net\Mqtt\Flow\OutgoingConnectFlow;
-use BinSoul\Net\Mqtt\Flow\OutgoingDisconnectFlow;
-use BinSoul\Net\Mqtt\Flow\OutgoingPingFlow;
-use BinSoul\Net\Mqtt\Flow\OutgoingPublishFlow;
-use BinSoul\Net\Mqtt\Flow\OutgoingSubscribeFlow;
-use BinSoul\Net\Mqtt\Flow\OutgoingUnsubscribeFlow;
+use BinSoul\Net\Mqtt\Flow;
 
 /**
  * Builds instances of the {@see Flow} interface.
@@ -19,55 +12,55 @@ use BinSoul\Net\Mqtt\Flow\OutgoingUnsubscribeFlow;
 interface FlowFactory
 {
     /**
-     * @return IncomingPingFlow
+     * @return Flow
      */
-    public function buildIncomingPingFlow(): IncomingPingFlow;
+    public function buildIncomingPingFlow(): Flow;
 
     /**
      * @param Message  $message
      * @param int|null $identifier
      *
-     * @return IncomingPublishFlow
+     * @return Flow
      */
-    public function buildIncomingPublishFlow(Message $message, int $identifier = null): IncomingPublishFlow;
+    public function buildIncomingPublishFlow(Message $message, int $identifier = null): Flow;
 
     /**
      * @param Connection $connection
      *
-     * @return OutgoingConnectFlow
+     * @return Flow
      */
-    public function buildOutgoingConnectFlow(Connection $connection): OutgoingConnectFlow;
+    public function buildOutgoingConnectFlow(Connection $connection): Flow;
 
     /**
      * @param Connection $connection
      *
-     * @return OutgoingDisconnectFlow
+     * @return Flow
      */
-    public function buildOutgoingDisconnectFlow(Connection $connection): OutgoingDisconnectFlow;
+    public function buildOutgoingDisconnectFlow(Connection $connection): Flow;
 
     /**
-     * @return OutgoingPingFlow
+     * @return Flow
      */
-    public function buildOutgoingPingFlow(): OutgoingPingFlow;
+    public function buildOutgoingPingFlow(): Flow;
 
     /**
      * @param Message $message
      *
-     * @return OutgoingPublishFlow
+     * @return Flow
      */
-    public function buildOutgoingPublishFlow(Message $message): OutgoingPublishFlow;
+    public function buildOutgoingPublishFlow(Message $message): Flow;
 
     /**
      * @param Subscription[] $subscriptions
      *
-     * @return OutgoingSubscribeFlow
+     * @return Flow
      */
-    public function buildOutgoingSubscribeFlow(array $subscriptions): OutgoingSubscribeFlow;
+    public function buildOutgoingSubscribeFlow(array $subscriptions): Flow;
 
     /**
      * @param Subscription[] $subscriptions
      *
-     * @return OutgoingUnsubscribeFlow
+     * @return Flow
      */
-    public function buildOutgoingUnsubscribeFlow(array $subscriptions): OutgoingUnsubscribeFlow;
+    public function buildOutgoingUnsubscribeFlow(array $subscriptions): Flow;
 }
