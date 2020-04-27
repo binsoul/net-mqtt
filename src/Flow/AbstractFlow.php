@@ -27,8 +27,6 @@ abstract class AbstractFlow implements Flow
 
     /**
      * Constructs an instance of this class.
-     *
-     * @param PacketFactory $packetFactory
      */
     public function __construct(PacketFactory $packetFactory)
     {
@@ -69,8 +67,6 @@ abstract class AbstractFlow implements Flow
      * Marks the flow as successful and sets the result.
      *
      * @param mixed|null $result
-     *
-     * @return void
      */
     protected function succeed($result = null): void
     {
@@ -81,10 +77,6 @@ abstract class AbstractFlow implements Flow
 
     /**
      * Marks the flow as failed and sets the error message.
-     *
-     * @param string $error
-     *
-     * @return void
      */
     protected function fail(string $error = ''): void
     {
@@ -94,10 +86,6 @@ abstract class AbstractFlow implements Flow
     }
 
     /**
-     * @param int $type
-     *
-     * @return Packet
-     *
      * @throws UnknownPacketTypeException
      */
     protected function generatePacket(int $type): Packet

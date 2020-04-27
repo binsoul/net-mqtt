@@ -38,11 +38,7 @@ class PacketStream
     /**
      * Returns the desired number of bytes.
      *
-     * @param int $count
-     *
      * @throws EndOfStreamException
-     *
-     * @return string
      */
     public function read(int $count): string
     {
@@ -68,8 +64,6 @@ class PacketStream
     /**
      * Returns a single byte.
      *
-     * @return int
-     *
      * @throws EndOfStreamException
      */
     public function readByte(): int
@@ -80,8 +74,6 @@ class PacketStream
     /**
      * Returns a single word.
      *
-     * @return int
-     *
      * @throws EndOfStreamException
      */
     public function readWord(): int
@@ -91,8 +83,6 @@ class PacketStream
 
     /**
      * Returns a length prefixed string.
-     *
-     * @return string
      *
      * @throws EndOfStreamException
      */
@@ -105,10 +95,6 @@ class PacketStream
 
     /**
      * Appends the given value.
-     *
-     * @param string $value
-     *
-     * @return void
      */
     public function write(string $value): void
     {
@@ -117,10 +103,6 @@ class PacketStream
 
     /**
      * Appends a single byte.
-     *
-     * @param int $value
-     *
-     * @return void
      */
     public function writeByte(int $value): void
     {
@@ -129,10 +111,6 @@ class PacketStream
 
     /**
      * Appends a single word.
-     *
-     * @param int $value
-     *
-     * @return void
      */
     public function writeWord(int $value): void
     {
@@ -142,10 +120,6 @@ class PacketStream
 
     /**
      * Appends a length prefixed string.
-     *
-     * @param string $string
-     *
-     * @return void
      */
     public function writeString(string $string): void
     {
@@ -155,8 +129,6 @@ class PacketStream
 
     /**
      * Returns the length of the stream.
-     *
-     * @return int
      */
     public function length(): int
     {
@@ -165,8 +137,6 @@ class PacketStream
 
     /**
      * Returns the number of bytes until the end of the stream.
-     *
-     * @return int
      */
     public function getRemainingBytes(): int
     {
@@ -175,8 +145,6 @@ class PacketStream
 
     /**
      * Returns the whole content of the stream.
-     *
-     * @return string
      */
     public function getData(): string
     {
@@ -185,10 +153,6 @@ class PacketStream
 
     /**
      * Changes the internal position of the stream relative to the current position.
-     *
-     * @param int $offset
-     *
-     * @return void
      */
     public function seek(int $offset): void
     {
@@ -197,8 +161,6 @@ class PacketStream
 
     /**
      * Returns the internal position of the stream.
-     *
-     * @return int
      */
     public function getPosition(): int
     {
@@ -207,10 +169,6 @@ class PacketStream
 
     /**
      * Sets the internal position of the stream.
-     *
-     * @param int $value
-     *
-     * @return void
      */
     public function setPosition(int $value): void
     {
@@ -219,8 +177,6 @@ class PacketStream
 
     /**
      * Removes all bytes from the beginning to the current position.
-     *
-     * @return void
      */
     public function cut(): void
     {

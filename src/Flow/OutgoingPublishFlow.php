@@ -28,10 +28,6 @@ class OutgoingPublishFlow extends AbstractFlow
 
     /**
      * Constructs an instance of this class.
-     *
-     * @param PacketFactory             $packetFactory
-     * @param Message                   $message
-     * @param PacketIdentifierGenerator $generator
      */
     public function __construct(PacketFactory $packetFactory, Message $message, PacketIdentifierGenerator $generator)
     {

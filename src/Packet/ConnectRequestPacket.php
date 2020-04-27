@@ -106,8 +106,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Returns the protocol level.
-     *
-     * @return int
      */
     public function getProtocolLevel(): int
     {
@@ -116,10 +114,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Sets the protocol level.
-     *
-     * @param int $value
-     *
-     * @return void
      *
      * @throws InvalidArgumentException
      */
@@ -139,8 +133,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Returns the client id.
-     *
-     * @return string
      */
     public function getClientID(): string
     {
@@ -149,10 +141,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Sets the client id.
-     *
-     * @param string $value
-     *
-     * @return void
      */
     public function setClientID(string $value): void
     {
@@ -161,8 +149,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Returns the keep alive time in seconds.
-     *
-     * @return int
      */
     public function getKeepAlive(): int
     {
@@ -171,10 +157,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Sets the keep alive time in seconds.
-     *
-     * @param int $value
-     *
-     * @return void
      *
      * @throws InvalidArgumentException
      */
@@ -194,8 +176,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Indicates if the clean session flag is set.
-     *
-     * @return bool
      */
     public function isCleanSession(): bool
     {
@@ -204,10 +184,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Changes the clean session flag.
-     *
-     * @param bool $value
-     *
-     * @return void
      */
     public function setCleanSession(bool $value): void
     {
@@ -220,8 +196,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Indicates if a will is set.
-     *
-     * @return bool
      */
     public function hasWill(): bool
     {
@@ -230,8 +204,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Returns the desired quality of service level of the will.
-     *
-     * @return int
      */
     public function getWillQosLevel(): int
     {
@@ -240,8 +212,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Indicates if the will should be retained.
-     *
-     * @return bool
      */
     public function isWillRetained(): bool
     {
@@ -250,8 +220,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Returns the will topic.
-     *
-     * @return string
      */
     public function getWillTopic(): string
     {
@@ -260,8 +228,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Returns the will message.
-     *
-     * @return string
      */
     public function getWillMessage(): string
     {
@@ -270,13 +236,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Sets the will.
-     *
-     * @param string $topic
-     * @param string $message
-     * @param int    $qosLevel
-     * @param bool   $isRetained
-     *
-     * @return void
      *
      * @throws InvalidArgumentException
      */
@@ -313,8 +272,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Removes the will.
-     *
-     * @return void
      */
     public function removeWill(): void
     {
@@ -325,8 +282,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Indicates if a username is set.
-     *
-     * @return bool
      */
     public function hasUsername(): bool
     {
@@ -335,8 +290,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Returns the username.
-     *
-     * @return string
      */
     public function getUsername(): string
     {
@@ -345,16 +298,12 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Sets the username.
-     *
-     * @param string $value
-     *
-     * @return void
      */
     public function setUsername(string $value): void
     {
         try {
             $this->assertValidString($value);
-        } catch (MalformedPacketException $e){
+        } catch (MalformedPacketException $e) {
             throw new InvalidArgumentException($e->getMessage());
         }
 
@@ -368,8 +317,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Indicates if a password is set.
-     *
-     * @return bool
      */
     public function hasPassword(): bool
     {
@@ -378,8 +325,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Returns the password.
-     *
-     * @return string
      */
     public function getPassword(): string
     {
@@ -388,10 +333,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Sets the password.
-     *
-     * @param string $value
-     *
-     * @return void
      *
      * @throws InvalidArgumentException
      */
@@ -413,8 +354,6 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Asserts that all will flags and quality of service are correct.
-     *
-     * @return void
      *
      * @throws MalformedPacketException
      */

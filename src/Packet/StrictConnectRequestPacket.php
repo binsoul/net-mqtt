@@ -23,10 +23,6 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
     /**
      * Sets the client id.
      *
-     * @param string $value
-     *
-     * @return void
-     *
      * @throws InvalidArgumentException
      */
     public function setClientID(string $value): void
@@ -42,10 +38,6 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
 
     /**
      * Asserts that a client id is shorter than 24 bytes and only contains characters 0-9, a-z or A-Z.
-     *
-     * @param string $value
-     *
-     * @return void
      *
      * @throws MalformedPacketException
      */

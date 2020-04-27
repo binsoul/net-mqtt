@@ -18,9 +18,6 @@ class OutgoingDisconnectFlow extends AbstractFlow
 
     /**
      * Constructs an instance of this class.
-     *
-     * @param PacketFactory $packetFactory
-     * @param Connection    $connection
      */
     public function __construct(PacketFactory $packetFactory, Connection $connection)
     {

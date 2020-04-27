@@ -39,8 +39,6 @@ class TopicMatcherTest extends TestCase
      * Data provider for canMatchTopic test.
      *
      * @see test_can_match_topic()
-     *
-     * @return array
      */
     public function patternsAndTopics(): array
     {
@@ -169,10 +167,6 @@ class TopicMatcherTest extends TestCase
      ************************************************/
 
     /**
-     * @param string $pattern
-     * @param string $topic
-     * @param bool   $expectedResult
-     *
      * @dataProvider patternsAndTopics
      */
     public function test_can_match_topic(string $pattern, string $topic, bool $expectedResult): void

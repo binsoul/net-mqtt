@@ -29,17 +29,11 @@ interface Packet
 
     /**
      * Returns the type of the packet.
-     *
-     * @return int
      */
     public function getPacketType(): int;
 
     /**
      * Reads the packet from the given stream.
-     *
-     * @param PacketStream $stream
-     *
-     * @return void
      *
      * @throws MalformedPacketException
      * @throws EndOfStreamException
@@ -48,17 +42,11 @@ interface Packet
 
     /**
      * Writes the packet to the given stream.
-     *
-     * @param PacketStream $stream
-     *
-     * @return void
      */
     public function write(PacketStream $stream): void;
 
     /**
      * Returns the serialized form of the packet.
-     *
-     * @return string
      */
     public function __toString(): string;
 }

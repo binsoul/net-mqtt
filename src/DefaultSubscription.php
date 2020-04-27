@@ -18,9 +18,6 @@ class DefaultSubscription implements Subscription
 
     /**
      * Constructs an instance of this class.
-     *
-     * @param string $filter
-     * @param int    $qosLevel
      */
     public function __construct(string $filter, int $qosLevel = 0)
     {
@@ -58,10 +55,6 @@ class DefaultSubscription implements Subscription
 
     /**
      * Asserts that the given quality of service level is valid.
-     *
-     * @param int  $level
-     *
-     * @return void
      *
      * @throws InvalidArgumentException
      */

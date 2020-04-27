@@ -65,10 +65,6 @@ class SubscribeResponsePacket extends BasePacket
 
     /**
      * Indicates if the given return code is an error.
-     *
-     * @param int $returnCode
-     *
-     * @return bool
      */
     public function isError(int $returnCode): bool
     {
@@ -77,10 +73,6 @@ class SubscribeResponsePacket extends BasePacket
 
     /**
      * Indicates if the given return code is an error.
-     *
-     * @param int $returnCode
-     *
-     * @return string
      */
     public function getReturnCodeName(int $returnCode): string
     {
@@ -106,8 +98,6 @@ class SubscribeResponsePacket extends BasePacket
      *
      * @param int[] $value
      *
-     * @return void
-     *
      * @throws InvalidArgumentException
      */
     public function setReturnCodes(array $value): void
@@ -125,10 +115,6 @@ class SubscribeResponsePacket extends BasePacket
 
     /**
      * Asserts that a return code is valid.
-     *
-     * @param int  $returnCode
-     *
-     * @return void
      *
      * @throws MalformedPacketException
      */

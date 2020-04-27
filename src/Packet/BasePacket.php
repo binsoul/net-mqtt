@@ -69,10 +69,6 @@ abstract class BasePacket implements Packet
     /**
      * Reads the remaining length from the given stream.
      *
-     * @param PacketStream $stream
-     *
-     * @return void
-     *
      * @throws MalformedPacketException
      * @throws EndOfStreamException
      */
@@ -95,10 +91,6 @@ abstract class BasePacket implements Packet
 
     /**
      * Writes the remaining length to the given stream.
-     *
-     * @param PacketStream $stream
-     *
-     * @return void
      */
     private function writeRemainingLength(PacketStream $stream): void
     {
@@ -121,8 +113,6 @@ abstract class BasePacket implements Packet
 
     /**
      * Returns the packet flags.
-     *
-     * @return int
      */
     public function getPacketFlags(): int
     {
@@ -131,8 +121,6 @@ abstract class BasePacket implements Packet
 
     /**
      * Returns the remaining length.
-     *
-     * @return int
      */
     public function getRemainingPacketLength(): int
     {
@@ -141,10 +129,6 @@ abstract class BasePacket implements Packet
 
     /**
      * Asserts that the packet flags have a specific value.
-     *
-     * @param int  $value
-     *
-     * @return void
      *
      * @throws MalformedPacketException
      */
@@ -164,9 +148,7 @@ abstract class BasePacket implements Packet
     /**
      * Asserts that the remaining length is greater than zero and has a specific value.
      *
-     * @param int|null $value      value to test or null if any value greater than zero is valid
-     *
-     * @return void
+     * @param int|null $value value to test or null if any value greater than zero is valid
      *
      * @throws MalformedPacketException
      */
@@ -190,10 +172,6 @@ abstract class BasePacket implements Packet
     /**
      * Asserts that the given string is a well-formed MQTT string.
      *
-     * @param string $value
-     *
-     * @return void
-     *
      * @throws MalformedPacketException
      */
     protected function assertValidStringLength(string $value): void
@@ -210,10 +188,6 @@ abstract class BasePacket implements Packet
 
     /**
      * Asserts that the given string is a well-formed MQTT string.
-     *
-     * @param string $value
-     *
-     * @return void
      *
      * @throws MalformedPacketException
      */
@@ -242,10 +216,6 @@ abstract class BasePacket implements Packet
 
     /**
      * Asserts that the given quality of service level is valid.
-     *
-     * @param int  $level
-     *
-     * @return void
      *
      * @throws MalformedPacketException
      */

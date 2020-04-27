@@ -13,8 +13,6 @@ interface Flow
 {
     /**
      * Returns the unique code.
-     *
-     * @return string
      */
     public function getCode(): string;
 
@@ -31,8 +29,6 @@ interface Flow
      * Indicates if the flow can handle the given packet.
      *
      * @param Packet $packet Packet to accept
-     *
-     * @return bool
      */
     public function accept(Packet $packet): bool;
 
@@ -47,15 +43,11 @@ interface Flow
 
     /**
      * Indicates if the flow is finished.
-     *
-     * @return bool
      */
     public function isFinished(): bool;
 
     /**
      * Indicates if the flow finished successfully.
-     *
-     * @return bool
      */
     public function isSuccess(): bool;
 
@@ -68,8 +60,6 @@ interface Flow
 
     /**
      * Returns an error message if the flow didn't finish successfully.
-     *
-     * @return string
      */
     public function getErrorMessage(): string;
 }

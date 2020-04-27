@@ -42,7 +42,7 @@ class UnsubscribeRequestPacket extends BasePacket
         $data = new PacketStream();
 
         $data->writeWord($this->generateIdentifier());
-        foreach($this->topics as $topic) {
+        foreach ($this->topics as $topic) {
             $data->writeString($topic);
         }
 
@@ -67,8 +67,6 @@ class UnsubscribeRequestPacket extends BasePacket
      *
      * @param string[] $values
      *
-     * @return void
-     *
      * @throws InvalidArgumentException
      */
     public function setTopics(array $values): void
@@ -83,7 +81,6 @@ class UnsubscribeRequestPacket extends BasePacket
             } catch (MalformedPacketException $e) {
                 throw new InvalidArgumentException(sprintf('Topic %s: '.$e->getMessage(), $index));
             }
-
         }
 
         $this->topics = $values;

@@ -34,8 +34,6 @@ abstract class IdentifierOnlyPacket extends BasePacket
 
     /**
      * Returns the expected packet flags.
-     *
-     * @return int
      */
     protected function getExpectedPacketFlags(): int
     {

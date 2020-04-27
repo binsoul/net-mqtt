@@ -21,10 +21,6 @@ class OutgoingConnectFlow extends AbstractFlow
 
     /**
      * Constructs an instance of this class.
-     *
-     * @param PacketFactory             $packetFactory
-     * @param Connection                $connection
-     * @param ClientIdentifierGenerator $generator
      */
     public function __construct(PacketFactory $packetFactory, Connection $connection, ClientIdentifierGenerator $generator)
     {

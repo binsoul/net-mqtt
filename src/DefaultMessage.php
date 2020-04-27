@@ -24,12 +24,6 @@ class DefaultMessage implements Message
 
     /**
      * Constructs an instance of this class.
-     *
-     * @param string $topic
-     * @param string $payload
-     * @param int    $qosLevel
-     * @param bool   $retain
-     * @param bool   $isDuplicate
      */
     public function __construct(string $topic, string $payload = '', int $qosLevel = 0, bool $retain = false, bool $isDuplicate = false)
     {
@@ -125,10 +119,6 @@ class DefaultMessage implements Message
 
     /**
      * Asserts that the given quality of service level is valid.
-     *
-     * @param int  $level
-     *
-     * @return void
      *
      * @throws InvalidArgumentException
      */

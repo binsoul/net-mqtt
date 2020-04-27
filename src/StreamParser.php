@@ -23,8 +23,6 @@ class StreamParser
 
     /**
      * Constructs an instance of this class.
-     *
-     * @param PacketFactory|null $packetFactory
      */
     public function __construct(PacketFactory $packetFactory = null)
     {
@@ -34,10 +32,6 @@ class StreamParser
 
     /**
      * Registers an error callback.
-     *
-     * @param callable $callback
-     *
-     * @return void
      */
     public function onError(callable $callback): void
     {
@@ -46,8 +40,6 @@ class StreamParser
 
     /**
      * Appends the given data to the internal buffer and parses it.
-     *
-     * @param string $data
      *
      * @return Packet[]
      */
@@ -84,10 +76,6 @@ class StreamParser
 
     /**
      * Executes the registered error callback.
-     *
-     * @param Throwable $exception
-     *
-     * @return void
      */
     private function handleError(Throwable $exception): void
     {

@@ -14,11 +14,7 @@ interface PacketFactory
     /**
      * Builds a packet object for the given type.
      *
-     * @param int $type
-     *
      * @throws UnknownPacketTypeException
-     *
-     * @return Packet
      */
     public function build(int $type): Packet;
 }

@@ -146,12 +146,12 @@ class PublishRequestPacketTest extends TestCase
         $packet->setQosLevel(0);
         $packet->setDuplicate(false);
         $packet->setRetained(false);
-        $packet->setPayload(str_repeat('x', 1024*1024));
+        $packet->setPayload(str_repeat('x', 1024 * 1024));
 
         $stream = new PacketStream();
         $packet->write($stream);
 
-        $this->assertGreaterThan(1024*1024, $stream->length());
+        $this->assertGreaterThan(1024 * 1024, $stream->length());
     }
 
     public function test_read_qos_level0(): void

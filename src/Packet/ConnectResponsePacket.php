@@ -69,8 +69,6 @@ class ConnectResponsePacket extends BasePacket
 
     /**
      * Returns the return code.
-     *
-     * @return int
      */
     public function getReturnCode(): int
     {
@@ -79,8 +77,6 @@ class ConnectResponsePacket extends BasePacket
 
     /**
      * Sets the return code.
-     *
-     * @param int $value
      */
     public function setReturnCode(int $value): void
     {
@@ -89,8 +85,6 @@ class ConnectResponsePacket extends BasePacket
 
     /**
      * Indicates if the connection was successful.
-     *
-     * @return bool
      */
     public function isSuccess(): bool
     {
@@ -99,8 +93,6 @@ class ConnectResponsePacket extends BasePacket
 
     /**
      * Indicates if the connection failed.
-     *
-     * @return bool
      */
     public function isError(): bool
     {
@@ -109,8 +101,6 @@ class ConnectResponsePacket extends BasePacket
 
     /**
      * Indicates if the server has a stored session for this client.
-     *
-     * @return bool
      */
     public function isSessionPresent(): bool
     {
@@ -119,10 +109,6 @@ class ConnectResponsePacket extends BasePacket
 
     /**
      * Changes the session present flag.
-     *
-     * @param bool $value
-     *
-     * @return void
      */
     public function setSessionPresent(bool $value): void
     {
@@ -135,8 +121,6 @@ class ConnectResponsePacket extends BasePacket
 
     /**
      * Returns a string representation of the returned error code.
-     *
-     * @return string
      */
     public function getErrorName(): string
     {

@@ -54,8 +54,6 @@ class SubscribeRequestPacket extends BasePacket
 
     /**
      * Returns the topic.
-     *
-     * @return string
      */
     public function getTopic(): string
     {
@@ -64,10 +62,6 @@ class SubscribeRequestPacket extends BasePacket
 
     /**
      * Sets the topic.
-     *
-     * @param string $value
-     *
-     * @return void
      *
      * @throws InvalidArgumentException
      */
@@ -79,7 +73,7 @@ class SubscribeRequestPacket extends BasePacket
 
         try {
             $this->assertValidString($value);
-        } catch (MalformedPacketException $e){
+        } catch (MalformedPacketException $e) {
             throw new InvalidArgumentException($e->getMessage());
         }
 
@@ -88,8 +82,6 @@ class SubscribeRequestPacket extends BasePacket
 
     /**
      * Returns the quality of service level.
-     *
-     * @return int
      */
     public function getQosLevel(): int
     {
@@ -98,10 +90,6 @@ class SubscribeRequestPacket extends BasePacket
 
     /**
      * Sets the quality of service level.
-     *
-     * @param int $value
-     *
-     * @return void
      *
      * @throws InvalidArgumentException
      */

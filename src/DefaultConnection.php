@@ -26,23 +26,15 @@ class DefaultConnection implements Connection
 
     /**
      * Constructs an instance of this class.
-     *
-     * @param string       $username
-     * @param string       $password
-     * @param Message|null $will
-     * @param string       $clientID
-     * @param int          $keepAlive
-     * @param int          $protocol
-     * @param bool         $clean
      */
     public function __construct(
-        $username = '',
-        $password = '',
+        string $username = '',
+        string $password = '',
         Message $will = null,
-        $clientID = '',
-        $keepAlive = 60,
-        $protocol = 4,
-        $clean = true
+        string $clientID = '',
+        int $keepAlive = 60,
+        int $protocol = 4,
+        bool $clean = true
     ) {
         $this->username = $username;
         $this->password = $password;

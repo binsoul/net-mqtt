@@ -18,8 +18,6 @@ trait IdentifiablePacket
 
     /**
      * Returns the identifier or generates a new one.
-     *
-     * @return int
      */
     protected function generateIdentifier(): int
     {
@@ -35,8 +33,6 @@ trait IdentifiablePacket
 
     /**
      * Returns the identifier.
-     *
-     * @return int|null
      */
     public function getIdentifier(): ?int
     {
@@ -45,10 +41,6 @@ trait IdentifiablePacket
 
     /**
      * Sets the identifier.
-     *
-     * @param int|null $value
-     *
-     * @return void
      */
     public function setIdentifier(?int $value): void
     {

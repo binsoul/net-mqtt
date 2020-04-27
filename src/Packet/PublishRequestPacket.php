@@ -61,8 +61,6 @@ class PublishRequestPacket extends BasePacket
 
     /**
      * Returns the topic.
-     *
-     * @return string
      */
     public function getTopic(): string
     {
@@ -71,10 +69,6 @@ class PublishRequestPacket extends BasePacket
 
     /**
      * Sets the topic.
-     *
-     * @param string $value
-     *
-     * @return void
      *
      * @throws InvalidArgumentException
      */
@@ -86,7 +80,7 @@ class PublishRequestPacket extends BasePacket
 
         try {
             $this->assertValidString($value);
-        } catch (MalformedPacketException $e){
+        } catch (MalformedPacketException $e) {
             throw new InvalidArgumentException($e->getMessage());
         }
 
@@ -95,8 +89,6 @@ class PublishRequestPacket extends BasePacket
 
     /**
      * Returns the payload.
-     *
-     * @return string
      */
     public function getPayload(): string
     {
@@ -105,10 +97,6 @@ class PublishRequestPacket extends BasePacket
 
     /**
      * Sets the payload.
-     *
-     * @param string $value
-     *
-     * @return void
      */
     public function setPayload(string $value): void
     {
@@ -117,8 +105,6 @@ class PublishRequestPacket extends BasePacket
 
     /**
      * Indicates if the packet is a duplicate.
-     *
-     * @return bool
      */
     public function isDuplicate(): bool
     {
@@ -127,10 +113,6 @@ class PublishRequestPacket extends BasePacket
 
     /**
      * Marks the packet as duplicate.
-     *
-     * @param bool $value
-     *
-     * @return void
      */
     public function setDuplicate(bool $value): void
     {
@@ -143,8 +125,6 @@ class PublishRequestPacket extends BasePacket
 
     /**
      * Indicates if the packet is retained.
-     *
-     * @return bool
      */
     public function isRetained(): bool
     {
@@ -153,10 +133,6 @@ class PublishRequestPacket extends BasePacket
 
     /**
      * Marks the packet as retained.
-     *
-     * @param bool $value
-     *
-     * @return void
      */
     public function setRetained(bool $value): void
     {
@@ -169,8 +145,6 @@ class PublishRequestPacket extends BasePacket
 
     /**
      * Returns the quality of service level.
-     *
-     * @return int
      */
     public function getQosLevel(): int
     {
@@ -179,10 +153,6 @@ class PublishRequestPacket extends BasePacket
 
     /**
      * Sets the quality of service level.
-     *
-     * @param int $value
-     *
-     * @return void
      *
      * @throws InvalidArgumentException
      */
