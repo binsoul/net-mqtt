@@ -16,10 +16,8 @@ class SubscribeRequestPacket extends BasePacket
 {
     use IdentifiablePacket;
 
-    /** @var string */
-    private $topic;
-    /** @var int */
-    private $qosLevel;
+    /** @var int[] */
+    private $topics = [];
 
     protected static $packetType = Packet::TYPE_SUBSCRIBE;
     protected $packetFlags = 2;
@@ -29,13 +27,17 @@ class SubscribeRequestPacket extends BasePacket
         parent::read($stream);
         $this->assertPacketFlags(2);
         $this->assertRemainingPacketLength();
-
         $this->identifier = $stream->readWord();
-        $this->topic = $stream->readString();
-        $this->qosLevel = $stream->readByte();
 
-        $this->assertValidQosLevel($this->qosLevel);
-        $this->assertValidString($this->topic);
+        while ($stream->getRemainingBytes() > 0) {
+            $topic = $stream->readString();
+            $qosLevel = $stream->readByte();
+
+            $this->assertValidString($topic);
+            $this->assertValidQosLevel($qosLevel);
+
+            $this->topics[$topic] = $qosLevel;
+        }
     }
 
     public function write(PacketStream $stream): void
@@ -43,8 +45,11 @@ class SubscribeRequestPacket extends BasePacket
         $data = new PacketStream();
 
         $data->writeWord($this->generateIdentifier());
-        $data->writeString($this->topic);
-        $data->writeByte($this->qosLevel);
+
+        foreach ($this->topics as $topic => $qosLevel) {
+            $data->writeString($topic);
+            $data->writeByte($qosLevel);
+        }
 
         $this->remainingPacketLength = $data->length();
 
@@ -53,54 +58,31 @@ class SubscribeRequestPacket extends BasePacket
     }
 
     /**
-     * Returns the topic.
+     * Returns the topics as an array using topics as keys and corresponding quality of service levels as values.
+     *
+     * @return int[]
      */
-    public function getTopic(): string
+    public function getTopics(): array
     {
-        return $this->topic;
+        return $this->topics;
     }
 
     /**
-     * Sets the topic.
-     *
      * @throws InvalidArgumentException
      */
-    public function setTopic(string $value): void
+    public function addTopic(string $topic, int $qosLevel): void
     {
-        if ($value === '') {
+        if ($topic === '') {
             throw new InvalidArgumentException('The topic must not be empty.');
         }
 
         try {
-            $this->assertValidString($value);
+            $this->assertValidString($topic);
+            $this->assertValidQosLevel($qosLevel);
         } catch (MalformedPacketException $e) {
             throw new InvalidArgumentException($e->getMessage());
         }
 
-        $this->topic = $value;
-    }
-
-    /**
-     * Returns the quality of service level.
-     */
-    public function getQosLevel(): int
-    {
-        return $this->qosLevel;
-    }
-
-    /**
-     * Sets the quality of service level.
-     *
-     * @throws InvalidArgumentException
-     */
-    public function setQosLevel(int $value): void
-    {
-        try {
-            $this->assertValidQosLevel($value);
-        } catch (MalformedPacketException $e) {
-            throw new InvalidArgumentException($e->getMessage());
-        }
-
-        $this->qosLevel = $value;
+        $this->topics[$topic] = $qosLevel;
     }
 }

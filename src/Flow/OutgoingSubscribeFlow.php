@@ -45,9 +45,11 @@ class OutgoingSubscribeFlow extends AbstractFlow
     {
         /** @var SubscribeRequestPacket $packet */
         $packet = $this->generatePacket(Packet::TYPE_SUBSCRIBE);
-        $packet->setTopic($this->subscriptions[0]->getFilter());
-        $packet->setQosLevel($this->subscriptions[0]->getQosLevel());
         $packet->setIdentifier($this->identifier);
+
+        foreach ($this->subscriptions as $subscription) {
+            $packet->addTopic($subscription->getFilter(), $subscription->getQosLevel());
+        }
 
         return $packet;
     }
@@ -93,7 +95,7 @@ class OutgoingSubscribeFlow extends AbstractFlow
             }
         }
 
-        $this->succeed($this->subscriptions[0]);
+        $this->succeed(count($this->subscriptions) === 1 ? $this->subscriptions[0] : $this->subscriptions);
 
         return null;
     }
