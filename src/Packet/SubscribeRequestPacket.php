@@ -25,10 +25,13 @@ class SubscribeRequestPacket extends BasePacket
     public function read(PacketStream $stream): void
     {
         parent::read($stream);
+
         $this->assertPacketFlags(2);
         $this->assertRemainingPacketLength();
+
         $originalPosition = $stream->getPosition();
         $this->identifier = $stream->readWord();
+        $this->topics = [];
 
         do {
             $topic = $stream->readString();
