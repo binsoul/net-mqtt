@@ -27,9 +27,10 @@ class SubscribeRequestPacket extends BasePacket
         parent::read($stream);
         $this->assertPacketFlags(2);
         $this->assertRemainingPacketLength();
+        $originalPosition = $stream->getPosition();
         $this->identifier = $stream->readWord();
 
-        while ($stream->getRemainingBytes() > 0) {
+        do {
             $topic = $stream->readString();
             $qosLevel = $stream->readByte();
 
@@ -37,7 +38,7 @@ class SubscribeRequestPacket extends BasePacket
             $this->assertValidQosLevel($qosLevel);
 
             $this->topics[$topic] = $qosLevel;
-        }
+        } while (($stream->getPosition() - $originalPosition) < $this->remainingPacketLength);
     }
 
     public function write(PacketStream $stream): void
