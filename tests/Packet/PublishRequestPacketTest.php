@@ -75,6 +75,20 @@ class PublishRequestPacketTest extends TestCase
         $packet->setTopic(str_repeat('x', 0x10000));
     }
 
+    public function test_cannot_set_single_level_wildcard_topic(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $packet = new PublishRequestPacket();
+        $packet->setTopic('topic/+');
+    }
+
+    public function test_cannot_set_multi_level_wildcard_topic(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $packet = new PublishRequestPacket();
+        $packet->setTopic('#');
+    }
+
     public function test_cannot_set_negative_qos_level(): void
     {
         $this->expectException(InvalidArgumentException::class);
