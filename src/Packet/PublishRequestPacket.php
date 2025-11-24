@@ -78,6 +78,9 @@ class PublishRequestPacket extends BasePacket
         if ($value === '') {
             throw new InvalidArgumentException('The topic must not be empty.');
         }
+        if (strpbrk($value, '+#')) {
+            throw new InvalidArgumentException('The topic must not contain wildcards.');
+        }
 
         try {
             $this->assertValidString($value);
