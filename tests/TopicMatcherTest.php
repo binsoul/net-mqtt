@@ -39,6 +39,8 @@ class TopicMatcherTest extends TestCase
      * Data provider for canMatchTopic test.
      *
      * @see test_can_match_topic()
+     *
+     * @return array<int, array<int, string|bool>>
      */
     public function patternsAndTopics(): array
     {
