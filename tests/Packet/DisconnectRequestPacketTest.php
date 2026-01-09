@@ -11,18 +11,13 @@ use PHPUnit\Framework\TestCase;
 
 class DisconnectRequestPacketTest extends TestCase
 {
-    private function getDefaultData(): string
-    {
-        return "\xe0\x00";
-    }
-
     public function test_write(): void
     {
         $packet = new DisconnectRequestPacket();
         $stream = new PacketStream();
         $packet->write($stream);
 
-        $this->assertEquals($this->getDefaultData(), $stream->getData());
+        self::assertEquals($this->getDefaultData(), $stream->getData());
     }
 
     public function test_read(): void
@@ -31,7 +26,7 @@ class DisconnectRequestPacketTest extends TestCase
         $packet = new DisconnectRequestPacket();
         $packet->read($stream);
 
-        $this->assertEquals(Packet::TYPE_DISCONNECT, $packet->getPacketType());
+        self::assertEquals(Packet::TYPE_DISCONNECT, $packet->getPacketType());
     }
 
     public function test_can_read_what_it_writes(): void
@@ -44,6 +39,11 @@ class DisconnectRequestPacketTest extends TestCase
 
         $packet = new DisconnectRequestPacket();
         $packet->read($stream);
-        $this->assertEquals($this->getDefaultData(), $stream->getData());
+        self::assertEquals($this->getDefaultData(), $stream->getData());
+    }
+
+    private function getDefaultData(): string
+    {
+        return "\xe0\x00";
     }
 }

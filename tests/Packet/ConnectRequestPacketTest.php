@@ -12,28 +12,12 @@ use PHPUnit\Framework\TestCase;
 
 class ConnectRequestPacketTest extends TestCase
 {
-    private function createDefaultPacket(): ConnectRequestPacket
-    {
-        $packet = new ConnectRequestPacket();
-        $packet->setProtocolLevel(4);
-        $packet->setCleanSession(true);
-        $packet->setKeepAlive(10);
-        $packet->setClientID('foobar');
-
-        return $packet;
-    }
-
-    private function getDefaultData(): string
-    {
-        return "\x10\x12\x00\x04MQTT\x04\x02\x00\x0a\x00\x06foobar";
-    }
-
     public function test_generates_client_id_on_write(): void
     {
         $packet = new ConnectRequestPacket();
-        $this->assertEquals('', $packet->getClientID());
+        self::assertEquals('', $packet->getClientID());
         $packet->write(new PacketStream());
-        $this->assertNotEquals('', $packet->getClientID());
+        self::assertNotEquals('', $packet->getClientID());
     }
 
     public function test_minimal_packet(): void
@@ -42,26 +26,26 @@ class ConnectRequestPacketTest extends TestCase
         $packet = new ConnectRequestPacket();
         $packet->read($stream);
 
-        $this->assertEquals(1, $packet->getPacketType());
-        $this->assertEquals(0, $packet->getPacketFlags());
-        $this->assertEquals(4, $packet->getProtocolLevel());
-        $this->assertTrue($packet->isCleanSession());
-        $this->assertEquals(10, $packet->getKeepAlive());
-        $this->assertEquals('foobar', $packet->getClientID());
-        $this->assertEquals('', $packet->getUsername());
-        $this->assertEquals('', $packet->getPassword());
-        $this->assertFalse($packet->hasWill());
-        $this->assertFalse($packet->isWillRetained());
-        $this->assertEquals('', $packet->getWillMessage());
-        $this->assertEquals('', $packet->getWillTopic());
-        $this->assertEquals(0, $packet->getWillQosLevel());
+        self::assertEquals(1, $packet->getPacketType());
+        self::assertEquals(0, $packet->getPacketFlags());
+        self::assertEquals(4, $packet->getProtocolLevel());
+        self::assertTrue($packet->isCleanSession());
+        self::assertEquals(10, $packet->getKeepAlive());
+        self::assertEquals('foobar', $packet->getClientID());
+        self::assertEquals('', $packet->getUsername());
+        self::assertEquals('', $packet->getPassword());
+        self::assertFalse($packet->hasWill());
+        self::assertFalse($packet->isWillRetained());
+        self::assertEquals('', $packet->getWillMessage());
+        self::assertEquals('', $packet->getWillTopic());
+        self::assertEquals(0, $packet->getWillQosLevel());
 
-        $this->assertEquals($this->getDefaultData(), (string) $packet);
+        self::assertEquals($this->getDefaultData(), (string) $packet);
 
         $packet = $this->createDefaultPacket();
         $packet->setProtocolLevel(4);
 
-        $this->assertEquals($this->getDefaultData(), (string) $packet);
+        self::assertEquals($this->getDefaultData(), (string) $packet);
     }
 
     public function test_packet_with_protocol_level_3(): void
@@ -71,14 +55,14 @@ class ConnectRequestPacketTest extends TestCase
         $packet = new ConnectRequestPacket();
         $packet->read($stream);
 
-        $this->assertEquals(3, $packet->getProtocolLevel());
+        self::assertEquals(3, $packet->getProtocolLevel());
 
-        $this->assertEquals($data, (string) $packet);
+        self::assertEquals($data, (string) $packet);
 
         $packet = $this->createDefaultPacket();
         $packet->setProtocolLevel(3);
 
-        $this->assertEquals($data, (string) $packet);
+        self::assertEquals($data, (string) $packet);
     }
 
     public function test_with_existing_session(): void
@@ -88,14 +72,14 @@ class ConnectRequestPacketTest extends TestCase
         $packet = new ConnectRequestPacket();
         $packet->read($stream);
 
-        $this->assertFalse($packet->isCleanSession());
+        self::assertFalse($packet->isCleanSession());
 
-        $this->assertEquals($data, (string) $packet);
+        self::assertEquals($data, (string) $packet);
 
         $packet = $this->createDefaultPacket();
         $packet->setCleanSession(false);
 
-        $this->assertEquals($data, (string) $packet);
+        self::assertEquals($data, (string) $packet);
     }
 
     public function test_packet_with_username(): void
@@ -105,22 +89,22 @@ class ConnectRequestPacketTest extends TestCase
         $packet = new ConnectRequestPacket();
         $packet->read($stream);
 
-        $this->assertTrue($packet->hasUsername());
-        $this->assertEquals('üsername', $packet->getUsername());
+        self::assertTrue($packet->hasUsername());
+        self::assertEquals('üsername', $packet->getUsername());
 
-        $this->assertEquals($data, (string) $packet);
+        self::assertEquals($data, (string) $packet);
 
         $packet = $this->createDefaultPacket();
         $packet->setUsername('üsername');
 
-        $this->assertTrue($packet->hasUsername());
-        $this->assertEquals('üsername', $packet->getUsername());
-        $this->assertEquals($data, (string) $packet);
+        self::assertTrue($packet->hasUsername());
+        self::assertEquals('üsername', $packet->getUsername());
+        self::assertEquals($data, (string) $packet);
 
         $packet->setUsername('');
-        $this->assertFalse($packet->hasUsername());
-        $this->assertEquals('', $packet->getUsername());
-        $this->assertEquals($this->getDefaultData(), (string) $packet);
+        self::assertFalse($packet->hasUsername());
+        self::assertEquals('', $packet->getUsername());
+        self::assertEquals($this->getDefaultData(), (string) $packet);
     }
 
     public function test_cannot_set_too_large_username(): void
@@ -151,17 +135,17 @@ class ConnectRequestPacketTest extends TestCase
         $packet = new ConnectRequestPacket();
         $packet->read($stream);
 
-        $this->assertEquals('pässwörd', $packet->getPassword());
+        self::assertEquals('pässwörd', $packet->getPassword());
 
-        $this->assertEquals($data, (string) $packet);
+        self::assertEquals($data, (string) $packet);
 
         $packet = $this->createDefaultPacket();
         $packet->setPassword('pässwörd');
 
-        $this->assertEquals($data, (string) $packet);
+        self::assertEquals($data, (string) $packet);
 
         $packet->setPassword('');
-        $this->assertEquals($this->getDefaultData(), (string) $packet);
+        self::assertEquals($this->getDefaultData(), (string) $packet);
     }
 
     public function test_cannot_set_invalid_password(): void
@@ -178,24 +162,24 @@ class ConnectRequestPacketTest extends TestCase
         $packet = new ConnectRequestPacket();
         $packet->read($stream);
 
-        $this->assertTrue($packet->hasWill());
-        $this->assertTrue($packet->isWillRetained());
-        $this->assertEquals('message', $packet->getWillMessage());
-        $this->assertEquals('topic', $packet->getWillTopic());
-        $this->assertEquals(2, $packet->getWillQosLevel());
+        self::assertTrue($packet->hasWill());
+        self::assertTrue($packet->isWillRetained());
+        self::assertEquals('message', $packet->getWillMessage());
+        self::assertEquals('topic', $packet->getWillTopic());
+        self::assertEquals(2, $packet->getWillQosLevel());
 
-        $this->assertEquals($data, (string) $packet);
+        self::assertEquals($data, (string) $packet);
 
         $packet = $this->createDefaultPacket();
         $packet->setWill('topic', 'message', 2, true);
 
-        $this->assertEquals($data, (string) $packet);
+        self::assertEquals($data, (string) $packet);
 
         $packet->setWill('topic', 'message', 2, false);
-        $this->assertFalse($packet->isWillRetained());
+        self::assertFalse($packet->isWillRetained());
 
         $packet->removeWill();
-        $this->assertEquals($this->getDefaultData(), (string) $packet);
+        self::assertEquals($this->getDefaultData(), (string) $packet);
     }
 
     public function test_packet_without_will_but_will_qos(): void
@@ -275,9 +259,25 @@ class ConnectRequestPacketTest extends TestCase
 
         $packet = new ConnectRequestPacket();
         $packet->read($stream);
-        $this->assertEquals(4, $packet->getProtocolLevel());
-        $this->assertTrue($packet->isCleanSession());
-        $this->assertEquals(10, $packet->getKeepAlive());
-        $this->assertEquals('foobar', $packet->getClientID());
+        self::assertEquals(4, $packet->getProtocolLevel());
+        self::assertTrue($packet->isCleanSession());
+        self::assertEquals(10, $packet->getKeepAlive());
+        self::assertEquals('foobar', $packet->getClientID());
+    }
+
+    private function createDefaultPacket(): ConnectRequestPacket
+    {
+        $packet = new ConnectRequestPacket();
+        $packet->setProtocolLevel(4);
+        $packet->setCleanSession(true);
+        $packet->setKeepAlive(10);
+        $packet->setClientID('foobar');
+
+        return $packet;
+    }
+
+    private function getDefaultData(): string
+    {
+        return "\x10\x12\x00\x04MQTT\x04\x02\x00\x0a\x00\x06foobar";
     }
 }

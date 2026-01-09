@@ -11,5 +11,5 @@ use BinSoul\Net\Mqtt\Packet;
  */
 class PublishReceivedPacket extends IdentifierOnlyPacket
 {
-    protected static $packetType = Packet::TYPE_PUBREC;
+    protected static int $packetType = Packet::TYPE_PUBREC;
 }

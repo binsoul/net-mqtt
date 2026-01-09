@@ -9,20 +9,19 @@ namespace BinSoul\Net\Mqtt;
  */
 class DefaultConnection implements Connection
 {
-    /** @var string */
-    private $username;
-    /** @var string */
-    private $password;
-    /** @var Message|null */
-    private $will;
-    /** @var string */
-    private $clientID;
-    /** @var int */
-    private $keepAlive;
-    /** @var int */
-    private $protocol;
-    /** @var bool */
-    private $clean;
+    private string $username;
+
+    private string $password;
+
+    private ?Message $will;
+
+    private string $clientID;
+
+    private int $keepAlive;
+
+    private int $protocol;
+
+    private bool $clean;
 
     /**
      * Constructs an instance of this class.

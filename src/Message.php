@@ -36,50 +36,36 @@ interface Message
 
     /**
      * Returns a new message with the given topic.
-     *
-     * @return self
      */
     public function withTopic(string $topic): Message;
 
     /**
      * Returns a new message with the given payload.
-     *
-     * @return self
      */
     public function withPayload(string $payload): Message;
 
     /**
      * Returns a new message with the given quality of service level.
-     *
-     * @return self
      */
     public function withQosLevel(int $level): Message;
 
     /**
      * Returns a new message flagged as retained.
-     *
-     * @return self
      */
     public function retain(): Message;
 
     /**
      * Returns a new message flagged as not retained.
-     *
-     * @return self
      */
     public function release(): Message;
 
     /**
      * Returns a new message flagged as duplicate.
-     *
-     * @return self
      */
     public function duplicate(): Message;
 
     /**
      * Returns a new message flagged as original.
-     *
-     * @return self
      */
     public function original(): Message;
 }

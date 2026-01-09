@@ -11,5 +11,5 @@ use BinSoul\Net\Mqtt\Packet;
  */
 class PublishAckPacket extends IdentifierOnlyPacket
 {
-    protected static $packetType = Packet::TYPE_PUBACK;
+    protected static int $packetType = Packet::TYPE_PUBACK;
 }

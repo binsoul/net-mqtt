@@ -15,26 +15,25 @@ use InvalidArgumentException;
  */
 class ConnectRequestPacket extends BasePacket
 {
-    /** @var int */
-    private $protocolLevel = 4;
-    /** @var string */
-    private $protocolName = 'MQTT';
-    /** @var int */
-    private $flags = 2;
-    /** @var string */
-    protected $clientID = '';
-    /** @var int */
-    private $keepAlive = 60;
-    /** @var string */
-    private $willTopic = '';
-    /** @var string */
-    private $willMessage = '';
-    /** @var string */
-    private $username = '';
-    /** @var string */
-    private $password = '';
+    protected static int $packetType = Packet::TYPE_CONNECT;
 
-    protected static $packetType = Packet::TYPE_CONNECT;
+    protected string $clientID = '';
+
+    private int $protocolLevel = 4;
+
+    private string $protocolName = 'MQTT';
+
+    private int $flags = 2;
+
+    private int $keepAlive = 60;
+
+    private string $willTopic = '';
+
+    private string $willMessage = '';
+
+    private string $username = '';
+
+    private string $password = '';
 
     public function read(PacketStream $stream): void
     {
@@ -71,9 +70,9 @@ class ConnectRequestPacket extends BasePacket
     {
         if ($this->clientID === '') {
             try {
-                $this->clientID = 'BinSoul'.random_int(100000, 999999);
+                $this->clientID = 'BinSoul' . random_int(100000, 999999);
             } catch (Exception $e) {
-                $this->clientID = 'BinSoul'.mt_rand(100000, 999999);
+                $this->clientID = 'BinSoul' . mt_rand(100000, 999999);
             }
         }
 
@@ -124,6 +123,7 @@ class ConnectRequestPacket extends BasePacket
         }
 
         $this->protocolLevel = $value;
+
         if ($this->protocolLevel === 3) {
             $this->protocolName = 'MQIsdp';
         } elseif ($this->protocolLevel === 4) {
@@ -253,8 +253,8 @@ class ConnectRequestPacket extends BasePacket
             $this->assertValidString($topic);
             $this->assertValidStringLength($message);
             $this->assertValidQosLevel($qosLevel);
-        } catch (MalformedPacketException $e) {
-            throw new InvalidArgumentException($e->getMessage());
+        } catch (MalformedPacketException $malformedPacketException) {
+            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
         }
 
         $this->willTopic = $topic;
@@ -303,11 +303,12 @@ class ConnectRequestPacket extends BasePacket
     {
         try {
             $this->assertValidString($value);
-        } catch (MalformedPacketException $e) {
-            throw new InvalidArgumentException($e->getMessage());
+        } catch (MalformedPacketException $malformedPacketException) {
+            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
         }
 
         $this->username = $value;
+
         if ($this->username !== '') {
             $this->flags |= 64;
         } else {
@@ -340,11 +341,12 @@ class ConnectRequestPacket extends BasePacket
     {
         try {
             $this->assertValidStringLength($value);
-        } catch (MalformedPacketException $e) {
-            throw new InvalidArgumentException($e->getMessage());
+        } catch (MalformedPacketException $malformedPacketException) {
+            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
         }
 
         $this->password = $value;
+
         if ($this->password !== '') {
             $this->flags |= 128;
         } else {

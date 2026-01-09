@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class StreamParserTest extends TestCase
 {
-    private $packets;
+    private array $packets;
 
     protected function setUp(): void
     {
@@ -49,11 +49,13 @@ class StreamParserTest extends TestCase
     public function test_returns_expected_packets(): void
     {
         $parser = new StreamParser();
+
         foreach ($this->packets as $type => $packets) {
             foreach ($packets as $data) {
                 $result = $parser->push($data);
+
                 foreach ($result as $packet) {
-                    $this->assertEquals($type, $packet->getPacketType());
+                    self::assertEquals($type, $packet->getPacketType());
                 }
             }
         }
@@ -63,44 +65,50 @@ class StreamParserTest extends TestCase
     {
         $parser = new StreamParser();
         $called = 0;
-        $parser->onError(static function () use (&$called) {
-            ++$called;
-        });
+        $parser->onError(
+            static function () use (&$called): void {
+                $called++;
+            }
+        );
 
         $parser->push("\x00");
         $parser->push("\xF0");
 
-        $this->assertEquals(2, $called);
+        self::assertEquals(2, $called);
     }
 
     public function test_handles_malformed_packets(): void
     {
         $parser = new StreamParser();
         $called = 0;
-        $parser->onError(static function () use (&$called) {
-            ++$called;
-        });
+        $parser->onError(
+            static function () use (&$called): void {
+                $called++;
+            }
+        );
 
         $parser->push("\x16\x00");
-        $this->assertEquals(1, $called);
+        self::assertEquals(1, $called);
     }
 
     public function test_handles_fragmented_packets(): void
     {
         $parser = new StreamParser();
         $called = 0;
-        $parser->onError(static function () use (&$called) {
-            ++$called;
-        });
+        $parser->onError(
+            static function () use (&$called): void {
+                $called++;
+            }
+        );
 
         $packets = $parser->push("0\x0d");
-        $this->assertCount(0, $packets);
+        self::assertCount(0, $packets);
         $packets = $parser->push("\x00\x06TopicAqos 1");
-        $this->assertCount(1, $packets);
+        self::assertCount(1, $packets);
 
         $packets = $parser->push("0\x0d\x00\x06TopicA");
-        $this->assertCount(0, $packets);
+        self::assertCount(0, $packets);
         $packets = $parser->push('qos 1');
-        $this->assertCount(1, $packets);
+        self::assertCount(1, $packets);
     }
 }

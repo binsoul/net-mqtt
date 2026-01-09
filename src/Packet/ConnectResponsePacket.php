@@ -12,8 +12,14 @@ use BinSoul\Net\Mqtt\PacketStream;
  */
 class ConnectResponsePacket extends BasePacket
 {
-    /** @var string[][] */
-    private static $returnCodes = [
+    protected static int $packetType = Packet::TYPE_CONNACK;
+
+    protected int $remainingPacketLength = 2;
+
+    /**
+     * @var string[][]
+     */
+    private static array $returnCodes = [
         0 => [
             'Connection accepted',
             '',
@@ -40,13 +46,9 @@ class ConnectResponsePacket extends BasePacket
         ],
     ];
 
-    /** @var int */
-    private $flags = 0;
-    /** @var int */
-    private $returnCode;
+    private int $flags = 0;
 
-    protected static $packetType = Packet::TYPE_CONNACK;
-    protected $remainingPacketLength = 2;
+    private int $returnCode = 0;
 
     public function read(PacketStream $stream): void
     {
@@ -128,6 +130,6 @@ class ConnectResponsePacket extends BasePacket
             return self::$returnCodes[$this->returnCode][0];
         }
 
-        return 'Error '.$this->returnCode;
+        return 'Error ' . $this->returnCode;
     }
 }

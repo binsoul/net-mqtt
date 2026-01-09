@@ -19,12 +19,11 @@ use BinSoul\Net\Mqtt\PacketIdentifierGenerator;
  */
 class OutgoingPublishFlow extends AbstractFlow
 {
-    /** @var int|null */
-    private $identifier;
-    /** @var Message */
-    private $message;
-    /** @var bool */
-    private $receivedPubRec = false;
+    private ?int $identifier = null;
+
+    private Message $message;
+
+    private bool $receivedPubRec = false;
 
     /**
      * Constructs an instance of this class.
@@ -34,6 +33,7 @@ class OutgoingPublishFlow extends AbstractFlow
         parent::__construct($packetFactory);
 
         $this->message = $message;
+
         if ($this->message->getQosLevel() > 0) {
             $this->identifier = $generator->generatePacketIdentifier();
         }

@@ -13,7 +13,7 @@ abstract class IdentifierOnlyPacket extends BasePacket
 {
     use IdentifiablePacket;
 
-    protected $remainingPacketLength = 2;
+    protected int $remainingPacketLength = 2;
 
     public function read(PacketStream $stream): void
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BinSoul\Test\Net\Mqtt\Helpers;
+namespace BinSoul\Test\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\TopicMatcher;
 use PHPUnit\Framework\TestCase;
@@ -173,6 +173,6 @@ class TopicMatcherTest extends TestCase
     {
         $result = $this->matcher->matches($pattern, $topic);
 
-        $this->assertSame($expectedResult, $result);
+        self::assertSame($expectedResult, $result);
     }
 }

@@ -16,10 +16,12 @@ use BinSoul\Net\Mqtt\Subscription;
  */
 class OutgoingUnsubscribeFlow extends AbstractFlow
 {
-    /** @var int */
-    private $identifier;
-    /** @var Subscription[] */
-    private $subscriptions;
+    private int $identifier;
+
+    /**
+     * @var Subscription[]
+     */
+    private array $subscriptions;
 
     /**
      * Constructs an instance of this class.
@@ -46,9 +48,11 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
         $packet->setIdentifier($this->identifier);
 
         $topics = [];
+
         foreach ($this->subscriptions as $subscription) {
             $topics[] = $subscription->getFilter();
         }
+
         $packet->setTopics($topics);
 
         return $packet;

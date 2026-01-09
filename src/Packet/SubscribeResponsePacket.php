@@ -16,20 +16,22 @@ class SubscribeResponsePacket extends BasePacket
 {
     use IdentifiablePacket;
 
+    protected static int $packetType = Packet::TYPE_SUBACK;
+
     /**
      * @var string[][]
      */
-    private static $qosLevels = [
+    private static array $qosLevels = [
         0 => ['Maximum QoS 0'],
         1 => ['Maximum QoS 1'],
         2 => ['Maximum QoS 2'],
         128 => ['Failure'],
     ];
 
-    /** @var int[] */
-    private $returnCodes = [];
-
-    protected static $packetType = Packet::TYPE_SUBACK;
+    /**
+     * @var int[]
+     */
+    private array $returnCodes = [];
 
     public function read(PacketStream $stream): void
     {
@@ -40,7 +42,8 @@ class SubscribeResponsePacket extends BasePacket
         $this->identifier = $stream->readWord();
 
         $returnCodeLength = $this->remainingPacketLength - 2;
-        for ($n = 0; $n < $returnCodeLength; ++$n) {
+
+        for ($n = 0; $n < $returnCodeLength; $n++) {
             $returnCode = $stream->readByte();
             $this->assertValidReturnCode($returnCode);
 
@@ -53,6 +56,7 @@ class SubscribeResponsePacket extends BasePacket
         $data = new PacketStream();
 
         $data->writeWord($this->generateIdentifier());
+
         foreach ($this->returnCodes as $returnCode) {
             $data->writeByte($returnCode);
         }
@@ -80,7 +84,7 @@ class SubscribeResponsePacket extends BasePacket
             return self::$qosLevels[$returnCode][0];
         }
 
-        return 'Unknown '.$returnCode;
+        return 'Unknown ' . $returnCode;
     }
 
     /**
@@ -106,7 +110,7 @@ class SubscribeResponsePacket extends BasePacket
             try {
                 $this->assertValidReturnCode($returnCode);
             } catch (MalformedPacketException $e) {
-                throw new InvalidArgumentException(sprintf('Return code index %s: %s', $index, $e->getMessage()));
+                throw new InvalidArgumentException(sprintf('Return code index %s: %s', $index, $e->getMessage()), $e->getCode(), $e);
             }
         }
 
@@ -120,7 +124,7 @@ class SubscribeResponsePacket extends BasePacket
      */
     private function assertValidReturnCode(int $returnCode): void
     {
-        if (!in_array($returnCode, [0, 1, 2, 128], true)) {
+        if (! in_array($returnCode, [0, 1, 2, 128], true)) {
             throw new MalformedPacketException(sprintf('Malformed return code %02x.', $returnCode));
         }
     }

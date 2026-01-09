@@ -12,7 +12,7 @@ use BinSoul\Net\Mqtt\PacketStream;
  */
 class DisconnectRequestPacket extends BasePacket
 {
-    protected static $packetType = Packet::TYPE_DISCONNECT;
+    protected static int $packetType = Packet::TYPE_DISCONNECT;
 
     public function read(PacketStream $stream): void
     {

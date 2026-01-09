@@ -16,13 +16,13 @@ class SubscribeRequestPacket extends BasePacket
 {
     use IdentifiablePacket;
 
-    /** @var string */
-    private $topic;
-    /** @var int */
-    private $qosLevel;
+    protected static int $packetType = Packet::TYPE_SUBSCRIBE;
 
-    protected static $packetType = Packet::TYPE_SUBSCRIBE;
-    protected $packetFlags = 2;
+    protected int $packetFlags = 2;
+
+    private string $topic;
+
+    private int $qosLevel;
 
     public function read(PacketStream $stream): void
     {
@@ -73,8 +73,8 @@ class SubscribeRequestPacket extends BasePacket
 
         try {
             $this->assertValidString($value);
-        } catch (MalformedPacketException $e) {
-            throw new InvalidArgumentException($e->getMessage());
+        } catch (MalformedPacketException $malformedPacketException) {
+            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
         }
 
         $this->topic = $value;
@@ -97,8 +97,8 @@ class SubscribeRequestPacket extends BasePacket
     {
         try {
             $this->assertValidQosLevel($value);
-        } catch (MalformedPacketException $e) {
-            throw new InvalidArgumentException($e->getMessage());
+        } catch (MalformedPacketException $malformedPacketException) {
+            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
         }
 
         $this->qosLevel = $value;

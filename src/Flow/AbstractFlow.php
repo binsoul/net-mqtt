@@ -14,16 +14,18 @@ use BinSoul\Net\Mqtt\PacketFactory;
  */
 abstract class AbstractFlow implements Flow
 {
-    /** @var bool */
-    private $isFinished = false;
-    /** @var bool */
-    private $isSuccess = false;
-    /** @var mixed */
+    private bool $isFinished = false;
+
+    private bool $isSuccess = false;
+
+    /**
+     * @var mixed
+     */
     private $result;
-    /** @var string */
-    private $error = '';
-    /** @var PacketFactory */
-    private $packetFactory;
+
+    private string $error = '';
+
+    private PacketFactory $packetFactory;
 
     /**
      * Constructs an instance of this class.
@@ -53,6 +55,9 @@ abstract class AbstractFlow implements Flow
         return $this->isFinished && $this->isSuccess;
     }
 
+    /**
+     * @return mixed
+     */
     public function getResult()
     {
         return $this->result;
@@ -66,7 +71,7 @@ abstract class AbstractFlow implements Flow
     /**
      * Marks the flow as successful and sets the result.
      *
-     * @param mixed|null $result
+     * @param mixed $result
      */
     protected function succeed($result = null): void
     {

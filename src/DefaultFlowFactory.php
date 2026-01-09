@@ -18,18 +18,11 @@ use BinSoul\Net\Mqtt\Flow\OutgoingUnsubscribeFlow;
  */
 class DefaultFlowFactory implements FlowFactory
 {
-    /**
-     * @var ClientIdentifierGenerator
-     */
-    private $clientIdentifierGenerator;
-    /**
-     * @var PacketIdentifierGenerator
-     */
-    private $packetIdentifierGenerator;
-    /**
-     * @var PacketFactory
-     */
-    private $packetFactory;
+    private ClientIdentifierGenerator $clientIdentifierGenerator;
+
+    private PacketIdentifierGenerator $packetIdentifierGenerator;
+
+    private PacketFactory $packetFactory;
 
     /**
      * Constructs an instance of this class.

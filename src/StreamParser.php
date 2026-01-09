@@ -14,11 +14,13 @@ use Throwable;
  */
 class StreamParser
 {
-    /** @var PacketStream */
-    private $buffer;
-    /** @var PacketFactory */
-    private $factory;
-    /** @var callable */
+    private PacketStream $buffer;
+
+    private PacketFactory $factory;
+
+    /**
+     * @var callable
+     */
     private $errorCallback;
 
     /**
@@ -48,23 +50,28 @@ class StreamParser
         $this->buffer->write($data);
 
         $result = [];
+
         while ($this->buffer->getRemainingBytes() > 0) {
             $type = $this->buffer->readByte() >> 4;
+
             try {
                 $packet = $this->factory->build($type);
             } catch (UnknownPacketTypeException $e) {
                 $this->handleError($e);
+
                 continue;
             }
 
             $this->buffer->seek(-1);
             $position = $this->buffer->getPosition();
+
             try {
                 $packet->read($this->buffer);
                 $result[] = $packet;
                 $this->buffer->cut();
             } catch (EndOfStreamException $e) {
                 $this->buffer->setPosition($position);
+
                 break;
             } catch (MalformedPacketException $e) {
                 $this->handleError($e);

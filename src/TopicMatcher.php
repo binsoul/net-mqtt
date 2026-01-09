@@ -24,18 +24,16 @@ class TopicMatcher
         // Created by Steffen (https://github.com/kernelguy)
         $tokens = explode('/', $filter);
         $parts = [];
+
         foreach ($tokens as $index => $token) {
             switch ($token) {
                 case '+':
                     $parts[] = '[^/#\+]*';
 
                     break;
+
                 case '#':
-                    if ($index === 0) {
-                        $parts[] = '[^\+\$]*';
-                    } else {
-                        $parts[] = '[^\+]*';
-                    }
+                    $parts[] = $index === 0 ? '[^\+\$]*' : '[^\+]*';
 
                     break;
                 default:
@@ -47,7 +45,7 @@ class TopicMatcher
 
         $regex = implode('/', $parts);
         $regex = str_replace('$', '\$', $regex);
-        $regex = ';^'.$regex.'$;';
+        $regex = ';^' . $regex . '$;';
 
         return preg_match($regex, $topic) === 1;
     }

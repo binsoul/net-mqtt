@@ -16,8 +16,7 @@ use BinSoul\Net\Mqtt\PacketFactory;
  */
 class OutgoingConnectFlow extends AbstractFlow
 {
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
     /**
      * Constructs an instance of this class.
@@ -48,7 +47,9 @@ class OutgoingConnectFlow extends AbstractFlow
         $packet->setCleanSession($this->connection->isCleanSession());
         $packet->setUsername($this->connection->getUsername());
         $packet->setPassword($this->connection->getPassword());
+
         $will = $this->connection->getWill();
+
         if ($will !== null && $will->getTopic() !== '' && $will->getPayload() !== '') {
             $packet->setWill($will->getTopic(), $will->getPayload(), $will->getQosLevel(), $will->isRetained());
         }

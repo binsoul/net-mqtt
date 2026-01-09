@@ -13,19 +13,37 @@ use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 interface Packet
 {
     public const TYPE_CONNECT = 1;
+
     public const TYPE_CONNACK = 2;
+
     public const TYPE_PUBLISH = 3;
+
     public const TYPE_PUBACK = 4;
+
     public const TYPE_PUBREC = 5;
+
     public const TYPE_PUBREL = 6;
+
     public const TYPE_PUBCOMP = 7;
+
     public const TYPE_SUBSCRIBE = 8;
+
     public const TYPE_SUBACK = 9;
+
     public const TYPE_UNSUBSCRIBE = 10;
+
     public const TYPE_UNSUBACK = 11;
+
     public const TYPE_PINGREQ = 12;
+
     public const TYPE_PINGRESP = 13;
+
     public const TYPE_DISCONNECT = 14;
+
+    /**
+     * Returns the serialized form of the packet.
+     */
+    public function __toString(): string;
 
     /**
      * Returns the type of the packet.
@@ -44,9 +62,4 @@ interface Packet
      * Writes the packet to the given stream.
      */
     public function write(PacketStream $stream): void;
-
-    /**
-     * Returns the serialized form of the packet.
-     */
-    public function __toString(): string;
 }

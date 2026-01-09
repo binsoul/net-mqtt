@@ -38,6 +38,8 @@ interface Flow
      * @param Packet $packet Packet to respond
      *
      * @return Packet|null Next packet of the flow
+     *
+     * @throws Exception
      */
     public function next(Packet $packet): ?Packet;
 

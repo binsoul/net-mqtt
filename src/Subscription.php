@@ -21,15 +21,11 @@ interface Subscription
 
     /**
      * Returns a new subscription with the given topic filter.
-     *
-     * @return self
      */
     public function withFilter(string $filter): Subscription;
 
     /**
      * Returns a new subscription with the given quality of service level.
-     *
-     * @return self
      */
     public function withQosLevel(int $level): Subscription;
 }

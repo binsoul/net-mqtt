@@ -17,10 +17,9 @@ use BinSoul\Net\Mqtt\PacketFactory;
  */
 class IncomingPublishFlow extends AbstractFlow
 {
-    /** @var int|null */
-    private $identifier;
-    /** @var Message */
-    private $message;
+    private ?int $identifier;
+
+    private Message $message;
 
     /**
      * Constructs an instance of this class.
@@ -42,6 +41,7 @@ class IncomingPublishFlow extends AbstractFlow
     {
         $packet = null;
         $emit = true;
+
         if ($this->message->getQosLevel() === 1) {
             $packet = $this->generatePacket(Packet::TYPE_PUBACK);
         } elseif ($this->message->getQosLevel() === 2) {

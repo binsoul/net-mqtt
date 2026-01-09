@@ -12,17 +12,6 @@ use PHPUnit\Framework\TestCase;
 
 class StrictConnectRequestPacketTest extends TestCase
 {
-    private function createDefaultPacket(): StrictConnectRequestPacket
-    {
-        $packet = new StrictConnectRequestPacket();
-        $packet->setProtocolLevel(4);
-        $packet->setCleanSession(true);
-        $packet->setKeepAlive(10);
-        $packet->setClientID('foobar');
-
-        return $packet;
-    }
-
     public function test_defaults(): void
     {
         $packet = $this->createDefaultPacket();
@@ -33,7 +22,7 @@ class StrictConnectRequestPacketTest extends TestCase
         $packet = new StrictConnectRequestPacket();
         $packet->read($stream);
 
-        $this->assertEquals('foobar', $packet->getClientID());
+        self::assertEquals('foobar', $packet->getClientID());
     }
 
     public function test_too_long_client_id_in_packet(): void
@@ -68,5 +57,16 @@ class StrictConnectRequestPacketTest extends TestCase
 
         $packet = $this->createDefaultPacket();
         $packet->setClientID('!fööbär!');
+    }
+
+    private function createDefaultPacket(): StrictConnectRequestPacket
+    {
+        $packet = new StrictConnectRequestPacket();
+        $packet->setProtocolLevel(4);
+        $packet->setCleanSession(true);
+        $packet->setKeepAlive(10);
+        $packet->setClientID('foobar');
+
+        return $packet;
     }
 }

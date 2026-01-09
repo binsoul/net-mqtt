@@ -11,16 +11,15 @@ use InvalidArgumentException;
  */
 class DefaultMessage implements Message
 {
-    /** @var string */
-    private $topic;
-    /** @var string */
-    private $payload;
-    /** @var bool */
-    private $isRetained;
-    /** @var bool */
-    private $isDuplicate;
-    /** @var int */
-    private $qosLevel;
+    private string $topic;
+
+    private string $payload;
+
+    private bool $isRetained;
+
+    private bool $isDuplicate;
+
+    private int $qosLevel;
 
     /**
      * Constructs an instance of this class.

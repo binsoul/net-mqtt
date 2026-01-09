@@ -11,25 +11,9 @@ use InvalidArgumentException;
  */
 trait IdentifiablePacket
 {
-    /** @var int */
-    private static $nextIdentifier = 0;
-    /** @var int|null */
-    protected $identifier;
+    protected ?int $identifier = null;
 
-    /**
-     * Returns the identifier or generates a new one.
-     */
-    protected function generateIdentifier(): int
-    {
-        if ($this->identifier === null) {
-            ++self::$nextIdentifier;
-            self::$nextIdentifier &= 0xFFFF;
-
-            $this->identifier = self::$nextIdentifier;
-        }
-
-        return $this->identifier;
-    }
+    private static int $nextIdentifier = 0;
 
     /**
      * Returns the identifier.
@@ -54,5 +38,20 @@ trait IdentifiablePacket
         }
 
         $this->identifier = $value;
+    }
+
+    /**
+     * Returns the identifier or generates a new one.
+     */
+    protected function generateIdentifier(): int
+    {
+        if ($this->identifier === null) {
+            self::$nextIdentifier++;
+            self::$nextIdentifier &= 0xFFFF;
+
+            $this->identifier = self::$nextIdentifier;
+        }
+
+        return $this->identifier;
     }
 }

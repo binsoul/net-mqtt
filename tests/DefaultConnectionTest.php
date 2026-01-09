@@ -14,13 +14,13 @@ class DefaultConnectionTest extends TestCase
     {
         $conn = new DefaultConnection();
 
-        $this->assertEquals('', $conn->getUsername());
-        $this->assertEquals('', $conn->getPassword());
-        $this->assertEquals('', $conn->getClientID());
-        $this->assertNull($conn->getWill());
-        $this->assertGreaterThan(0, $conn->getKeepAlive());
-        $this->assertGreaterThan(0, $conn->getProtocol());
-        $this->assertTrue($conn->isCleanSession());
+        self::assertEquals('', $conn->getUsername());
+        self::assertEquals('', $conn->getPassword());
+        self::assertEquals('', $conn->getClientID());
+        self::assertNull($conn->getWill());
+        self::assertGreaterThan(0, $conn->getKeepAlive());
+        self::assertGreaterThan(0, $conn->getProtocol());
+        self::assertTrue($conn->isCleanSession());
     }
 
     public function test_returns_instance_with_different_credentials(): void
@@ -28,9 +28,9 @@ class DefaultConnectionTest extends TestCase
         $original = new DefaultConnection('foo', 'bar');
         $clone = $original->withCredentials('username', 'password');
 
-        $this->assertNotSame($clone, $original);
-        $this->assertEquals('username', $clone->getUsername());
-        $this->assertEquals('password', $clone->getPassword());
+        self::assertNotSame($clone, $original);
+        self::assertEquals('username', $clone->getUsername());
+        self::assertEquals('password', $clone->getPassword());
     }
 
     public function test_returns_instance_with_different_will(): void
@@ -39,8 +39,8 @@ class DefaultConnectionTest extends TestCase
         $original = new DefaultConnection();
         $clone = $original->withWill($will);
 
-        $this->assertNotSame($clone, $original);
-        $this->assertSame($will, $clone->getWill());
+        self::assertNotSame($clone, $original);
+        self::assertSame($will, $clone->getWill());
     }
 
     public function test_returns_instance_with_different_client_id(): void
@@ -48,8 +48,8 @@ class DefaultConnectionTest extends TestCase
         $original = new DefaultConnection();
         $clone = $original->withClientID('clientid');
 
-        $this->assertNotSame($clone, $original);
-        $this->assertEquals('clientid', $clone->getClientID());
+        self::assertNotSame($clone, $original);
+        self::assertEquals('clientid', $clone->getClientID());
     }
 
     public function test_returns_instance_with_different_protocol(): void
@@ -57,8 +57,8 @@ class DefaultConnectionTest extends TestCase
         $original = new DefaultConnection();
         $clone = $original->withProtocol(3);
 
-        $this->assertNotSame($clone, $original);
-        $this->assertEquals(3, $clone->getProtocol());
+        self::assertNotSame($clone, $original);
+        self::assertEquals(3, $clone->getProtocol());
     }
 
     public function test_returns_instance_with_different_keepalive(): void
@@ -66,7 +66,7 @@ class DefaultConnectionTest extends TestCase
         $original = new DefaultConnection();
         $clone = $original->withKeepAlive(30);
 
-        $this->assertNotSame($clone, $original);
-        $this->assertEquals(30, $clone->getKeepAlive());
+        self::assertNotSame($clone, $original);
+        self::assertEquals(30, $clone->getKeepAlive());
     }
 }

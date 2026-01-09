@@ -15,9 +15,9 @@ class DefaultSubscriptionTest extends TestCase
         $original = new DefaultSubscription('foo', 1);
         $clone = $original->withFilter('bar');
 
-        $this->assertNotEquals($original, $clone);
-        $this->assertEquals('bar', $clone->getFilter());
-        $this->assertEquals($original->getQosLevel(), $clone->getQosLevel());
+        self::assertNotEquals($original, $clone);
+        self::assertEquals('bar', $clone->getFilter());
+        self::assertEquals($original->getQosLevel(), $clone->getQosLevel());
     }
 
     public function test_returns_instance_with_different_qos(): void
@@ -25,9 +25,9 @@ class DefaultSubscriptionTest extends TestCase
         $original = new DefaultSubscription('foo', 1);
         $clone = $original->withQosLevel(2);
 
-        $this->assertNotEquals($original, $clone);
-        $this->assertEquals($original->getFilter(), $clone->getFilter());
-        $this->assertEquals(2, $clone->getQosLevel());
+        self::assertNotEquals($original, $clone);
+        self::assertEquals($original->getFilter(), $clone->getFilter());
+        self::assertEquals(2, $clone->getQosLevel());
     }
 
     public function test_negative_qos_level(): void

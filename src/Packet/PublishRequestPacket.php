@@ -16,12 +16,11 @@ class PublishRequestPacket extends BasePacket
 {
     use IdentifiablePacket;
 
-    /** @var string */
-    private $topic;
-    /** @var string */
-    private $payload;
+    protected static int $packetType = Packet::TYPE_PUBLISH;
 
-    protected static $packetType = Packet::TYPE_PUBLISH;
+    private string $topic;
+
+    private string $payload;
 
     public function read(PacketStream $stream): void
     {
@@ -31,6 +30,7 @@ class PublishRequestPacket extends BasePacket
         $originalPosition = $stream->getPosition();
         $this->topic = $stream->readString();
         $this->identifier = null;
+
         if ($this->getQosLevel() > 0) {
             $this->identifier = $stream->readWord();
         }
@@ -47,6 +47,7 @@ class PublishRequestPacket extends BasePacket
         $data = new PacketStream();
 
         $data->writeString($this->topic);
+
         if ($this->getQosLevel() > 0) {
             $data->writeWord($this->generateIdentifier());
         }
@@ -80,8 +81,8 @@ class PublishRequestPacket extends BasePacket
 
         try {
             $this->assertValidString($value);
-        } catch (MalformedPacketException $e) {
-            throw new InvalidArgumentException($e->getMessage());
+        } catch (MalformedPacketException $malformedPacketException) {
+            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
         }
 
         $this->topic = $value;
@@ -160,8 +161,8 @@ class PublishRequestPacket extends BasePacket
     {
         try {
             $this->assertValidQosLevel($value);
-        } catch (MalformedPacketException $e) {
-            throw new InvalidArgumentException($e->getMessage());
+        } catch (MalformedPacketException $malformedPacketException) {
+            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
         }
 
         $this->packetFlags |= ($value & 3) << 1;

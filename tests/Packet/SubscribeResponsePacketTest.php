@@ -12,19 +12,14 @@ use PHPUnit\Framework\TestCase;
 
 class SubscribeResponsePacketTest extends TestCase
 {
-    private function getDefaultData(): string
-    {
-        return "\x90\x03\x00\x00\x00";
-    }
-
     public function test_getters_and_setters(): void
     {
         $packet = new SubscribeResponsePacket();
         $packet->setIdentifier(1);
-        $this->assertEquals(1, $packet->getIdentifier());
+        self::assertEquals(1, $packet->getIdentifier());
 
         $packet->setReturnCodes([0, 128]);
-        $this->assertEquals([0, 128], $packet->getReturnCodes());
+        self::assertEquals([0, 128], $packet->getReturnCodes());
     }
 
     public function test_cannot_set_negative_identifier(): void
@@ -51,15 +46,16 @@ class SubscribeResponsePacketTest extends TestCase
     public function test_knows_error_return_code(): void
     {
         $packet = new SubscribeResponsePacket();
-        $this->assertFalse($packet->isError(0));
-        $this->assertTrue($packet->isError(128));
+        self::assertFalse($packet->isError(0));
+        self::assertTrue($packet->isError(128));
     }
 
     public function test_returns_names(): void
     {
         $packet = new SubscribeResponsePacket();
+
         for ($i = 0; $i <= 128; $i++) {
-            $this->assertNotEmpty($packet->getReturnCodeName($i));
+            self::assertNotEmpty($packet->getReturnCodeName($i));
         }
     }
 
@@ -72,7 +68,7 @@ class SubscribeResponsePacketTest extends TestCase
         $stream = new PacketStream();
         $packet->write($stream);
 
-        $this->assertEquals($this->getDefaultData(), $stream->getData());
+        self::assertEquals($this->getDefaultData(), $stream->getData());
     }
 
     public function test_read(): void
@@ -81,7 +77,7 @@ class SubscribeResponsePacketTest extends TestCase
         $packet = new SubscribeResponsePacket();
         $packet->read($stream);
 
-        $this->assertEquals(Packet::TYPE_SUBACK, $packet->getPacketType());
+        self::assertEquals(Packet::TYPE_SUBACK, $packet->getPacketType());
     }
 
     public function test_can_read_what_it_writes(): void
@@ -96,6 +92,11 @@ class SubscribeResponsePacketTest extends TestCase
 
         $packet = new SubscribeResponsePacket();
         $packet->read($stream);
-        $this->assertEquals($this->getDefaultData(), $stream->getData());
+        self::assertEquals($this->getDefaultData(), $stream->getData());
+    }
+
+    private function getDefaultData(): string
+    {
+        return "\x90\x03\x00\x00\x00";
     }
 }

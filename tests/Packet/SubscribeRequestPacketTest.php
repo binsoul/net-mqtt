@@ -12,22 +12,17 @@ use PHPUnit\Framework\TestCase;
 
 class SubscribeRequestPacketTest extends TestCase
 {
-    private function getDefaultData(): string
-    {
-        return "\x82\x06\x00\x01\x00\x01#\x00";
-    }
-
     public function test_getters_and_setters(): void
     {
         $packet = new SubscribeRequestPacket();
         $packet->setIdentifier(1);
-        $this->assertEquals(1, $packet->getIdentifier());
+        self::assertEquals(1, $packet->getIdentifier());
 
         $packet->setTopic('#');
-        $this->assertEquals('#', $packet->getTopic());
+        self::assertEquals('#', $packet->getTopic());
 
         $packet->setQosLevel(1);
-        $this->assertEquals(1, $packet->getQosLevel());
+        self::assertEquals(1, $packet->getQosLevel());
     }
 
     public function test_cannot_set_negative_identifier(): void
@@ -75,7 +70,7 @@ class SubscribeRequestPacketTest extends TestCase
         $stream = new PacketStream();
         $packet->write($stream);
 
-        $this->assertEquals($this->getDefaultData(), $stream->getData());
+        self::assertEquals($this->getDefaultData(), $stream->getData());
     }
 
     public function test_read(): void
@@ -84,7 +79,7 @@ class SubscribeRequestPacketTest extends TestCase
         $packet = new SubscribeRequestPacket();
         $packet->read($stream);
 
-        $this->assertEquals(Packet::TYPE_SUBSCRIBE, $packet->getPacketType());
+        self::assertEquals(Packet::TYPE_SUBSCRIBE, $packet->getPacketType());
     }
 
     public function test_can_read_what_it_writes(): void
@@ -100,6 +95,11 @@ class SubscribeRequestPacketTest extends TestCase
 
         $packet = new SubscribeRequestPacket();
         $packet->read($stream);
-        $this->assertEquals($this->getDefaultData(), $stream->getData());
+        self::assertEquals($this->getDefaultData(), $stream->getData());
+    }
+
+    private function getDefaultData(): string
+    {
+        return "\x82\x06\x00\x01\x00\x01#\x00";
     }
 }

@@ -11,10 +11,9 @@ use BinSoul\Net\Mqtt\Exception\EndOfStreamException;
  */
 class PacketStream
 {
-    /** @var string */
-    private $data;
-    /** @var int */
-    private $position;
+    private string $data;
+
+    private int $position = 0;
 
     /**
      * Constructs an instance of this class.
@@ -24,7 +23,6 @@ class PacketStream
     public function __construct(string $data = '')
     {
         $this->data = $data;
-        $this->position = 0;
     }
 
     /**
@@ -43,6 +41,7 @@ class PacketStream
     public function read(int $count): string
     {
         $contentLength = strlen($this->data);
+
         if ($this->position > $contentLength || $count > $contentLength - $this->position) {
             throw new EndOfStreamException(
                 sprintf(

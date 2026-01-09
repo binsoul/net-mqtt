@@ -12,16 +12,11 @@ use PHPUnit\Framework\TestCase;
 
 class PublishAckPacketTest extends TestCase
 {
-    private function getDefaultData(): string
-    {
-        return "\x40\x02\x00\x00";
-    }
-
     public function test_getters_and_setters(): void
     {
         $packet = new PublishAckPacket();
         $packet->setIdentifier(1);
-        $this->assertEquals(1, $packet->getIdentifier());
+        self::assertEquals(1, $packet->getIdentifier());
     }
 
     public function test_cannot_set_negative_identifier(): void
@@ -46,7 +41,7 @@ class PublishAckPacketTest extends TestCase
         $stream = new PacketStream();
         $packet->write($stream);
 
-        $this->assertEquals($this->getDefaultData(), $stream->getData());
+        self::assertEquals($this->getDefaultData(), $stream->getData());
     }
 
     public function test_read(): void
@@ -55,7 +50,7 @@ class PublishAckPacketTest extends TestCase
         $packet = new PublishAckPacket();
         $packet->read($stream);
 
-        $this->assertEquals(Packet::TYPE_PUBACK, $packet->getPacketType());
+        self::assertEquals(Packet::TYPE_PUBACK, $packet->getPacketType());
     }
 
     public function test_can_read_what_it_writes(): void
@@ -69,6 +64,11 @@ class PublishAckPacketTest extends TestCase
 
         $packet = new PublishAckPacket();
         $packet->read($stream);
-        $this->assertEquals($this->getDefaultData(), $stream->getData());
+        self::assertEquals($this->getDefaultData(), $stream->getData());
+    }
+
+    private function getDefaultData(): string
+    {
+        return "\x40\x02\x00\x00";
     }
 }

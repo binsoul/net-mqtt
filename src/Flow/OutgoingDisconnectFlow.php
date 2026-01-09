@@ -13,8 +13,7 @@ use BinSoul\Net\Mqtt\PacketFactory;
  */
 class OutgoingDisconnectFlow extends AbstractFlow
 {
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
     /**
      * Constructs an instance of this class.

@@ -14,15 +14,17 @@ class DefaultIdentifierGeneratorTest extends TestCase
         $generator = new DefaultIdentifierGenerator();
 
         $previous = '';
-        for ($i = 1; $i < 10; ++$i) {
+
+        for ($i = 1; $i < 10; $i++) {
             $current = $generator->generatePacketIdentifier();
-            $this->assertLessThanOrEqual(0xFFFF, $current);
+            self::assertLessThanOrEqual(0xFFFF, $current);
+
             if ($i === 1) {
                 $previous = $generator->generatePacketIdentifier();
-                $this->assertLessThanOrEqual(0xFFFF, $previous);
+                self::assertLessThanOrEqual(0xFFFF, $previous);
             }
 
-            $this->assertNotEquals($current, $previous);
+            self::assertNotEquals($current, $previous);
             $previous = $current;
         }
     }
@@ -31,11 +33,11 @@ class DefaultIdentifierGeneratorTest extends TestCase
     {
         $generator = new DefaultIdentifierGenerator();
 
-        for ($i = 1; $i <= 0xFFFF; ++$i) {
+        for ($i = 1; $i <= 0xFFFF; $i++) {
             $generator->generatePacketIdentifier();
         }
 
-        $this->assertEquals(1, $generator->generatePacketIdentifier());
+        self::assertEquals(1, $generator->generatePacketIdentifier());
     }
 
     public function test_generates_client_id(): void
@@ -43,15 +45,17 @@ class DefaultIdentifierGeneratorTest extends TestCase
         $generator = new DefaultIdentifierGenerator();
 
         $previous = '';
-        for ($i = 1; $i < 10; ++$i) {
+
+        for ($i = 1; $i < 10; $i++) {
             $current = $generator->generateClientIdentifier();
-            $this->assertLessThanOrEqual(23, strlen($current));
+            self::assertLessThanOrEqual(23, strlen($current));
+
             if ($i === 1) {
                 $previous = $generator->generateClientIdentifier();
-                $this->assertLessThanOrEqual(23, strlen($previous));
+                self::assertLessThanOrEqual(23, strlen($previous));
             }
 
-            $this->assertNotEquals($current, $previous);
+            self::assertNotEquals($current, $previous);
             $previous = $current;
         }
     }

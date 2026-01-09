@@ -12,19 +12,14 @@ use PHPUnit\Framework\TestCase;
 
 class UnsubscribeRequestPacketTest extends TestCase
 {
-    private function getDefaultData(): string
-    {
-        return "\xa2\x05\x00\x01\x00\x01#";
-    }
-
     public function test_getters_and_setters(): void
     {
         $packet = new UnsubscribeRequestPacket();
         $packet->setIdentifier(1);
-        $this->assertEquals(1, $packet->getIdentifier());
+        self::assertEquals(1, $packet->getIdentifier());
 
         $packet->setTopics(['#']);
-        $this->assertEquals(['#'], $packet->getTopics());
+        self::assertEquals(['#'], $packet->getTopics());
     }
 
     public function test_cannot_set_negative_identifier(): void
@@ -64,7 +59,7 @@ class UnsubscribeRequestPacketTest extends TestCase
         $stream = new PacketStream();
         $packet->write($stream);
 
-        $this->assertEquals($this->getDefaultData(), $stream->getData());
+        self::assertEquals($this->getDefaultData(), $stream->getData());
     }
 
     public function test_read(): void
@@ -73,7 +68,7 @@ class UnsubscribeRequestPacketTest extends TestCase
         $packet = new UnsubscribeRequestPacket();
         $packet->read($stream);
 
-        $this->assertEquals(Packet::TYPE_UNSUBSCRIBE, $packet->getPacketType());
+        self::assertEquals(Packet::TYPE_UNSUBSCRIBE, $packet->getPacketType());
     }
 
     public function test_read_multiple_topics(): void
@@ -82,7 +77,7 @@ class UnsubscribeRequestPacketTest extends TestCase
         $packet = new UnsubscribeRequestPacket();
         $packet->read($stream);
 
-        $this->assertEquals(Packet::TYPE_UNSUBSCRIBE, $packet->getPacketType());
+        self::assertEquals(Packet::TYPE_UNSUBSCRIBE, $packet->getPacketType());
     }
 
     public function test_can_read_what_it_writes(): void
@@ -97,6 +92,11 @@ class UnsubscribeRequestPacketTest extends TestCase
 
         $packet = new UnsubscribeRequestPacket();
         $packet->read($stream);
-        $this->assertEquals($this->getDefaultData(), $stream->getData());
+        self::assertEquals($this->getDefaultData(), $stream->getData());
+    }
+
+    private function getDefaultData(): string
+    {
+        return "\xa2\x05\x00\x01\x00\x01#";
     }
 }

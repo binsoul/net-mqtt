@@ -18,10 +18,12 @@ use RuntimeException;
  */
 class OutgoingSubscribeFlow extends AbstractFlow
 {
-    /** @var int */
-    private $identifier;
-    /** @var Subscription[] */
-    private $subscriptions;
+    private int $identifier;
+
+    /**
+     * @var Subscription[]
+     */
+    private array $subscriptions;
 
     /**
      * Constructs an instance of this class.
@@ -64,7 +66,7 @@ class OutgoingSubscribeFlow extends AbstractFlow
 
     public function next(Packet $packet): ?Packet
     {
-        if (!($packet instanceof SubscribeResponsePacket)) {
+        if (! ($packet instanceof SubscribeResponsePacket)) {
             throw new RuntimeException(
                 sprintf(
                     'SUBACK: Expected packet of class %s but got %s.',
@@ -75,6 +77,7 @@ class OutgoingSubscribeFlow extends AbstractFlow
         }
 
         $returnCodes = $packet->getReturnCodes();
+
         if (count($returnCodes) !== count($this->subscriptions)) {
             throw new LogicException(
                 sprintf(

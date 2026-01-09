@@ -11,18 +11,13 @@ use PHPUnit\Framework\TestCase;
 
 class PingResponsePacketTest extends TestCase
 {
-    private function getDefaultData(): string
-    {
-        return "\xd0\x00";
-    }
-
     public function test_write(): void
     {
         $packet = new PingResponsePacket();
         $stream = new PacketStream();
         $packet->write($stream);
 
-        $this->assertEquals($this->getDefaultData(), $stream->getData());
+        self::assertEquals($this->getDefaultData(), $stream->getData());
     }
 
     public function test_read(): void
@@ -31,7 +26,7 @@ class PingResponsePacketTest extends TestCase
         $packet = new PingResponsePacket();
         $packet->read($stream);
 
-        $this->assertEquals(Packet::TYPE_PINGRESP, $packet->getPacketType());
+        self::assertEquals(Packet::TYPE_PINGRESP, $packet->getPacketType());
     }
 
     public function test_can_read_what_it_writes(): void
@@ -44,6 +39,11 @@ class PingResponsePacketTest extends TestCase
 
         $packet = new PingResponsePacket();
         $packet->read($stream);
-        $this->assertEquals($this->getDefaultData(), $stream->getData());
+        self::assertEquals($this->getDefaultData(), $stream->getData());
+    }
+
+    private function getDefaultData(): string
+    {
+        return "\xd0\x00";
     }
 }

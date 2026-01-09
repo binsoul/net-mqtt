@@ -11,12 +11,12 @@ use Exception;
  */
 class DefaultIdentifierGenerator implements PacketIdentifierGenerator, ClientIdentifierGenerator
 {
-    /** @var int */
-    private $currentIdentifier = 0;
+    private int $currentIdentifier = 0;
 
     public function generatePacketIdentifier(): int
     {
-        ++$this->currentIdentifier;
+        $this->currentIdentifier++;
+
         if ($this->currentIdentifier > 0xFFFF) {
             $this->currentIdentifier = 1;
         }
@@ -28,13 +28,14 @@ class DefaultIdentifierGenerator implements PacketIdentifierGenerator, ClientIde
     {
         try {
             $data = random_bytes(9);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             $data = '';
-            for ($i = 1; $i <= 8; ++$i) {
-                $data = chr(mt_rand(0, 255)).$data;
+
+            for ($i = 1; $i <= 8; $i++) {
+                $data = chr(mt_rand(0, 255)) . $data;
             }
         }
 
-        return 'BNMCR'.bin2hex($data);
+        return 'BNMCR' . bin2hex($data);
     }
 }

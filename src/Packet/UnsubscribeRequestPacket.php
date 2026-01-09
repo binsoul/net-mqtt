@@ -16,11 +16,14 @@ class UnsubscribeRequestPacket extends BasePacket
 {
     use IdentifiablePacket;
 
-    /** @var string[] */
-    private $topics = [];
+    protected static int $packetType = Packet::TYPE_UNSUBSCRIBE;
 
-    protected static $packetType = Packet::TYPE_UNSUBSCRIBE;
-    protected $packetFlags = 2;
+    protected int $packetFlags = 2;
+
+    /**
+     * @var string[]
+     */
+    private array $topics = [];
 
     public function read(PacketStream $stream): void
     {
@@ -32,6 +35,7 @@ class UnsubscribeRequestPacket extends BasePacket
         $originalPosition = $stream->getPosition();
         $this->identifier = $stream->readWord();
         $this->topics = [];
+
         do {
             $this->topics[] = $stream->readString();
         } while (($stream->getPosition() - $originalPosition) < $this->remainingPacketLength);
@@ -42,6 +46,7 @@ class UnsubscribeRequestPacket extends BasePacket
         $data = new PacketStream();
 
         $data->writeWord($this->generateIdentifier());
+
         foreach ($this->topics as $topic) {
             $data->writeString($topic);
         }
@@ -79,7 +84,7 @@ class UnsubscribeRequestPacket extends BasePacket
             try {
                 $this->assertValidString($value);
             } catch (MalformedPacketException $e) {
-                throw new InvalidArgumentException(sprintf('Topic %s: '.$e->getMessage(), $index));
+                throw new InvalidArgumentException(sprintf('Topic %s: ' . $e->getMessage(), $index), $e->getCode(), $e);
             }
         }
 

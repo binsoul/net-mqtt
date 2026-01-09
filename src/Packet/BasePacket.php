@@ -16,23 +16,18 @@ abstract class BasePacket implements Packet
 {
     /**
      * Type of the packet. See {@see Packet}.
-     *
-     * @var int
      */
-    protected static $packetType = 0;
+    protected static int $packetType = 0;
+
     /**
      * Flags of the packet.
-     *
-     * @var int
      */
-    protected $packetFlags = 0;
+    protected int $packetFlags = 0;
 
     /**
      * Number of bytes of a variable length packet.
-     *
-     * @var int
      */
-    protected $remainingPacketLength = 0;
+    protected int $remainingPacketLength = 0;
 
     public function __toString(): string
     {
@@ -46,6 +41,7 @@ abstract class BasePacket implements Packet
     {
         $byte = $stream->readByte();
         $packetType = $byte >> 4;
+
         if ($packetType !== static::$packetType) {
             throw new MalformedPacketException(
                 sprintf(
@@ -64,46 +60,6 @@ abstract class BasePacket implements Packet
     {
         $stream->writeByte(((static::$packetType & 0x0F) << 4) + ($this->packetFlags & 0x0F));
         $this->writeRemainingLength($stream);
-    }
-
-    /**
-     * Reads the remaining length from the given stream.
-     *
-     * @throws MalformedPacketException
-     * @throws EndOfStreamException
-     */
-    private function readRemainingLength(PacketStream $stream): void
-    {
-        $this->remainingPacketLength = 0;
-        $multiplier = 1;
-
-        do {
-            $encodedByte = $stream->readByte();
-
-            $this->remainingPacketLength += ($encodedByte & 127) * $multiplier;
-            $multiplier *= 128;
-
-            if ($multiplier > 128 * 128 * 128 * 128) {
-                throw new MalformedPacketException('Malformed remaining length.');
-            }
-        } while (($encodedByte & 128) !== 0);
-    }
-
-    /**
-     * Writes the remaining length to the given stream.
-     */
-    private function writeRemainingLength(PacketStream $stream): void
-    {
-        $x = $this->remainingPacketLength;
-        do {
-            $encodedByte = $x % 128;
-            $x = (int) ($x / 128);
-            if ($x > 0) {
-                $encodedByte |= 128;
-            }
-
-            $stream->writeByte($encodedByte);
-        } while ($x > 0);
     }
 
     public function getPacketType(): int
@@ -195,7 +151,7 @@ abstract class BasePacket implements Packet
     {
         $this->assertValidStringLength($value);
 
-        if (!mb_check_encoding($value, 'UTF-8')) {
+        if (! mb_check_encoding($value, 'UTF-8')) {
             throw new MalformedPacketException(
                 sprintf(
                     'The string "%s" is not well-formed UTF-8.',
@@ -229,5 +185,47 @@ abstract class BasePacket implements Packet
                 )
             );
         }
+    }
+
+    /**
+     * Reads the remaining length from the given stream.
+     *
+     * @throws MalformedPacketException
+     * @throws EndOfStreamException
+     */
+    private function readRemainingLength(PacketStream $stream): void
+    {
+        $this->remainingPacketLength = 0;
+        $multiplier = 1;
+
+        do {
+            $encodedByte = $stream->readByte();
+
+            $this->remainingPacketLength += ($encodedByte & 127) * $multiplier;
+            $multiplier *= 128;
+
+            if ($multiplier > 128 * 128 * 128 * 128) {
+                throw new MalformedPacketException('Malformed remaining length.');
+            }
+        } while (($encodedByte & 128) !== 0);
+    }
+
+    /**
+     * Writes the remaining length to the given stream.
+     */
+    private function writeRemainingLength(PacketStream $stream): void
+    {
+        $x = $this->remainingPacketLength;
+
+        do {
+            $encodedByte = $x % 128;
+            $x = (int) ($x / 128);
+
+            if ($x > 0) {
+                $encodedByte |= 128;
+            }
+
+            $stream->writeByte($encodedByte);
+        } while ($x > 0);
     }
 }

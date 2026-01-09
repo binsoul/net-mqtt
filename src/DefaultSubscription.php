@@ -11,10 +11,9 @@ use InvalidArgumentException;
  */
 class DefaultSubscription implements Subscription
 {
-    /** @var string */
-    private $filter;
-    /** @var int */
-    private $qosLevel;
+    private string $filter;
+
+    private int $qosLevel;
 
     /**
      * Constructs an instance of this class.

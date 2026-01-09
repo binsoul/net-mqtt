@@ -29,8 +29,8 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
     {
         try {
             $this->assertValidClientID($value);
-        } catch (MalformedPacketException $e) {
-            throw new InvalidArgumentException($e->getMessage());
+        } catch (MalformedPacketException $malformedPacketException) {
+            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
         }
 
         $this->clientID = $value;
@@ -52,7 +52,7 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
             );
         }
 
-        if ($value !== '' && !ctype_alnum($value)) {
+        if ($value !== '' && ! ctype_alnum($value)) {
             throw new MalformedPacketException(
                 sprintf(
                     'Expected a client id containing characters 0-9, a-z or A-Z but got "%s".',

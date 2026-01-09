@@ -11,8 +11,9 @@ use BinSoul\Net\Mqtt\Packet;
  */
 class PublishReleasePacket extends IdentifierOnlyPacket
 {
-    protected static $packetType = Packet::TYPE_PUBREL;
-    protected $packetFlags = 2;
+    protected static int $packetType = Packet::TYPE_PUBREL;
+
+    protected int $packetFlags = 2;
 
     protected function getExpectedPacketFlags(): int
     {
