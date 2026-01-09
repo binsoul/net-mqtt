@@ -52,14 +52,15 @@ class StreamParser
         $result = [];
 
         while ($this->buffer->getRemainingBytes() > 0) {
-            $type = $this->buffer->readByte() >> 4;
-
             try {
+                $type = $this->buffer->readByte() >> 4;
                 $packet = $this->factory->build($type);
             } catch (UnknownPacketTypeException $e) {
                 $this->handleError($e);
 
                 continue;
+            } catch (EndOfStreamException $e) {
+                break;
             }
 
             $this->buffer->seek(-1);
