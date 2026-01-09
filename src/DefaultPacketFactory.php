@@ -28,7 +28,7 @@ class DefaultPacketFactory implements PacketFactory
     /**
      * Map of packet types to packet classes.
      *
-     * @var string[]
+     * @var array<int, class-string<Packet>>
      */
     private static array $mapping = [
         Packet::TYPE_CONNECT => ConnectRequestPacket::class,
