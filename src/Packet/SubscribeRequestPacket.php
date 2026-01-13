@@ -20,9 +20,15 @@ class SubscribeRequestPacket extends BasePacket
 
     protected int $packetFlags = 2;
 
-    private string $topic;
+    /**
+     * @var array<int, string>
+     */
+    private array $topics = [];
 
-    private int $qosLevel;
+    /**
+     * @var array<int, int>
+     */
+    private array $qosLevels = [];
 
     public function read(PacketStream $stream): void
     {
@@ -30,12 +36,21 @@ class SubscribeRequestPacket extends BasePacket
         $this->assertPacketFlags(2);
         $this->assertRemainingPacketLength();
 
+        $originalPosition = $stream->getPosition();
         $this->identifier = $stream->readWord();
-        $this->topic = $stream->readString();
-        $this->qosLevel = $stream->readByte();
+        $this->topics = [];
+        $this->qosLevels = [];
 
-        $this->assertValidQosLevel($this->qosLevel);
-        $this->assertValidString($this->topic);
+        do {
+            $topic = $stream->readString();
+            $qosLevel = $stream->readByte();
+
+            $this->assertValidQosLevel($qosLevel);
+            $this->assertValidString($topic);
+
+            $this->topics[] = $topic;
+            $this->qosLevels[] = $qosLevel;
+        } while (($stream->getPosition() - $originalPosition) < $this->remainingPacketLength);
     }
 
     public function write(PacketStream $stream): void
@@ -43,8 +58,11 @@ class SubscribeRequestPacket extends BasePacket
         $data = new PacketStream();
 
         $data->writeWord($this->generateIdentifier());
-        $data->writeString($this->topic);
-        $data->writeByte($this->qosLevel);
+
+        foreach ($this->topics as $index => $topic) {
+            $data->writeString($topic);
+            $data->writeByte($this->qosLevels[$index] ?? 0);
+        }
 
         $this->remainingPacketLength = $data->length();
 
@@ -53,54 +71,78 @@ class SubscribeRequestPacket extends BasePacket
     }
 
     /**
-     * Returns the topic.
+     * Returns the topics.
+     *
+     * @return array<int, string>
      */
-    public function getTopic(): string
+    public function getTopics(): array
     {
-        return $this->topic;
+        return $this->topics;
     }
 
     /**
-     * Sets the topic.
+     * Sets the topics.
+     *
+     * @param array<int, string> $values
      *
      * @throws InvalidArgumentException
      */
-    public function setTopic(string $value): void
+    public function setTopics(array $values): void
     {
-        if ($value === '') {
-            throw new InvalidArgumentException('The topic must not be empty.');
+        if ($values === []) {
+            throw new InvalidArgumentException('The topics array cannot be empty.');
         }
 
-        try {
-            $this->assertValidString($value);
-        } catch (MalformedPacketException $malformedPacketException) {
-            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
+        foreach ($values as $index => $value) {
+            if ($value === '') {
+                throw new InvalidArgumentException(sprintf('The topic %s must not be empty.', $index));
+            }
+
+            try {
+                $this->assertValidString($value);
+            } catch (MalformedPacketException $malformedPacketException) {
+                throw new InvalidArgumentException(
+                    sprintf('Topic %s: ' . $malformedPacketException->getMessage(), $index),
+                    $malformedPacketException->getCode(),
+                    $malformedPacketException
+                );
+            }
         }
 
-        $this->topic = $value;
+        $this->topics = $values;
     }
 
     /**
-     * Returns the quality of service level.
+     * Returns the quality of service levels.
+     *
+     * @return array<int, int>
      */
-    public function getQosLevel(): int
+    public function getQosLevels(): array
     {
-        return $this->qosLevel;
+        return $this->qosLevels;
     }
 
     /**
-     * Sets the quality of service level.
+     * Sets the quality of service levels.
+     *
+     * @param array<int, int> $values
      *
      * @throws InvalidArgumentException
      */
-    public function setQosLevel(int $value): void
+    public function setQosLevels(array $values): void
     {
-        try {
-            $this->assertValidQosLevel($value);
-        } catch (MalformedPacketException $malformedPacketException) {
-            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
+        foreach ($values as $index => $value) {
+            try {
+                $this->assertValidQosLevel($value);
+            } catch (MalformedPacketException $malformedPacketException) {
+                throw new InvalidArgumentException(
+                    sprintf('QoS level %s: ' . $malformedPacketException->getMessage(), $index),
+                    $malformedPacketException->getCode(),
+                    $malformedPacketException
+                );
+            }
         }
 
-        $this->qosLevel = $value;
+        $this->qosLevels = $values;
     }
 }

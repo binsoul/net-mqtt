@@ -47,9 +47,18 @@ class OutgoingSubscribeFlow extends AbstractFlow
     {
         /** @var SubscribeRequestPacket $packet */
         $packet = $this->generatePacket(Packet::TYPE_SUBSCRIBE);
-        $packet->setTopic($this->subscriptions[0]->getFilter());
-        $packet->setQosLevel($this->subscriptions[0]->getQosLevel());
         $packet->setIdentifier($this->identifier);
+
+        $topics = [];
+        $qosLevels = [];
+
+        foreach ($this->subscriptions as $subscription) {
+            $topics[] = $subscription->getFilter();
+            $qosLevels[] = $subscription->getQosLevel();
+        }
+
+        $packet->setTopics($topics);
+        $packet->setQosLevels($qosLevels);
 
         return $packet;
     }
@@ -96,7 +105,7 @@ class OutgoingSubscribeFlow extends AbstractFlow
             }
         }
 
-        $this->succeed($this->subscriptions[0]);
+        $this->succeed($this->subscriptions);
 
         return null;
     }
