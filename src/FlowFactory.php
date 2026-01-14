@@ -9,9 +9,32 @@ namespace BinSoul\Net\Mqtt;
  */
 interface FlowFactory
 {
+    /**
+     * @param int<0, 255> $returnCode
+     */
+    public function buildIncomingConnectFlow(Connection $connection, int $returnCode, bool $sessionPresent): Flow;
+
+    public function buildIncomingDisconnectFlow(Connection $connection): Flow;
+
     public function buildIncomingPingFlow(): Flow;
 
+    /**
+     * @param int<1, 65535>|null $identifier
+     */
     public function buildIncomingPublishFlow(Message $message, int $identifier = null): Flow;
+
+    /**
+     * @param array<int, Subscription> $subscriptions
+     * @param array<int, int<0, 255>>  $returnCodes
+     * @param int<1, 65535>            $identifier
+     */
+    public function buildIncomingSubscribeFlow(array $subscriptions, array $returnCodes, int $identifier): Flow;
+
+    /**
+     * @param array<int, Subscription> $subscriptions
+     * @param int<1, 65535>            $identifier
+     */
+    public function buildIncomingUnsubscribeFlow(array $subscriptions, int $identifier): Flow;
 
     public function buildOutgoingConnectFlow(Connection $connection): Flow;
 
@@ -22,12 +45,12 @@ interface FlowFactory
     public function buildOutgoingPublishFlow(Message $message): Flow;
 
     /**
-     * @param Subscription[] $subscriptions
+     * @param array<int, Subscription> $subscriptions
      */
     public function buildOutgoingSubscribeFlow(array $subscriptions): Flow;
 
     /**
-     * @param Subscription[] $subscriptions
+     * @param array<int, Subscription> $subscriptions
      */
     public function buildOutgoingUnsubscribeFlow(array $subscriptions): Flow;
 }

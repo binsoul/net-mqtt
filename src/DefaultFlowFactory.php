@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt;
 
+use BinSoul\Net\Mqtt\Flow\IncomingConnectFlow;
+use BinSoul\Net\Mqtt\Flow\IncomingDisconnectFlow;
 use BinSoul\Net\Mqtt\Flow\IncomingPingFlow;
 use BinSoul\Net\Mqtt\Flow\IncomingPublishFlow;
+use BinSoul\Net\Mqtt\Flow\IncomingSubscribeFlow;
+use BinSoul\Net\Mqtt\Flow\IncomingUnsubscribeFlow;
 use BinSoul\Net\Mqtt\Flow\OutgoingConnectFlow;
 use BinSoul\Net\Mqtt\Flow\OutgoingDisconnectFlow;
 use BinSoul\Net\Mqtt\Flow\OutgoingPingFlow;
@@ -37,6 +41,16 @@ class DefaultFlowFactory implements FlowFactory
         $this->packetFactory = $packetFactory;
     }
 
+    public function buildIncomingConnectFlow(Connection $connection, int $returnCode, bool $sessionPresent): Flow
+    {
+        return new IncomingConnectFlow($this->packetFactory, $connection, $returnCode, $sessionPresent);
+    }
+
+    public function buildIncomingDisconnectFlow(Connection $connection): Flow
+    {
+        return new IncomingDisconnectFlow($this->packetFactory, $connection);
+    }
+
     public function buildIncomingPingFlow(): Flow
     {
         return new IncomingPingFlow($this->packetFactory);
@@ -45,6 +59,16 @@ class DefaultFlowFactory implements FlowFactory
     public function buildIncomingPublishFlow(Message $message, int $identifier = null): Flow
     {
         return new IncomingPublishFlow($this->packetFactory, $message, $identifier);
+    }
+
+    public function buildIncomingSubscribeFlow(array $subscriptions, array $returnCodes, int $identifier): Flow
+    {
+        return new IncomingSubscribeFlow($this->packetFactory, $subscriptions, $returnCodes, $identifier);
+    }
+
+    public function buildIncomingUnsubscribeFlow(array $subscriptions, int $identifier): Flow
+    {
+        return new IncomingUnsubscribeFlow($this->packetFactory, $subscriptions, $identifier);
     }
 
     public function buildOutgoingConnectFlow(Connection $connection): Flow
