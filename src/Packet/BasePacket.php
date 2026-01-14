@@ -244,7 +244,7 @@ abstract class BasePacket implements Packet
                 $encodedByte |= 128;
             }
 
-            $stream->writeByte($encodedByte);
+            $stream->writeByte($encodedByte & 0xFF);
         } while ($x > 0);
     }
 }

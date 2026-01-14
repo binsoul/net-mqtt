@@ -115,9 +115,9 @@ class ConnectResponsePacket extends BasePacket
     public function setSessionPresent(bool $value): void
     {
         if ($value) {
-            $this->flags |= 1;
+            $this->flags = ($this->flags | 1) & 0xFF;
         } else {
-            $this->flags &= ~1;
+            $this->flags = ($this->flags & ~1) & 0xFF;
         }
     }
 

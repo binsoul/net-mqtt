@@ -188,9 +188,9 @@ class ConnectRequestPacket extends BasePacket
     public function setCleanSession(bool $value): void
     {
         if ($value) {
-            $this->flags |= 2;
+            $this->flags = ($this->flags | 2) & 0xFF;
         } else {
-            $this->flags &= ~2;
+            $this->flags = ($this->flags & ~2) & 0xFF;
         }
     }
 
@@ -260,13 +260,13 @@ class ConnectRequestPacket extends BasePacket
         $this->willTopic = $topic;
         $this->willMessage = $message;
 
-        $this->flags |= 4;
-        $this->flags |= ($qosLevel << 3);
+        $this->flags = ($this->flags | 4) & 0xFF;
+        $this->flags = ($this->flags | ($qosLevel << 3)) & 0xFF;
 
         if ($isRetained) {
-            $this->flags |= 32;
+            $this->flags = ($this->flags | 32) & 0xFF;
         } else {
-            $this->flags &= ~32;
+            $this->flags = ($this->flags & ~32) & 0xFF;
         }
     }
 
@@ -275,7 +275,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function removeWill(): void
     {
-        $this->flags &= ~60;
+        $this->flags = ($this->flags & ~60) & 0xFF;
         $this->willTopic = '';
         $this->willMessage = '';
     }
@@ -310,9 +310,9 @@ class ConnectRequestPacket extends BasePacket
         $this->username = $value;
 
         if ($this->username !== '') {
-            $this->flags |= 64;
+            $this->flags = ($this->flags | 64) & 0xFF;
         } else {
-            $this->flags &= ~64;
+            $this->flags = ($this->flags & ~64) & 0xFF;
         }
     }
 
@@ -348,9 +348,9 @@ class ConnectRequestPacket extends BasePacket
         $this->password = $value;
 
         if ($this->password !== '') {
-            $this->flags |= 128;
+            $this->flags = ($this->flags | 128) & 0xFF;
         } else {
-            $this->flags &= ~128;
+            $this->flags = ($this->flags & ~128) & 0xFF;
         }
     }
 
