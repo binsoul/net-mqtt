@@ -144,7 +144,9 @@ class PacketStream
      */
     public function getRemainingBytes(): int
     {
-        return $this->length() - $this->position;
+        $result = $this->length() - $this->position;
+
+        return max($result, 0);
     }
 
     /**
@@ -160,7 +162,8 @@ class PacketStream
      */
     public function seek(int $offset): void
     {
-        $this->position += $offset;
+        $newPosition = $this->position + $offset;
+        $this->position = max($newPosition, 0);
     }
 
     /**
@@ -176,7 +179,7 @@ class PacketStream
      */
     public function setPosition(int $value): void
     {
-        $this->position = $value;
+        $this->position = max($value, 0);
     }
 
     /**
