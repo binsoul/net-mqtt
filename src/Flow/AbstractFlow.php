@@ -91,6 +91,8 @@ abstract class AbstractFlow implements Flow
     }
 
     /**
+     * @phpstan-param Packet::TYPE_* $type
+     *
      * @throws UnknownPacketTypeException
      */
     protected function generatePacket(int $type): Packet

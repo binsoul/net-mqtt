@@ -30,7 +30,7 @@ class DefaultPacketFactory implements PacketFactory
      *
      * @var array<int, class-string<Packet>>
      */
-    private static array $mapping = [
+    private const MAPPING = [
         Packet::TYPE_CONNECT => ConnectRequestPacket::class,
         Packet::TYPE_CONNACK => ConnectResponsePacket::class,
         Packet::TYPE_PUBLISH => PublishRequestPacket::class,
@@ -47,13 +47,23 @@ class DefaultPacketFactory implements PacketFactory
         Packet::TYPE_DISCONNECT => DisconnectRequestPacket::class,
     ];
 
+    /**
+     * @template M of self::MAPPING
+     * @template T of key-of<M>
+     *
+     * @param T $type
+     *
+     * @return new<M[T]>
+     *
+     * @throws UnknownPacketTypeException
+     */
     public function build(int $type): Packet
     {
-        if (! isset(self::$mapping[$type])) {
+        if (! array_key_exists($type, self::MAPPING)) {
             throw new UnknownPacketTypeException(sprintf('Unknown packet type %d.', $type));
         }
 
-        $class = self::$mapping[$type];
+        $class = self::MAPPING[$type];
 
         return new $class();
     }
