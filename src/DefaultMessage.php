@@ -19,10 +19,15 @@ class DefaultMessage implements Message
 
     private bool $isDuplicate;
 
+    /**
+     * @var int<0, 2>
+     */
     private int $qosLevel;
 
     /**
      * Constructs an instance of this class.
+     *
+     * @param int<0, 2> $qosLevel
      */
     public function __construct(string $topic, string $payload = '', int $qosLevel = 0, bool $retain = false, bool $isDuplicate = false)
     {

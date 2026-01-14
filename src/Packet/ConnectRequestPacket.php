@@ -20,7 +20,7 @@ class ConnectRequestPacket extends BasePacket
     protected string $clientID = '';
 
     /**
-     * @var int<0, 255>
+     * @var int<3, 4>
      */
     private int $protocolLevel = 4;
 
@@ -124,6 +124,8 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Returns the protocol level.
+     *
+     * @return int<3, 4>
      */
     public function getProtocolLevel(): int
     {
@@ -132,6 +134,8 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Sets the protocol level.
+     *
+     * @param int<3, 4> $value
      *
      * @throws InvalidArgumentException
      */
@@ -168,6 +172,8 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Returns the keep alive time in seconds.
+     *
+     * @return int<0, 65535>
      */
     public function getKeepAlive(): int
     {
@@ -225,10 +231,14 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Returns the desired quality of service level of the will.
+     *
+     * @return int<0, 2>
      */
     public function getWillQosLevel(): int
     {
-        return ($this->flags & 24) >> 3;
+        $level = ($this->flags & 24) >> 3;
+
+        return $level > 2 ? 0 : $level;
     }
 
     /**
@@ -257,6 +267,8 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Sets the will.
+     *
+     * @param int<0, 2> $qosLevel
      *
      * @throws InvalidArgumentException
      */
@@ -382,14 +394,16 @@ class ConnectRequestPacket extends BasePacket
      */
     private function assertValidWill(): void
     {
+        $willQosLevel = ($this->flags & 24) >> 3;
+
         if ($this->hasWill()) {
-            $this->assertValidQosLevel($this->getWillQosLevel());
+            $this->assertValidQosLevel($willQosLevel);
         } else {
-            if ($this->getWillQosLevel() > 0) {
+            if ($willQosLevel > 0) {
                 throw new MalformedPacketException(
                     sprintf(
                         'Expected a will quality of service level of zero but got %d.',
-                        $this->getWillQosLevel()
+                        $willQosLevel
                     )
                 );
             }

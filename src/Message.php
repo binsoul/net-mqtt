@@ -21,6 +21,8 @@ interface Message
 
     /**
      * Returns the quality of service level.
+     *
+     * @return int<0, 2>
      */
     public function getQosLevel(): int;
 
@@ -50,6 +52,8 @@ interface Message
 
     /**
      * Returns a new message with the given quality of service level.
+     *
+     * @param int<0, 2> $level
      *
      * @return static
      */

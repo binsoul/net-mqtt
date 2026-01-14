@@ -24,6 +24,9 @@ class DefaultConnection implements Connection
      */
     private int $keepAlive;
 
+    /**
+     * @var int<3,4>
+     */
     private int $protocol;
 
     private bool $clean;
@@ -32,6 +35,7 @@ class DefaultConnection implements Connection
      * Constructs an instance of this class.
      *
      * @param int<0, 65535> $keepAlive
+     * @param int<3, 4>     $protocol
      */
     public function __construct(
         string $username = '',

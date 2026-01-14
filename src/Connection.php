@@ -9,6 +9,9 @@ namespace BinSoul\Net\Mqtt;
  */
 interface Connection
 {
+    /**
+     * @return int<3, 4>
+     */
     public function getProtocol(): int;
 
     public function getClientID(): string;
@@ -28,6 +31,8 @@ interface Connection
 
     /**
      * Returns a new connection with the given protocol.
+     *
+     * @param int<3, 4> $protocol
      *
      * @return static
      */
