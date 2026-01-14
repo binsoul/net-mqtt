@@ -6,6 +6,7 @@ namespace BinSoul\Net\Mqtt\Flow;
 
 use BinSoul\Net\Mqtt\Connection;
 use BinSoul\Net\Mqtt\Packet;
+use BinSoul\Net\Mqtt\Packet\DisconnectRequestPacket;
 use BinSoul\Net\Mqtt\PacketFactory;
 
 /**
@@ -30,10 +31,16 @@ class OutgoingDisconnectFlow extends AbstractFlow
         return 'disconnect';
     }
 
+    /**
+     * @return DisconnectRequestPacket
+     */
     public function start(): ?Packet
     {
         $this->succeed($this->connection);
 
-        return $this->generatePacket(Packet::TYPE_DISCONNECT);
+        /** @var DisconnectRequestPacket $packet */
+        $packet = $this->generatePacket(Packet::TYPE_DISCONNECT);
+
+        return $packet;
     }
 }

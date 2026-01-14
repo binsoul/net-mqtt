@@ -37,6 +37,9 @@ class IncomingPublishFlow extends AbstractFlow
         return 'message';
     }
 
+    /**
+     * @return PublishAckPacket|PublishReceivedPacket|null
+     */
     public function start(): ?Packet
     {
         $packet = null;
@@ -71,6 +74,9 @@ class IncomingPublishFlow extends AbstractFlow
         return $packet->getIdentifier() === $this->identifier;
     }
 
+    /**
+     * @return PublishCompletePacket
+     */
     public function next(Packet $packet): ?Packet
     {
         $this->succeed($this->message);

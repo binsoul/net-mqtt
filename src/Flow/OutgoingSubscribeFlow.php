@@ -43,6 +43,9 @@ class OutgoingSubscribeFlow extends AbstractFlow
         return 'subscribe';
     }
 
+    /**
+     * @return SubscribeRequestPacket
+     */
     public function start(): ?Packet
     {
         /** @var SubscribeRequestPacket $packet */

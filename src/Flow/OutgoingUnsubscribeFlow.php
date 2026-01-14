@@ -41,6 +41,9 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
         return 'unsubscribe';
     }
 
+    /**
+     * @return UnsubscribeRequestPacket
+     */
     public function start(): ?Packet
     {
         /** @var UnsubscribeRequestPacket $packet */

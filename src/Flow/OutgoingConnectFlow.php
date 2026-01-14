@@ -37,6 +37,9 @@ class OutgoingConnectFlow extends AbstractFlow
         return 'connect';
     }
 
+    /**
+     * @return ConnectRequestPacket
+     */
     public function start(): ?Packet
     {
         /** @var ConnectRequestPacket $packet */
