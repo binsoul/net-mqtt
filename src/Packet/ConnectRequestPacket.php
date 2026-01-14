@@ -79,10 +79,13 @@ class ConnectRequestPacket extends BasePacket
     {
         if ($this->clientID === '') {
             try {
-                $this->clientID = 'BinSoul' . random_int(100000, 999999);
+                $number = random_int(100000, 999999);
             } catch (Exception $e) {
-                $this->clientID = 'BinSoul' . mt_rand(100000, 999999);
+                $hash = md5(uniqid((string) microtime(true), true));
+                $number = (hexdec(substr($hash, 0, 8)) % 900000) + 100000;
             }
+
+            $this->clientID = 'BinSoul' . $number;
         }
 
         $data = new PacketStream();

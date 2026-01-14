@@ -35,11 +35,14 @@ class DefaultIdentifierGenerator implements PacketIdentifierGenerator, ClientIde
         try {
             $data = random_bytes(9);
         } catch (Exception $exception) {
-            $data = '';
+            $hash = md5(uniqid((string) microtime(true), true));
+            $bytes = hex2bin($hash);
 
-            for ($i = 1; $i <= 8; $i++) {
-                $data = chr(mt_rand(0, 255)) . $data;
+            if ($bytes === false) {
+                $bytes = $hash;
             }
+
+            $data = substr($bytes, 0, 9);
         }
 
         return 'BNMCR' . bin2hex($data);
