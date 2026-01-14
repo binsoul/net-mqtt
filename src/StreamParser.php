@@ -54,6 +54,13 @@ class StreamParser
         while ($this->buffer->getRemainingBytes() > 0) {
             try {
                 $type = $this->buffer->readByte() >> 4;
+
+                if ($type < Packet::TYPE_CONNECT || $type > Packet::TYPE_DISCONNECT) {
+                    $this->handleError(new UnknownPacketTypeException(sprintf('Unknown packet type %d.', $type)));
+
+                    continue;
+                }
+
                 $packet = $this->factory->build($type);
             } catch (UnknownPacketTypeException $e) {
                 $this->handleError($e);
