@@ -62,7 +62,7 @@ class SubscribeResponsePacketTest extends TestCase
     public function test_write(): void
     {
         $packet = new SubscribeResponsePacket();
-        $packet->setIdentifier(0);
+        $packet->setIdentifier(1);
         $packet->setReturnCodes([0]);
 
         $stream = new PacketStream();
@@ -83,7 +83,7 @@ class SubscribeResponsePacketTest extends TestCase
     public function test_can_read_what_it_writes(): void
     {
         $packet = new SubscribeResponsePacket();
-        $packet->setIdentifier(0);
+        $packet->setIdentifier(1);
         $packet->setReturnCodes([0]);
 
         $stream = new PacketStream();
@@ -97,6 +97,6 @@ class SubscribeResponsePacketTest extends TestCase
 
     private function getDefaultData(): string
     {
-        return "\x90\x03\x00\x00\x00";
+        return "\x90\x03\x00\x01\x00";
     }
 }

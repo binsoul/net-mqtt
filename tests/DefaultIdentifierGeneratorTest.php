@@ -17,6 +17,7 @@ class DefaultIdentifierGeneratorTest extends TestCase
 
         for ($i = 1; $i < 10; $i++) {
             $current = $generator->generatePacketIdentifier();
+            self::assertGreaterThanOrEqual(0x0001, $current);
             self::assertLessThanOrEqual(0xFFFF, $current);
 
             if ($i === 1) {

@@ -15,9 +15,9 @@ class DefaultIdentifierGenerator implements PacketIdentifierGenerator, ClientIde
 
     public function generatePacketIdentifier(): int
     {
-        $this->currentIdentifier++;
+        $this->currentIdentifier = ($this->currentIdentifier + 1) & 0xFFFF;
 
-        if ($this->currentIdentifier > 0xFFFF) {
+        if ($this->currentIdentifier === 0) {
             $this->currentIdentifier = 1;
         }
 

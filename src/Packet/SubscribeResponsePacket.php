@@ -39,7 +39,9 @@ class SubscribeResponsePacket extends BasePacket
         $this->assertPacketFlags(0);
         $this->assertRemainingPacketLength();
 
-        $this->identifier = $stream->readWord();
+        $identifier = $stream->readWord();
+        $this->assertValidIdentifier($identifier);
+        $this->identifier = $identifier === 0 ? null : $identifier;
 
         $returnCodeLength = $this->remainingPacketLength - 2;
 

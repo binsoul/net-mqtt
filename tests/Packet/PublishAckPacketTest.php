@@ -36,7 +36,7 @@ class PublishAckPacketTest extends TestCase
     public function test_write(): void
     {
         $packet = new PublishAckPacket();
-        $packet->setIdentifier(0);
+        $packet->setIdentifier(1);
 
         $stream = new PacketStream();
         $packet->write($stream);
@@ -56,7 +56,7 @@ class PublishAckPacketTest extends TestCase
     public function test_can_read_what_it_writes(): void
     {
         $packet = new PublishAckPacket();
-        $packet->setIdentifier(0);
+        $packet->setIdentifier(1);
 
         $stream = new PacketStream();
         $packet->write($stream);
@@ -69,6 +69,6 @@ class PublishAckPacketTest extends TestCase
 
     private function getDefaultData(): string
     {
-        return "\x40\x02\x00\x00";
+        return "\x40\x02\x00\x01";
     }
 }

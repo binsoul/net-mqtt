@@ -28,10 +28,10 @@ trait IdentifiablePacket
      */
     public function setIdentifier(?int $value): void
     {
-        if ($value !== null && ($value < 0 || $value > 0xFFFF)) {
+        if ($value !== null && ($value < 1 || $value > 0xFFFF)) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'Expected an identifier between 0x0000 and 0xFFFF but got %x',
+                    'Expected an identifier between 0x0001 and 0xFFFF but got %x',
                     $value
                 )
             );
@@ -46,8 +46,11 @@ trait IdentifiablePacket
     protected function generateIdentifier(): int
     {
         if ($this->identifier === null) {
-            self::$nextIdentifier++;
-            self::$nextIdentifier &= 0xFFFF;
+            self::$nextIdentifier = (self::$nextIdentifier + 1) & 0xFFFF;
+
+            if (self::$nextIdentifier === 0) {
+                self::$nextIdentifier = 1;
+            }
 
             $this->identifier = self::$nextIdentifier;
         }

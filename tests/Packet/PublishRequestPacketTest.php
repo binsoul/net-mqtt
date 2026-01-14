@@ -96,7 +96,7 @@ class PublishRequestPacketTest extends TestCase
     public function test_write_qos_level0(): void
     {
         $packet = new PublishRequestPacket();
-        $packet->setIdentifier(0);
+        $packet->setIdentifier(1);
         $packet->setTopic('topic');
         $packet->setQosLevel(0);
         $packet->setDuplicate(false);
@@ -189,7 +189,7 @@ class PublishRequestPacketTest extends TestCase
     public function test_can_read_what_it_writes(): void
     {
         $packet = new PublishRequestPacket();
-        $packet->setIdentifier(0);
+        $packet->setIdentifier(1);
         $packet->setTopic('topic');
         $packet->setQosLevel(0);
         $packet->setDuplicate(false);

@@ -21,7 +21,9 @@ abstract class IdentifierOnlyPacket extends BasePacket
         $this->assertPacketFlags($this->getExpectedPacketFlags());
         $this->assertRemainingPacketLength(2);
 
-        $this->identifier = $stream->readWord();
+        $identifier = $stream->readWord();
+        $this->assertValidIdentifier($identifier);
+        $this->identifier = $identifier === 0 ? null : $identifier;
     }
 
     public function write(PacketStream $stream): void

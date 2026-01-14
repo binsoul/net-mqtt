@@ -32,7 +32,9 @@ class PublishRequestPacket extends BasePacket
         $this->identifier = null;
 
         if ($this->getQosLevel() > 0) {
-            $this->identifier = $stream->readWord();
+            $identifier = $stream->readWord();
+            $this->assertValidIdentifier($identifier);
+            $this->identifier = $identifier === 0 ? null : $identifier;
         }
 
         $payloadLength = $this->remainingPacketLength - ($stream->getPosition() - $originalPosition);

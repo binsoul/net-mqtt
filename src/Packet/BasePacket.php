@@ -190,6 +190,23 @@ abstract class BasePacket implements Packet
     }
 
     /**
+     * Asserts that the given quality of service level is valid.
+     *
+     * @throws MalformedPacketException
+     */
+    protected function assertValidIdentifier(int $identifier): void
+    {
+        if ($identifier < 1 || $identifier > 0xFFFF) {
+            throw new MalformedPacketException(
+                sprintf(
+                    'Expected an identifier between 1 and 65535 but got %d.',
+                    $identifier
+                )
+            );
+        }
+    }
+
+    /**
      * Reads the remaining length from the given stream.
      *
      * @throws MalformedPacketException
