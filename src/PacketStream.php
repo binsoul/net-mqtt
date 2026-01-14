@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BinSoul\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\Exception\EndOfStreamException;
+use InvalidArgumentException;
 
 /**
  * Provides methods to operate on a stream of bytes.
@@ -122,6 +123,10 @@ class PacketStream
      */
     public function writeString(string $string): void
     {
+        if (strlen($string) > 0xFFFF) {
+            throw new InvalidArgumentException('The string length must be less than or equal to 65535 bytes');
+        }
+
         $this->writeWord(strlen($string));
         $this->write($string);
     }
