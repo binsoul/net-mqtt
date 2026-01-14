@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt;
 
+use InvalidArgumentException;
+
 /**
  * Provides a default implementation of the {@see Connection} interface.
  */
@@ -89,6 +91,10 @@ class DefaultConnection implements Connection
 
     public function withProtocol(int $protocol): self
     {
+        if ($protocol < 3 || $protocol > 4) {
+            throw new InvalidArgumentException(sprintf('Expected protocol level 3 or 4 but got %d.', $protocol));
+        }
+
         $result = clone $this;
         $result->protocol = $protocol;
 
@@ -122,6 +128,10 @@ class DefaultConnection implements Connection
 
     public function withKeepAlive(int $timeout): self
     {
+        if ($timeout < 0 || $timeout > 0xFFFF) {
+            throw new InvalidArgumentException(sprintf('Expected keep alive between 0 and 65535 but got %d.', $timeout));
+        }
+
         $result = clone $this;
         $result->keepAlive = $timeout;
 

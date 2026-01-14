@@ -51,7 +51,14 @@ class ConnectRequestPacket extends BasePacket
         $this->assertRemainingPacketLength();
 
         $this->protocolName = $stream->readString();
-        $this->protocolLevel = $stream->readByte();
+        $protocolLevel = $stream->readByte();
+
+        if ($protocolLevel < 3 || $protocolLevel > 4) {
+            throw new MalformedPacketException(sprintf('Expected protocol level 3 or 4 but got %d.', $protocolLevel));
+        }
+
+        $this->protocolLevel = $protocolLevel;
+
         $this->flags = $stream->readByte();
         $this->keepAlive = $stream->readWord();
         $this->clientID = $stream->readString();
@@ -176,10 +183,10 @@ class ConnectRequestPacket extends BasePacket
      */
     public function setKeepAlive(int $value): void
     {
-        if ($value > 65535) {
+        if ($value < 0 || $value > 65535) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'Expected a keep alive time lower than 65535 but got %d.',
+                    'Expected a keep alive time between 0 and 65535 but got %d.',
                     $value
                 )
             );

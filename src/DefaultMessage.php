@@ -78,6 +78,8 @@ class DefaultMessage implements Message
 
     public function withQosLevel(int $level): self
     {
+        $this->assertValidQosLevel($level);
+
         $result = clone $this;
         $result->qosLevel = $level;
 

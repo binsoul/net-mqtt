@@ -6,6 +6,7 @@ namespace BinSoul\Test\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\DefaultConnection;
 use BinSoul\Net\Mqtt\DefaultMessage;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class DefaultConnectionTest extends TestCase
@@ -68,5 +69,33 @@ class DefaultConnectionTest extends TestCase
 
         self::assertNotSame($clone, $original);
         self::assertEquals(30, $clone->getKeepAlive());
+    }
+
+    public function test_throws_exception_if_protocol_too_high(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $original = new DefaultConnection();
+        $original->withProtocol(5);
+    }
+
+    public function test_throws_exception_if_protocol_too_low(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $original = new DefaultConnection();
+        $original->withProtocol(2);
+    }
+
+    public function test_throws_exception_if_keep_alive_too_high(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $original = new DefaultConnection();
+        $original->withKeepAlive(0xFFFF + 1);
+    }
+
+    public function test_throws_exception_if_keep_alive_too_low(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $original = new DefaultConnection();
+        $original->withKeepAlive(-1);
     }
 }
