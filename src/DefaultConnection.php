@@ -79,7 +79,7 @@ class DefaultConnection implements Connection
         return $this->keepAlive;
     }
 
-    public function withProtocol(int $protocol): Connection
+    public function withProtocol(int $protocol): self
     {
         $result = clone $this;
         $result->protocol = $protocol;
@@ -87,7 +87,7 @@ class DefaultConnection implements Connection
         return $result;
     }
 
-    public function withClientID(string $clientID): Connection
+    public function withClientID(string $clientID): self
     {
         $result = clone $this;
         $result->clientID = $clientID;
@@ -95,7 +95,7 @@ class DefaultConnection implements Connection
         return $result;
     }
 
-    public function withCredentials(string $username, string $password): Connection
+    public function withCredentials(string $username, string $password): self
     {
         $result = clone $this;
         $result->username = $username;
@@ -104,7 +104,7 @@ class DefaultConnection implements Connection
         return $result;
     }
 
-    public function withWill(Message $will = null): Connection
+    public function withWill(Message $will = null): self
     {
         $result = clone $this;
         $result->will = $will;
@@ -112,7 +112,7 @@ class DefaultConnection implements Connection
         return $result;
     }
 
-    public function withKeepAlive(int $timeout): Connection
+    public function withKeepAlive(int $timeout): self
     {
         $result = clone $this;
         $result->keepAlive = $timeout;

@@ -60,7 +60,7 @@ class DefaultMessage implements Message
         return $this->isRetained;
     }
 
-    public function withTopic(string $topic): Message
+    public function withTopic(string $topic): self
     {
         $result = clone $this;
         $result->topic = $topic;
@@ -68,7 +68,7 @@ class DefaultMessage implements Message
         return $result;
     }
 
-    public function withPayload(string $payload): Message
+    public function withPayload(string $payload): self
     {
         $result = clone $this;
         $result->payload = $payload;
@@ -76,7 +76,7 @@ class DefaultMessage implements Message
         return $result;
     }
 
-    public function withQosLevel(int $level): Message
+    public function withQosLevel(int $level): self
     {
         $result = clone $this;
         $result->qosLevel = $level;
@@ -84,7 +84,7 @@ class DefaultMessage implements Message
         return $result;
     }
 
-    public function retain(): Message
+    public function retain(): self
     {
         $result = clone $this;
         $result->isRetained = true;
@@ -92,7 +92,7 @@ class DefaultMessage implements Message
         return $result;
     }
 
-    public function release(): Message
+    public function release(): self
     {
         $result = clone $this;
         $result->isRetained = false;
@@ -100,7 +100,7 @@ class DefaultMessage implements Message
         return $result;
     }
 
-    public function duplicate(): Message
+    public function duplicate(): self
     {
         $result = clone $this;
         $result->isDuplicate = true;
@@ -108,7 +108,7 @@ class DefaultMessage implements Message
         return $result;
     }
 
-    public function original(): Message
+    public function original(): self
     {
         $result = clone $this;
         $result->isDuplicate = false;

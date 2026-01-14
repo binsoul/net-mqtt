@@ -36,7 +36,7 @@ class DefaultSubscription implements Subscription
         return $this->qosLevel;
     }
 
-    public function withFilter(string $filter): Subscription
+    public function withFilter(string $filter): self
     {
         $result = clone $this;
         $result->filter = $filter;
@@ -44,7 +44,7 @@ class DefaultSubscription implements Subscription
         return $result;
     }
 
-    public function withQosLevel(int $level): Subscription
+    public function withQosLevel(int $level): self
     {
         $result = clone $this;
         $result->qosLevel = $level;

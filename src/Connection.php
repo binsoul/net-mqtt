@@ -25,26 +25,36 @@ interface Connection
 
     /**
      * Returns a new connection with the given protocol.
+     *
+     * @return static
      */
-    public function withProtocol(int $protocol): Connection;
+    public function withProtocol(int $protocol): self;
 
     /**
      * Returns a new connection with the given client id.
+     *
+     * @return static
      */
-    public function withClientID(string $clientID): Connection;
+    public function withClientID(string $clientID): self;
 
     /**
      * Returns a new connection with the given credentials.
+     *
+     * @return static
      */
-    public function withCredentials(string $username, string $password): Connection;
+    public function withCredentials(string $username, string $password): self;
 
     /**
      * Returns a new connection with the given will.
+     *
+     * @return static
      */
-    public function withWill(Message $will): Connection;
+    public function withWill(Message $will): self;
 
     /**
      * Returns a new connection with the given keep alive timeout.
+     *
+     * @return static
      */
-    public function withKeepAlive(int $timeout): Connection;
+    public function withKeepAlive(int $timeout): self;
 }
