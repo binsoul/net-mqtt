@@ -46,8 +46,14 @@ class ConnectResponsePacket extends BasePacket
         ],
     ];
 
+    /**
+     * @var int<0, 255>
+     */
     private int $flags = 0;
 
+    /**
+     * @var int<0, 255>
+     */
     private int $returnCode = 0;
 
     public function read(PacketStream $stream): void
@@ -79,6 +85,8 @@ class ConnectResponsePacket extends BasePacket
 
     /**
      * Sets the return code.
+     *
+     * @param int<0,255> $value
      */
     public function setReturnCode(int $value): void
     {

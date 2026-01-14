@@ -11,12 +11,20 @@ use InvalidArgumentException;
  */
 trait IdentifiablePacket
 {
+    /**
+     * @var int<1, 65535>|null
+     */
     protected ?int $identifier = null;
 
+    /**
+     * @var int<0, 65535>
+     */
     private static int $nextIdentifier = 0;
 
     /**
      * Returns the identifier.
+     *
+     * @return int<1,  65535>
      */
     public function getIdentifier(): ?int
     {
@@ -25,6 +33,8 @@ trait IdentifiablePacket
 
     /**
      * Sets the identifier.
+     *
+     * @param int<1, 65535>|null $value
      */
     public function setIdentifier(?int $value): void
     {
@@ -42,6 +52,8 @@ trait IdentifiablePacket
 
     /**
      * Returns the identifier or generates a new one.
+     *
+     * @return int<1, 65535>
      */
     protected function generateIdentifier(): int
     {

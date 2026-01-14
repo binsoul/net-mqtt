@@ -11,6 +11,8 @@ interface PacketIdentifierGenerator
 {
     /**
      * Generates a packet identifier between 1 and 0xFFFF.
+     *
+     * @return int<1, 65535>
      */
     public function generatePacketIdentifier(): int;
 }

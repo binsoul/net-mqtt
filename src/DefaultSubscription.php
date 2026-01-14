@@ -13,10 +13,15 @@ class DefaultSubscription implements Subscription
 {
     private string $filter;
 
+    /**
+     * @var int<0, 2>
+     */
     private int $qosLevel;
 
     /**
      * Constructs an instance of this class.
+     *
+     * @param int<0, 2> $qosLevel
      */
     public function __construct(string $filter, int $qosLevel = 0)
     {

@@ -17,12 +17,17 @@ use BinSoul\Net\Mqtt\PacketFactory;
  */
 class IncomingPublishFlow extends AbstractFlow
 {
+    /**
+     * @var int<1, 65535>|null
+     */
     private ?int $identifier;
 
     private Message $message;
 
     /**
      * Constructs an instance of this class.
+     *
+     * @param int<1, 65535>|null $identifier
      */
     public function __construct(PacketFactory $packetFactory, Message $message, ?int $identifier = null)
     {

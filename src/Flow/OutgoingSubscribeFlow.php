@@ -18,6 +18,9 @@ use RuntimeException;
  */
 class OutgoingSubscribeFlow extends AbstractFlow
 {
+    /**
+     * @var int<1, 65535>
+     */
     private int $identifier;
 
     /**

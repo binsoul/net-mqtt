@@ -11,8 +11,14 @@ use Exception;
  */
 class DefaultIdentifierGenerator implements PacketIdentifierGenerator, ClientIdentifierGenerator
 {
+    /**
+     * @var int<0, 65535>
+     */
     private int $currentIdentifier = 0;
 
+    /**
+     * @return int<1, 65535>
+     */
     public function generatePacketIdentifier(): int
     {
         $this->currentIdentifier = ($this->currentIdentifier + 1) & 0xFFFF;

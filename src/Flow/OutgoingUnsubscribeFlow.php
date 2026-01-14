@@ -16,6 +16,9 @@ use BinSoul\Net\Mqtt\Subscription;
  */
 class OutgoingUnsubscribeFlow extends AbstractFlow
 {
+    /**
+     * @var int<1, 65535>
+     */
     private int $identifier;
 
     /**

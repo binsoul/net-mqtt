@@ -17,6 +17,9 @@ class DefaultConnection implements Connection
 
     private string $clientID;
 
+    /**
+     * @var int<0, 65535>
+     */
     private int $keepAlive;
 
     private int $protocol;
@@ -25,6 +28,8 @@ class DefaultConnection implements Connection
 
     /**
      * Constructs an instance of this class.
+     *
+     * @param int<0, 65535> $keepAlive
      */
     public function __construct(
         string $username = '',
@@ -74,6 +79,9 @@ class DefaultConnection implements Connection
         return $this->will;
     }
 
+    /**
+     * @return int<0, 65535>
+     */
     public function getKeepAlive(): int
     {
         return $this->keepAlive;

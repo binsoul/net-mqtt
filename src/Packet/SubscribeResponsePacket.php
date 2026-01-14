@@ -29,7 +29,7 @@ class SubscribeResponsePacket extends BasePacket
     ];
 
     /**
-     * @var int[]
+     * @var array<int, int<0, 255>>
      */
     private array $returnCodes = [];
 
@@ -102,7 +102,7 @@ class SubscribeResponsePacket extends BasePacket
     /**
      * Sets the return codes.
      *
-     * @param int[] $value
+     * @param array<int, int<0,255>> $value
      *
      * @throws InvalidArgumentException
      */

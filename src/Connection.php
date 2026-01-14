@@ -21,6 +21,9 @@ interface Connection
 
     public function getWill(): ?Message;
 
+    /**
+     * @return int<0, 65535>
+     */
     public function getKeepAlive(): int;
 
     /**
@@ -53,6 +56,8 @@ interface Connection
 
     /**
      * Returns a new connection with the given keep alive timeout.
+     *
+     * @param int<0, 65535> $timeout
      *
      * @return static
      */

@@ -17,6 +17,8 @@ abstract class BasePacket implements Packet
     /**
      * Type of the packet. See {@see Packet}.
      *
+     * @var int<0, 15>
+     *
      * @phpstan-var Packet::TYPE_*
      */
     protected static int $packetType;

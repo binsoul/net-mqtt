@@ -14,6 +14,9 @@ class PacketStream
 {
     private string $data;
 
+    /**
+     * @var int<0, max>
+     */
     private int $position = 0;
 
     /**
@@ -36,6 +39,8 @@ class PacketStream
 
     /**
      * Returns the desired number of bytes.
+     *
+     * @paramt int<0, max> $count
      *
      * @throws EndOfStreamException
      */
@@ -64,6 +69,8 @@ class PacketStream
     /**
      * Returns a single byte.
      *
+     * @return int<0, 255>
+     *
      * @throws EndOfStreamException
      */
     public function readByte(): int
@@ -73,6 +80,8 @@ class PacketStream
 
     /**
      * Returns a single word.
+     *
+     * @return int<0, 65535>
      *
      * @throws EndOfStreamException
      */
@@ -103,6 +112,8 @@ class PacketStream
 
     /**
      * Appends a single byte.
+     *
+     * @param int<0, 255> $value
      */
     public function writeByte(int $value): void
     {
@@ -111,6 +122,8 @@ class PacketStream
 
     /**
      * Appends a single word.
+     *
+     * @param int<0, 65535> $value
      */
     public function writeWord(int $value): void
     {
@@ -133,6 +146,8 @@ class PacketStream
 
     /**
      * Returns the length of the stream.
+     *
+     * @return int<0, max>
      */
     public function length(): int
     {
@@ -141,6 +156,8 @@ class PacketStream
 
     /**
      * Returns the number of bytes until the end of the stream.
+     *
+     * @return int<0, max>
      */
     public function getRemainingBytes(): int
     {
@@ -168,6 +185,8 @@ class PacketStream
 
     /**
      * Returns the internal position of the stream.
+     *
+     * @return int<0, max>
      */
     public function getPosition(): int
     {
@@ -176,6 +195,8 @@ class PacketStream
 
     /**
      * Sets the internal position of the stream.
+     *
+     * @param int<0, max> $value
      */
     public function setPosition(int $value): void
     {

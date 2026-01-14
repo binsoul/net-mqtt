@@ -19,6 +19,9 @@ use BinSoul\Net\Mqtt\PacketIdentifierGenerator;
  */
 class OutgoingPublishFlow extends AbstractFlow
 {
+    /**
+     * @var int<1, 65535>|null
+     */
     private ?int $identifier = null;
 
     private Message $message;

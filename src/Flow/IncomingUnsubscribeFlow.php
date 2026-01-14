@@ -14,17 +14,21 @@ use BinSoul\Net\Mqtt\Subscription;
  */
 class IncomingUnsubscribeFlow extends AbstractFlow
 {
+    /**
+     * @var int<1, 65535>
+     */
     private int $identifier;
 
     /**
-     * @var Subscription[]
+     * @var array<int, Subscription>
      */
     private array $subscriptions;
 
     /**
      * Constructs an instance of this class.
      *
-     * @param Subscription[] $subscriptions
+     * @param array<int, Subscription> $subscriptions
+     * @param int<1, 65535>            $identifier
      */
     public function __construct(PacketFactory $packetFactory, array $subscriptions, int $identifier)
     {

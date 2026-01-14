@@ -16,6 +16,8 @@ interface Subscription
 
     /**
      * Returns the quality of service level.
+     *
+     * @return int<0, 2>
      */
     public function getQosLevel(): int;
 
@@ -28,6 +30,8 @@ interface Subscription
 
     /**
      * Returns a new subscription with the given quality of service level.
+     *
+     * @param int<0, 2> $level
      *
      * @return static
      */

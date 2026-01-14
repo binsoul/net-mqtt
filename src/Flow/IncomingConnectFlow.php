@@ -16,12 +16,17 @@ class IncomingConnectFlow extends AbstractFlow
 {
     private Connection $connection;
 
+    /**
+     * @var int<0, 255>
+     */
     private int $returnCode;
 
     private bool $sessionPresent;
 
     /**
      * Constructs an instance of this class.
+     *
+     * @param int<0, 255> $returnCode
      */
     public function __construct(PacketFactory $packetFactory, Connection $connection, int $returnCode, bool $sessionPresent)
     {

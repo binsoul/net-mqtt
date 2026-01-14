@@ -19,12 +19,21 @@ class ConnectRequestPacket extends BasePacket
 
     protected string $clientID = '';
 
+    /**
+     * @var int<0, 255>
+     */
     private int $protocolLevel = 4;
 
     private string $protocolName = 'MQTT';
 
+    /**
+     * @var int<0, 255>
+     */
     private int $flags = 2;
 
+    /**
+     * @var int<0, 65535>
+     */
     private int $keepAlive = 60;
 
     private string $willTopic = '';
@@ -157,6 +166,8 @@ class ConnectRequestPacket extends BasePacket
 
     /**
      * Sets the keep alive time in seconds.
+     *
+     * @param int<0, 65535> $value
      *
      * @throws InvalidArgumentException
      */

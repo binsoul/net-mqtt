@@ -26,7 +26,7 @@ class SubscribeRequestPacket extends BasePacket
     private array $topics = [];
 
     /**
-     * @var array<int, int>
+     * @var array<int, int<0, 255>>
      */
     private array $qosLevels = [];
 
@@ -127,7 +127,7 @@ class SubscribeRequestPacket extends BasePacket
     /**
      * Sets the quality of service levels.
      *
-     * @param array<int, int> $values
+     * @param array<int, int<0, 255>> $values
      *
      * @throws InvalidArgumentException
      */
