@@ -14,6 +14,8 @@ interface PacketFactory
     /**
      * Builds a packet object for the given type.
      *
+     * @param int<0, 15> $type
+     *
      * @phpstan-param Packet::TYPE_* $type
      *
      * @throws UnknownPacketTypeException

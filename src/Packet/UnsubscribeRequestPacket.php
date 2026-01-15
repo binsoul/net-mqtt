@@ -21,7 +21,7 @@ class UnsubscribeRequestPacket extends BasePacket
     protected int $packetFlags = 2;
 
     /**
-     * @var string[]
+     * @var array<int, string>
      */
     private array $topics = [];
 
@@ -62,7 +62,7 @@ class UnsubscribeRequestPacket extends BasePacket
     /**
      * Returns the topics.
      *
-     * @return string[]
+     * @return array<int, string>
      */
     public function getTopics(): array
     {
@@ -72,7 +72,7 @@ class UnsubscribeRequestPacket extends BasePacket
     /**
      * Sets the topics.
      *
-     * @param string[] $values
+     * @param array<int, string> $values
      *
      * @throws InvalidArgumentException
      */

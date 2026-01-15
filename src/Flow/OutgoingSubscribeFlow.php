@@ -24,14 +24,14 @@ class OutgoingSubscribeFlow extends AbstractFlow
     private int $identifier;
 
     /**
-     * @var Subscription[]
+     * @var array<int, Subscription>
      */
     private array $subscriptions;
 
     /**
      * Constructs an instance of this class.
      *
-     * @param Subscription[] $subscriptions
+     * @param array<int, Subscription> $subscriptions
      */
     public function __construct(PacketFactory $packetFactory, array $subscriptions, PacketIdentifierGenerator $generator)
     {

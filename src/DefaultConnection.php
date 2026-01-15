@@ -85,9 +85,6 @@ class DefaultConnection implements Connection
         return $this->will;
     }
 
-    /**
-     * @return int<0, 65535>
-     */
     public function getKeepAlive(): int
     {
         return $this->keepAlive;

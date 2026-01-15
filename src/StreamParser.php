@@ -19,7 +19,7 @@ class StreamParser
     private PacketFactory $factory;
 
     /**
-     * @var callable
+     * @var callable(Throwable): void
      */
     private $errorCallback;
 
@@ -34,6 +34,8 @@ class StreamParser
 
     /**
      * Registers an error callback.
+     *
+     * @param callable(Throwable): void $callback
      */
     public function onError(callable $callback): void
     {
@@ -43,7 +45,7 @@ class StreamParser
     /**
      * Appends the given data to the internal buffer and parses it.
      *
-     * @return Packet[]
+     * @return array<int, Packet>
      */
     public function push(string $data): array
     {
