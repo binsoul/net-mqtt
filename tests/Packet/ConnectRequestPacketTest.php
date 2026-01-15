@@ -20,6 +20,32 @@ class ConnectRequestPacketTest extends TestCase
         self::assertNotEquals('', $packet->getClientID());
     }
 
+    public function test_allows_empty_client_id(): void
+    {
+        $packet = new ConnectRequestPacket();
+        $packet->setClientID('');
+        self::assertEquals('', $packet->getClientID());
+
+        $packet->write(new PacketStream());
+        self::assertEquals('', $packet->getClientID());
+    }
+
+    public function test_sets_clean_session_for_empty_client_id(): void
+    {
+        $packet = new ConnectRequestPacket();
+        $packet->setClientID('test');
+        $packet->setCleanSession(false);
+        self::assertEquals('test', $packet->getClientID());
+        self::assertFalse($packet->isCleanSession());
+
+        $packet->setClientID('');
+        self::assertEquals('', $packet->getClientID());
+        self::assertTrue($packet->isCleanSession());
+
+        $packet->setCleanSession(false);
+        self::assertTrue($packet->isCleanSession());
+    }
+
     public function test_minimal_packet(): void
     {
         $stream = new PacketStream($this->getDefaultData());

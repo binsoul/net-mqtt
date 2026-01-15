@@ -17,7 +17,7 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
     {
         parent::read($stream);
 
-        $this->assertValidClientID($this->clientID);
+        $this->assertValidClientID($this->clientID ?? '');
     }
 
     /**

@@ -17,7 +17,7 @@ class ConnectRequestPacket extends BasePacket
 {
     protected static int $packetType = Packet::TYPE_CONNECT;
 
-    protected string $clientID = '';
+    protected ?string $clientID = null;
 
     /**
      * @var int<3, 4>
@@ -84,7 +84,7 @@ class ConnectRequestPacket extends BasePacket
 
     public function write(PacketStream $stream): void
     {
-        if ($this->clientID === '') {
+        if ($this->clientID === null) {
             $this->clientID = DefaultIdentifierGenerator::buildClientIdentifier();
         }
 
@@ -152,7 +152,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function getClientID(): string
     {
-        return $this->clientID;
+        return $this->clientID ?? '';
     }
 
     /**
@@ -161,6 +161,10 @@ class ConnectRequestPacket extends BasePacket
     public function setClientID(string $value): void
     {
         $this->clientID = $value;
+
+        if ($this->clientID === '') {
+            $this->setCleanSession(true);
+        }
     }
 
     /**
@@ -207,6 +211,10 @@ class ConnectRequestPacket extends BasePacket
      */
     public function setCleanSession(bool $value): void
     {
+        if ($this->clientID === '') {
+            $value = true;
+        }
+
         if ($value) {
             $this->flags = ($this->flags | 2) & 0xFF;
         } else {
