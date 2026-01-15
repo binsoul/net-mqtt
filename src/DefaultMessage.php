@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt;
 
-use InvalidArgumentException;
-
 /**
  * Provides a default implementation of the {@see Message} interface.
  */
 class DefaultMessage implements Message
 {
+    /**
+     * @var non-empty-string
+     */
     private string $topic;
 
     private string $payload;
@@ -27,11 +28,13 @@ class DefaultMessage implements Message
     /**
      * Constructs an instance of this class.
      *
-     * @param int<0, 2> $qosLevel
+     * @param non-empty-string $topic
+     * @param int<0, 2>        $qosLevel
      */
     public function __construct(string $topic, string $payload = '', int $qosLevel = 0, bool $retain = false, bool $isDuplicate = false)
     {
-        $this->assertValidQosLevel($qosLevel);
+        Validator::assertValidTopic($topic);
+        Validator::assertValidQosLevel($qosLevel);
 
         $this->topic = $topic;
         $this->payload = $payload;
@@ -67,6 +70,8 @@ class DefaultMessage implements Message
 
     public function withTopic(string $topic): self
     {
+        Validator::assertValidTopic($topic);
+
         $result = clone $this;
         $result->topic = $topic;
 
@@ -83,7 +88,7 @@ class DefaultMessage implements Message
 
     public function withQosLevel(int $level): self
     {
-        $this->assertValidQosLevel($level);
+        Validator::assertValidQosLevel($level);
 
         $result = clone $this;
         $result->qosLevel = $level;
@@ -121,24 +126,5 @@ class DefaultMessage implements Message
         $result->isDuplicate = false;
 
         return $result;
-    }
-
-    /**
-     * Asserts that the given quality of service level is valid.
-     *
-     * @phpstan-return ($level is 0|1|2 ? void : never)
-     *
-     * @throws InvalidArgumentException
-     */
-    private function assertValidQosLevel(int $level): void
-    {
-        if ($level < 0 || $level > 2) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Expected a quality of service level between 0 and 2 but got %d.',
-                    $level
-                )
-            );
-        }
     }
 }

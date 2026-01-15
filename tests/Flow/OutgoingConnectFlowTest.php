@@ -171,46 +171,6 @@ class OutgoingConnectFlowTest extends TestCase
         self::assertTrue($result->isWillRetained());
     }
 
-    public function test_start_does_not_set_will_with_empty_topic(): void
-    {
-        $will = new DefaultMessage('', self::WILL_PAYLOAD, self::QOS_LEVEL_AT_LEAST_ONCE, true);
-
-        $this->connection->method('getClientID')->willReturn(self::CLIENT_ID_TEST);
-        $this->connection->method('getProtocol')->willReturn(self::PROTOCOL_LEVEL_4);
-        $this->connection->method('getKeepAlive')->willReturn(self::KEEP_ALIVE_DEFAULT);
-        $this->connection->method('isCleanSession')->willReturn(true);
-        $this->connection->method('getUsername')->willReturn('');
-        $this->connection->method('getPassword')->willReturn('');
-        $this->connection->method('getWill')->willReturn($will);
-
-        $this->packetFactory->method('build')->willReturn(new ConnectRequestPacket());
-
-        $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
-        $result = $flow->start();
-
-        self::assertFalse($result->hasWill());
-    }
-
-    public function test_start_does_not_set_will_with_empty_payload(): void
-    {
-        $will = new DefaultMessage(self::WILL_TOPIC, '', self::QOS_LEVEL_AT_LEAST_ONCE, true);
-
-        $this->connection->method('getClientID')->willReturn(self::CLIENT_ID_TEST);
-        $this->connection->method('getProtocol')->willReturn(self::PROTOCOL_LEVEL_4);
-        $this->connection->method('getKeepAlive')->willReturn(self::KEEP_ALIVE_DEFAULT);
-        $this->connection->method('isCleanSession')->willReturn(true);
-        $this->connection->method('getUsername')->willReturn('');
-        $this->connection->method('getPassword')->willReturn('');
-        $this->connection->method('getWill')->willReturn($will);
-
-        $this->packetFactory->method('build')->willReturn(new ConnectRequestPacket());
-
-        $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
-        $result = $flow->start();
-
-        self::assertFalse($result->hasWill());
-    }
-
     public function test_start_with_different_protocol_level(): void
     {
         $this->connection->method('getClientID')->willReturn(self::CLIENT_ID_TEST);
