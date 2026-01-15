@@ -37,9 +37,16 @@ class ConnectResponsePacketTest extends TestCase
     {
         $packet = new ConnectResponsePacket();
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $packet->setReturnCode($i);
             self::assertNotEmpty($packet->getErrorName());
+            self::assertStringNotContainsString('Unknown', $packet->getErrorName());
+        }
+
+        foreach ([6, 128, 255] as $i) {
+            $packet->setReturnCode($i);
+            self::assertNotEmpty($packet->getErrorName());
+            self::assertStringContainsString('Unknown', $packet->getErrorName());
         }
     }
 

@@ -12,14 +12,10 @@ use BinSoul\Net\Mqtt\PacketStream;
  */
 class ConnectResponsePacket extends BasePacket
 {
-    protected static int $packetType = Packet::TYPE_CONNACK;
-
-    protected int $remainingPacketLength = 2;
-
     /**
-     * @var string[][]
+     * @var array<int, array<int, string>>
      */
-    private static array $returnCodes = [
+    private const RETURN_CODES = [
         0 => [
             'Connection accepted',
             '',
@@ -45,6 +41,10 @@ class ConnectResponsePacket extends BasePacket
             'The client is not authorized to connect.',
         ],
     ];
+
+    protected static int $packetType = Packet::TYPE_CONNACK;
+
+    protected int $remainingPacketLength = 2;
 
     /**
      * @var int<0, 255>
@@ -77,6 +77,8 @@ class ConnectResponsePacket extends BasePacket
 
     /**
      * Returns the return code.
+     *
+     * @return int<0, 255>
      */
     public function getReturnCode(): int
     {
@@ -86,7 +88,7 @@ class ConnectResponsePacket extends BasePacket
     /**
      * Sets the return code.
      *
-     * @param int<0,255> $value
+     * @param int<0, 255> $value
      */
     public function setReturnCode(int $value): void
     {
@@ -134,10 +136,10 @@ class ConnectResponsePacket extends BasePacket
      */
     public function getErrorName(): string
     {
-        if (isset(self::$returnCodes[$this->returnCode])) {
-            return self::$returnCodes[$this->returnCode][0];
+        if (array_key_exists($this->returnCode, self::RETURN_CODES)) {
+            return self::RETURN_CODES[$this->returnCode][0];
         }
 
-        return 'Error ' . $this->returnCode;
+        return sprintf('Unknown %02x', $this->returnCode);
     }
 }
