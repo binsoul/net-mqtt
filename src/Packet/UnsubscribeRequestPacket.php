@@ -24,7 +24,7 @@ class UnsubscribeRequestPacket extends BasePacket
     /**
      * @var array<int, non-empty-string>
      */
-    private array $topics = [];
+    private array $filters = [];
 
     public function read(PacketStream $stream): void
     {
@@ -37,12 +37,12 @@ class UnsubscribeRequestPacket extends BasePacket
         $identifier = $stream->readWord();
         Validator::assertValidIdentifier($identifier, MalformedPacketException::class);
         $this->identifier = $identifier;
-        $this->topics = [];
+        $this->filters = [];
 
         do {
-            $topic = $stream->readString();
-            Validator::assertValidNonEmptyString($topic, MalformedPacketException::class);
-            $this->topics[] = $topic;
+            $filter = $stream->readString();
+            Validator::assertValidNonEmptyString($filter, MalformedPacketException::class);
+            $this->filters[] = $filter;
         } while (($stream->getPosition() - $originalPosition) < $this->remainingPacketLength);
     }
 
@@ -52,8 +52,8 @@ class UnsubscribeRequestPacket extends BasePacket
 
         $data->writeWord($this->generateIdentifier());
 
-        foreach ($this->topics as $topic) {
-            $data->writeString($topic);
+        foreach ($this->filters as $filter) {
+            $data->writeString($filter);
         }
 
         $this->remainingPacketLength = $data->length();
@@ -63,32 +63,32 @@ class UnsubscribeRequestPacket extends BasePacket
     }
 
     /**
-     * Returns the topics.
+     * Returns the filters.
      *
      * @return array<int, non-empty-string>
      */
-    public function getTopics(): array
+    public function getFilters(): array
     {
-        return $this->topics;
+        return $this->filters;
     }
 
     /**
-     * Sets the topics.
+     * Sets the filters.
      *
      * @param array<int, non-empty-string> $values
      *
      * @throws InvalidArgumentException
      */
-    public function setTopics(array $values): void
+    public function setFilters(array $values): void
     {
         foreach ($values as $index => $value) {
             try {
                 Validator::assertValidNonEmptyString($value);
             } catch (InvalidArgumentException $e) {
-                throw new InvalidArgumentException(sprintf('Topic %s: ' . $e->getMessage(), $index), $e->getCode(), $e);
+                throw new InvalidArgumentException(sprintf('Filter %s: ' . $e->getMessage(), $index), $e->getCode(), $e);
             }
         }
 
-        $this->topics = $values;
+        $this->filters = $values;
     }
 }

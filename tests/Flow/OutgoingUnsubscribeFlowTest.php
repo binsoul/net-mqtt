@@ -71,7 +71,7 @@ class OutgoingUnsubscribeFlowTest extends TestCase
 
         self::assertInstanceOf(UnsubscribeRequestPacket::class, $result);
         self::assertEquals(self::PACKET_IDENTIFIER, $result->getIdentifier());
-        self::assertEquals([self::TOPIC_FILTER_TEST], $result->getTopics());
+        self::assertEquals([self::TOPIC_FILTER_TEST], $result->getFilters());
     }
 
     public function test_start_generates_unsubscribe_packet_with_multiple_subscriptions(): void
@@ -98,7 +98,7 @@ class OutgoingUnsubscribeFlowTest extends TestCase
         self::assertEquals(self::PACKET_IDENTIFIER, $result->getIdentifier());
         self::assertEquals(
             [self::TOPIC_FILTER_ALL, self::TOPIC_FILTER_SENSOR, self::TOPIC_FILTER_DEVICE],
-            $result->getTopics()
+            $result->getFilters()
         );
     }
 

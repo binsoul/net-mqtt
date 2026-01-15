@@ -18,8 +18,8 @@ class SubscribeRequestPacketTest extends TestCase
         $packet->setIdentifier(1);
         self::assertEquals(1, $packet->getIdentifier());
 
-        $packet->setTopics(['#', 'test/a/b/c']);
-        self::assertEquals(['#', 'test/a/b/c'], $packet->getTopics());
+        $packet->setFilters(['#', 'test/a/b/c']);
+        self::assertEquals(['#', 'test/a/b/c'], $packet->getFilters());
 
         $packet->setQosLevels([1, 2]);
         self::assertEquals([1, 2], $packet->getQosLevels());
@@ -39,25 +39,25 @@ class SubscribeRequestPacketTest extends TestCase
         $packet->setIdentifier(12345678);
     }
 
-    public function test_cannot_set_empty_topic(): void
+    public function test_cannot_set_empty_filter(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $packet = new SubscribeRequestPacket();
-        $packet->setTopics(['test/a/b/c', '']);
+        $packet->setFilters(['test/a/b/c', '']);
     }
 
-    public function test_cannot_set_too_large_topic(): void
+    public function test_cannot_set_too_large_filter(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $packet = new SubscribeRequestPacket();
-        $packet->setTopics([str_repeat('x', 0x10000)]);
+        $packet->setFilters([str_repeat('x', 0x10000)]);
     }
 
-    public function test_cannot_set_empty_topics_array(): void
+    public function test_cannot_set_empty_filters_array(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $packet = new SubscribeRequestPacket();
-        $packet->setTopics([]);
+        $packet->setFilters([]);
     }
 
     public function test_cannot_set_invalid_qos_level(): void
@@ -71,54 +71,54 @@ class SubscribeRequestPacketTest extends TestCase
     {
         $packet = new SubscribeRequestPacket();
         $packet->setIdentifier(1);
-        $packet->setTopics(['first' => '#', 'second' => 'test/a/b/c']);
+        $packet->setFilters(['first' => '#', 'second' => 'test/a/b/c']);
         $packet->setQosLevels(['second' => 1]);
 
         $stream = new PacketStream();
         $packet->write($stream);
 
-        self::assertEquals($this->getDefaultDataMultipleTopics(), $stream->getData());
+        self::assertEquals($this->getDefaultDataMultipleFilters(), $stream->getData());
     }
 
     public function test_write(): void
     {
         $packet = new SubscribeRequestPacket();
         $packet->setIdentifier(1);
-        $packet->setTopics(['#']);
+        $packet->setFilters(['#']);
         $packet->setQosLevels([0]);
 
         $stream = new PacketStream();
         $packet->write($stream);
 
-        self::assertEquals($this->getDefaultDataSingleTopic(), $stream->getData());
+        self::assertEquals($this->getDefaultDataSingleFilter(), $stream->getData());
 
         $packet = new SubscribeRequestPacket();
         $packet->setIdentifier(1);
-        $packet->setTopics(['#', 'test/a/b/c']);
+        $packet->setFilters(['#', 'test/a/b/c']);
         $packet->setQosLevels([0, 1]);
 
         $stream = new PacketStream();
         $packet->write($stream);
 
-        self::assertEquals($this->getDefaultDataMultipleTopics(), $stream->getData());
+        self::assertEquals($this->getDefaultDataMultipleFilters(), $stream->getData());
     }
 
     public function test_read(): void
     {
-        $stream = new PacketStream($this->getDefaultDataSingleTopic());
+        $stream = new PacketStream($this->getDefaultDataSingleFilter());
         $packet = new SubscribeRequestPacket();
         $packet->read($stream);
 
         self::assertEquals(Packet::TYPE_SUBSCRIBE, $packet->getPacketType());
-        self::assertEquals(['#'], $packet->getTopics());
+        self::assertEquals(['#'], $packet->getFilters());
         self::assertEquals([0], $packet->getQosLevels());
 
-        $stream = new PacketStream($this->getDefaultDataMultipleTopics());
+        $stream = new PacketStream($this->getDefaultDataMultipleFilters());
         $packet = new SubscribeRequestPacket();
         $packet->read($stream);
 
         self::assertEquals(Packet::TYPE_SUBSCRIBE, $packet->getPacketType());
-        self::assertEquals(['#', 'test/a/b/c'], $packet->getTopics());
+        self::assertEquals(['#', 'test/a/b/c'], $packet->getFilters());
         self::assertEquals([0, 1], $packet->getQosLevels());
     }
 
@@ -126,7 +126,7 @@ class SubscribeRequestPacketTest extends TestCase
     {
         $packetWrite = new SubscribeRequestPacket();
         $packetWrite->setIdentifier(1);
-        $packetWrite->setTopics(['#', 'test/a/b/c']);
+        $packetWrite->setFilters(['#', 'test/a/b/c']);
         $packetWrite->setQosLevels([0, 1]);
 
         $stream = new PacketStream();
@@ -136,16 +136,16 @@ class SubscribeRequestPacketTest extends TestCase
         $packetRead = new SubscribeRequestPacket();
         $packetRead->read($stream);
 
-        self::assertEquals(['#', 'test/a/b/c'], $packetRead->getTopics());
+        self::assertEquals(['#', 'test/a/b/c'], $packetRead->getFilters());
         self::assertEquals([0, 1], $packetRead->getQosLevels());
     }
 
-    private function getDefaultDataSingleTopic(): string
+    private function getDefaultDataSingleFilter(): string
     {
         return "\x82\x06\x00\x01\x00\x01#\x00";
     }
 
-    private function getDefaultDataMultipleTopics(): string
+    private function getDefaultDataMultipleFilters(): string
     {
         return "\x82\x13\x00\x01\x00\x01#\x00\x00\x0atest/a/b/c\x01";
     }

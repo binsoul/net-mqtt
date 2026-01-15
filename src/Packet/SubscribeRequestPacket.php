@@ -24,7 +24,7 @@ class SubscribeRequestPacket extends BasePacket
     /**
      * @var array<int, non-empty-string>
      */
-    private array $topics = [];
+    private array $filters = [];
 
     /**
      * @var array<int, int<0, 2>>
@@ -41,17 +41,17 @@ class SubscribeRequestPacket extends BasePacket
         $identifier = $stream->readWord();
         Validator::assertValidIdentifier($identifier, MalformedPacketException::class);
         $this->identifier = $identifier;
-        $this->topics = [];
+        $this->filters = [];
         $this->qosLevels = [];
 
         do {
-            $topic = $stream->readString();
+            $filter = $stream->readString();
             $qosLevel = $stream->readByte();
 
             Validator::assertValidQosLevel($qosLevel, MalformedPacketException::class);
-            Validator::assertValidNonEmptyString($topic, MalformedPacketException::class);
+            Validator::assertValidNonEmptyString($filter, MalformedPacketException::class);
 
-            $this->topics[] = $topic;
+            $this->filters[] = $filter;
             $this->qosLevels[] = $qosLevel;
         } while (($stream->getPosition() - $originalPosition) < $this->remainingPacketLength);
     }
@@ -62,8 +62,8 @@ class SubscribeRequestPacket extends BasePacket
 
         $data->writeWord($this->generateIdentifier());
 
-        foreach ($this->topics as $index => $topic) {
-            $data->writeString($topic);
+        foreach ($this->filters as $index => $filter) {
+            $data->writeString($filter);
             $data->writeByte($this->qosLevels[$index] ?? 0);
         }
 
@@ -74,26 +74,26 @@ class SubscribeRequestPacket extends BasePacket
     }
 
     /**
-     * Returns the topics.
+     * Returns the filters.
      *
      * @return array<int, non-empty-string>
      */
-    public function getTopics(): array
+    public function getFilters(): array
     {
-        return $this->topics;
+        return $this->filters;
     }
 
     /**
-     * Sets the topics.
+     * Sets the filters.
      *
      * @param array<int, non-empty-string> $values
      *
      * @throws InvalidArgumentException
      */
-    public function setTopics(array $values): void
+    public function setFilters(array $values): void
     {
         if ($values === []) {
-            throw new InvalidArgumentException('The array of topics is empty.');
+            throw new InvalidArgumentException('The array of filters is empty.');
         }
 
         foreach ($values as $index => $value) {
@@ -101,14 +101,14 @@ class SubscribeRequestPacket extends BasePacket
                 Validator::assertValidNonEmptyString($value);
             } catch (InvalidArgumentException $e) {
                 throw new InvalidArgumentException(
-                    sprintf('Topic %s: ' . $e->getMessage(), $index),
+                    sprintf('Filter %s: ' . $e->getMessage(), $index),
                     $e->getCode(),
                     $e
                 );
             }
         }
 
-        $this->topics = $values;
+        $this->filters = $values;
     }
 
     /**

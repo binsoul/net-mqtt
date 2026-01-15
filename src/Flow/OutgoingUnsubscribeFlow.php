@@ -59,7 +59,7 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
             $topics[] = $subscription->getFilter();
         }
 
-        $packet->setTopics($topics);
+        $packet->setFilters($topics);
 
         return $packet;
     }

@@ -73,7 +73,7 @@ class OutgoingSubscribeFlowTest extends TestCase
 
         self::assertInstanceOf(SubscribeRequestPacket::class, $result);
         self::assertEquals(self::PACKET_IDENTIFIER, $result->getIdentifier());
-        self::assertEquals([self::TOPIC_FILTER_TEST], $result->getTopics());
+        self::assertEquals([self::TOPIC_FILTER_TEST], $result->getFilters());
         self::assertEquals([self::QOS_LEVEL_AT_LEAST_ONCE], $result->getQosLevels());
     }
 
@@ -98,7 +98,7 @@ class OutgoingSubscribeFlowTest extends TestCase
 
         self::assertInstanceOf(SubscribeRequestPacket::class, $result);
         self::assertEquals(self::PACKET_IDENTIFIER, $result->getIdentifier());
-        self::assertEquals([self::TOPIC_FILTER_ALL, self::TOPIC_FILTER_SENSOR], $result->getTopics());
+        self::assertEquals([self::TOPIC_FILTER_ALL, self::TOPIC_FILTER_SENSOR], $result->getFilters());
         self::assertEquals([self::QOS_LEVEL_AT_MOST_ONCE, self::QOS_LEVEL_EXACTLY_ONCE], $result->getQosLevels());
     }
 

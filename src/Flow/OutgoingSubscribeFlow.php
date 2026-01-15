@@ -63,7 +63,7 @@ class OutgoingSubscribeFlow extends AbstractFlow
             $qosLevels[] = $subscription->getQosLevel();
         }
 
-        $packet->setTopics($topics);
+        $packet->setFilters($topics);
         $packet->setQosLevels($qosLevels);
 
         return $packet;

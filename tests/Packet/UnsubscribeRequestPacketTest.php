@@ -18,8 +18,8 @@ class UnsubscribeRequestPacketTest extends TestCase
         $packet->setIdentifier(1);
         self::assertEquals(1, $packet->getIdentifier());
 
-        $packet->setTopics(['#']);
-        self::assertEquals(['#'], $packet->getTopics());
+        $packet->setFilters(['#']);
+        self::assertEquals(['#'], $packet->getFilters());
     }
 
     public function test_cannot_set_negative_identifier(): void
@@ -36,25 +36,25 @@ class UnsubscribeRequestPacketTest extends TestCase
         $packet->setIdentifier(12345678);
     }
 
-    public function test_cannot_set_empty_topic(): void
+    public function test_cannot_set_empty_filter(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $packet = new UnsubscribeRequestPacket();
-        $packet->setTopics(['']);
+        $packet->setFilters(['']);
     }
 
-    public function test_cannot_set_too_large_topic(): void
+    public function test_cannot_set_too_large_filter(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $packet = new UnsubscribeRequestPacket();
-        $packet->setTopics([str_repeat('x', 0x10000)]);
+        $packet->setFilters([str_repeat('x', 0x10000)]);
     }
 
     public function test_write(): void
     {
         $packet = new UnsubscribeRequestPacket();
         $packet->setIdentifier(1);
-        $packet->setTopics(['#']);
+        $packet->setFilters(['#']);
 
         $stream = new PacketStream();
         $packet->write($stream);
@@ -71,7 +71,7 @@ class UnsubscribeRequestPacketTest extends TestCase
         self::assertEquals(Packet::TYPE_UNSUBSCRIBE, $packet->getPacketType());
     }
 
-    public function test_read_multiple_topics(): void
+    public function test_read_multiple_filters(): void
     {
         $stream = new PacketStream("\xa2\x09\x00\x01\x00\x01#\x00\x02##");
         $packet = new UnsubscribeRequestPacket();
@@ -84,7 +84,7 @@ class UnsubscribeRequestPacketTest extends TestCase
     {
         $packet = new UnsubscribeRequestPacket();
         $packet->setIdentifier(1);
-        $packet->setTopics(['#']);
+        $packet->setFilters(['#']);
 
         $stream = new PacketStream();
         $packet->write($stream);
