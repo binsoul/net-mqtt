@@ -268,12 +268,20 @@ class ConnectRequestPacketTest extends TestCase
         $packet->setWill('', 'message', 0, false);
     }
 
+    public function test_cannot_set_wildcard_will_topic(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $packet = $this->createDefaultPacket();
+        $packet->setWill('#', 'message', 0, false);
+    }
+
     public function test_cannot_set_invalid_will_message(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
         $packet = $this->createDefaultPacket();
-        $packet->setWill('topic', '', 0, false);
+        $packet->setWill('topic', str_repeat('a', 0xFFFF + 1), 0, false);
     }
 
     public function test_cannot_set_invalid_will_qos(): void

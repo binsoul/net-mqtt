@@ -36,9 +36,12 @@ class ConnectRequestPacket extends BasePacket
      */
     private int $keepAlive = 60;
 
-    private string $willTopic = '';
+    /**
+     * @var non-empty-string|null
+     */
+    private ?string $willTopic = null;
 
-    private string $willMessage = '';
+    private ?string $willMessage = null;
 
     private string $username = '';
 
@@ -62,9 +65,17 @@ class ConnectRequestPacket extends BasePacket
         $this->flags = $stream->readByte();
         $this->keepAlive = $stream->readWord();
         $this->clientID = $stream->readString();
+        $this->assertValidString($this->clientID);
+
+        $this->assertValidWill();
+        $this->willTopic = null;
+        $this->willMessage = null;
 
         if ($this->hasWill()) {
-            $this->willTopic = $stream->readString();
+            $willTopic = $stream->readString();
+            $this->assertValidTopic($willTopic);
+            $this->willTopic = $willTopic;
+
             $this->willMessage = $stream->readString();
         }
 
@@ -97,8 +108,8 @@ class ConnectRequestPacket extends BasePacket
         $data->writeString($this->clientID);
 
         if ($this->hasWill()) {
-            $data->writeString($this->willTopic);
-            $data->writeString($this->willMessage);
+            $data->writeString($this->willTopic ?? '');
+            $data->writeString($this->willMessage ?? '');
         }
 
         if ($this->hasUsername()) {
@@ -255,7 +266,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function getWillTopic(): string
     {
-        return $this->willTopic;
+        return $this->willTopic ?? '';
     }
 
     /**
@@ -263,7 +274,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function getWillMessage(): string
     {
-        return $this->willMessage;
+        return $this->willMessage ?? '';
     }
 
     /**
@@ -275,16 +286,8 @@ class ConnectRequestPacket extends BasePacket
      */
     public function setWill(string $topic, string $message, int $qosLevel = 0, bool $isRetained = false): void
     {
-        if ($topic === '') {
-            throw new InvalidArgumentException('The topic must not be empty.');
-        }
-
-        if ($message === '') {
-            throw new InvalidArgumentException('The message must not be empty.');
-        }
-
         try {
-            $this->assertValidString($topic);
+            $this->assertValidTopic($topic);
             $this->assertValidStringLength($message);
             $this->assertValidQosLevel($qosLevel);
         } catch (MalformedPacketException $malformedPacketException) {
@@ -310,8 +313,8 @@ class ConnectRequestPacket extends BasePacket
     public function removeWill(): void
     {
         $this->flags = ($this->flags & ~60) & 0xFF;
-        $this->willTopic = '';
-        $this->willMessage = '';
+        $this->willTopic = null;
+        $this->willMessage = null;
     }
 
     /**

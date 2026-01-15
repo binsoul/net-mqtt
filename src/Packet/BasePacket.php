@@ -179,6 +179,40 @@ abstract class BasePacket implements Packet
     }
 
     /**
+     * Asserts that the given string is a valid non-empty string.
+     *
+     * @phpstan-return ($value is non-empty-string ? void : never)
+     *
+     * @throws MalformedPacketException
+     */
+
+    protected function assertValidNonEmptyString(string $value): void
+    {
+        if ($value === '') {
+            throw new MalformedPacketException('The topic is empty.');
+        }
+
+        $this->assertValidString($value);
+    }
+
+    /**
+     * Asserts that the given string is a valid topic.
+     *
+     * @phpstan-return ($value is non-empty-string ? void : never)
+     *
+     * @throws MalformedPacketException
+     */
+
+    protected function assertValidTopic(string $value): void
+    {
+        if (strpbrk($value, '+#')) {
+            throw new MalformedPacketException('The topic contains wildcards.');
+        }
+
+        $this->assertValidNonEmptyString($value);
+    }
+
+    /**
      * Asserts that the given quality of service level is valid.
      *
      * @phpstan-return ($level is 0|1|2 ? void : never)
