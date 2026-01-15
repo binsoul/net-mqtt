@@ -43,9 +43,9 @@ class ConnectRequestPacket extends BasePacket
 
     private ?string $willMessage = null;
 
-    private string $username = '';
+    private ?string $username = null;
 
-    private string $password = '';
+    private ?string $password = null;
 
     public function read(PacketStream $stream): void
     {
@@ -79,18 +79,16 @@ class ConnectRequestPacket extends BasePacket
             $this->willMessage = $stream->readString();
         }
 
+        $this->username = null;
         if ($this->hasUsername()) {
             $this->username = $stream->readString();
+            $this->assertValidString($this->username);
         }
 
+        $this->password = null;
         if ($this->hasPassword()) {
             $this->password = $stream->readString();
         }
-
-        $this->assertValidWill();
-        $this->assertValidString($this->clientID);
-        $this->assertValidString($this->willTopic);
-        $this->assertValidString($this->username);
     }
 
     public function write(PacketStream $stream): void
@@ -113,11 +111,11 @@ class ConnectRequestPacket extends BasePacket
         }
 
         if ($this->hasUsername()) {
-            $data->writeString($this->username);
+            $data->writeString($this->username ?? '');
         }
 
         if ($this->hasPassword()) {
-            $data->writeString($this->password);
+            $data->writeString($this->password ?? '');
         }
 
         $this->remainingPacketLength = $data->length();
@@ -330,7 +328,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function getUsername(): string
     {
-        return $this->username;
+        return $this->username ?? '';
     }
 
     /**
@@ -366,7 +364,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function getPassword(): string
     {
-        return $this->password;
+        return $this->password ?? '';
     }
 
     /**
