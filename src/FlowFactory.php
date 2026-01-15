@@ -25,7 +25,7 @@ interface FlowFactory
 
     /**
      * @param array<int, Subscription> $subscriptions
-     * @param array<int, int<0, 255>>  $returnCodes
+     * @param array<int, int<0, 128>>  $returnCodes
      * @param int<1, 65535>            $identifier
      */
     public function buildIncomingSubscribeFlow(array $subscriptions, array $returnCodes, int $identifier): Flow;

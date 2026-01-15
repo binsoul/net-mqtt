@@ -47,15 +47,25 @@ class SubscribeResponsePacketTest extends TestCase
     {
         $packet = new SubscribeResponsePacket();
         self::assertFalse($packet->isError(0));
+        self::assertFalse($packet->isError(1));
+        self::assertFalse($packet->isError(2));
+        self::assertTrue($packet->isError(3));
         self::assertTrue($packet->isError(128));
+        self::assertTrue($packet->isError(255));
     }
 
     public function test_returns_names(): void
     {
         $packet = new SubscribeResponsePacket();
 
-        for ($i = 0; $i <= 128; $i++) {
-            self::assertNotEmpty($packet->getReturnCodeName($i));
+        foreach ([0, 1, 2, 128] as $code) {
+            self::assertNotEmpty($packet->getReturnCodeName($code));
+            self::assertStringNotContainsString('Unknown', $packet->getReturnCodeName($code));
+        }
+
+        foreach ([3, 255] as $code) {
+            self::assertNotEmpty($packet->getReturnCodeName($code));
+            self::assertStringContainsString('Unknown', $packet->getReturnCodeName($code));
         }
     }
 

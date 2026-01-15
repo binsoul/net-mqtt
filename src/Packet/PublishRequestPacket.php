@@ -29,19 +29,21 @@ class PublishRequestPacket extends BasePacket
 
         $originalPosition = $stream->getPosition();
         $this->topic = $stream->readString();
+        $this->assertValidString($this->topic);
+
+        $qosLevel = ($this->packetFlags & 6) >> 1;
+        $this->assertValidQosLevel($qosLevel);
+
         $this->identifier = null;
 
-        if ($this->getQosLevel() > 0) {
+        if ($qosLevel > 0) {
             $identifier = $stream->readWord();
             $this->assertValidIdentifier($identifier);
-            $this->identifier = $identifier === 0 ? null : $identifier;
+            $this->identifier = $identifier;
         }
 
         $payloadLength = $this->remainingPacketLength - ($stream->getPosition() - $originalPosition);
         $this->payload = $stream->read($payloadLength);
-
-        $this->assertValidQosLevel($this->getQosLevel());
-        $this->assertValidString($this->topic);
     }
 
     public function write(PacketStream $stream): void
@@ -152,14 +154,20 @@ class PublishRequestPacket extends BasePacket
 
     /**
      * Returns the quality of service level.
+     *
+     * @return int<0, 2>
      */
     public function getQosLevel(): int
     {
-        return ($this->packetFlags & 6) >> 1;
+        $qosLevel = ($this->packetFlags & 6) >> 1;
+
+        return $qosLevel > 2 ? 0 : $qosLevel;
     }
 
     /**
      * Sets the quality of service level.
+     *
+     * @param int<0, 2> $value
      *
      * @throws InvalidArgumentException
      */

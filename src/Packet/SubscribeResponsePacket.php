@@ -16,20 +16,20 @@ class SubscribeResponsePacket extends BasePacket
 {
     use IdentifiablePacket;
 
-    protected static int $packetType = Packet::TYPE_SUBACK;
-
     /**
-     * @var string[][]
+     * @var array<int, array<int, string>>
      */
-    private static array $qosLevels = [
+    private const QOS_LEVELS = [
         0 => ['Maximum QoS 0'],
         1 => ['Maximum QoS 1'],
         2 => ['Maximum QoS 2'],
         128 => ['Failure'],
     ];
 
+    protected static int $packetType = Packet::TYPE_SUBACK;
+
     /**
-     * @var array<int, int<0, 255>>
+     * @var array<int, int<0, 128>>
      */
     private array $returnCodes = [];
 
@@ -71,28 +71,32 @@ class SubscribeResponsePacket extends BasePacket
 
     /**
      * Indicates if the given return code is an error.
+     *
+     * @param int<0, 128> $returnCode
      */
     public function isError(int $returnCode): bool
     {
-        return $returnCode === 128;
+        return $returnCode < 0 || $returnCode > 2;
     }
 
     /**
      * Indicates if the given return code is an error.
+     *
+     * @param int<0, 128> $returnCode
      */
     public function getReturnCodeName(int $returnCode): string
     {
-        if (isset(self::$qosLevels[$returnCode])) {
-            return self::$qosLevels[$returnCode][0];
+        if (array_key_exists($returnCode, self::QOS_LEVELS)) {
+            return self::QOS_LEVELS[$returnCode][0];
         }
 
-        return 'Unknown ' . $returnCode;
+        return sprintf('Unknown %02x', $returnCode);
     }
 
     /**
      * Returns the return codes.
      *
-     * @return int[]
+     * @return array<int, int<0, 128>>
      */
     public function getReturnCodes(): array
     {
@@ -102,7 +106,7 @@ class SubscribeResponsePacket extends BasePacket
     /**
      * Sets the return codes.
      *
-     * @param array<int, int<0,255>> $value
+     * @param array<int, int<0, 128>> $value
      *
      * @throws InvalidArgumentException
      */
@@ -121,6 +125,8 @@ class SubscribeResponsePacket extends BasePacket
 
     /**
      * Asserts that a return code is valid.
+     *
+     * @phpstan-return ($returnCode is 0|1|2|128 ? void : never)
      *
      * @throws MalformedPacketException
      */

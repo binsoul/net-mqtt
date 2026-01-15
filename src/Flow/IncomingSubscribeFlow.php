@@ -25,7 +25,7 @@ class IncomingSubscribeFlow extends AbstractFlow
     private array $subscriptions;
 
     /**
-     * @var array<int, int<0, 255>>
+     * @var array<int, int<0, 128>>
      */
     private array $returnCodes;
 
@@ -33,7 +33,7 @@ class IncomingSubscribeFlow extends AbstractFlow
      * Constructs an instance of this class.
      *
      * @param array<int, Subscription> $subscriptions
-     * @param array<int, int<0, 255>>  $returnCodes
+     * @param array<int, int<0, 128>>  $returnCodes
      * @param int<1, 65535>            $identifier
      */
     public function __construct(PacketFactory $packetFactory, array $subscriptions, array $returnCodes, int $identifier)

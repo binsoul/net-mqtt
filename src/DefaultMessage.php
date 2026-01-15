@@ -126,6 +126,8 @@ class DefaultMessage implements Message
     /**
      * Asserts that the given quality of service level is valid.
      *
+     * @phpstan-return ($level is 0|1|2 ? void : never)
+     *
      * @throws InvalidArgumentException
      */
     private function assertValidQosLevel(int $level): void
