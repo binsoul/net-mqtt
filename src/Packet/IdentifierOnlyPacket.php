@@ -23,7 +23,7 @@ abstract class IdentifierOnlyPacket extends BasePacket
 
         $identifier = $stream->readWord();
         $this->assertValidIdentifier($identifier);
-        $this->identifier = $identifier === 0 ? null : $identifier;
+        $this->identifier = $identifier;
     }
 
     public function write(PacketStream $stream): void

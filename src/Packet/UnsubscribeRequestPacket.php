@@ -35,7 +35,7 @@ class UnsubscribeRequestPacket extends BasePacket
         $originalPosition = $stream->getPosition();
         $identifier = $stream->readWord();
         $this->assertValidIdentifier($identifier);
-        $this->identifier = $identifier === 0 ? null : $identifier;
+        $this->identifier = $identifier;
         $this->topics = [];
 
         do {

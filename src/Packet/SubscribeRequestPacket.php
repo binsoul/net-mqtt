@@ -39,7 +39,7 @@ class SubscribeRequestPacket extends BasePacket
         $originalPosition = $stream->getPosition();
         $identifier = $stream->readWord();
         $this->assertValidIdentifier($identifier);
-        $this->identifier = $identifier === 0 ? null : $identifier;
+        $this->identifier = $identifier;
         $this->topics = [];
         $this->qosLevels = [];
 

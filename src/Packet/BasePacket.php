@@ -198,6 +198,8 @@ abstract class BasePacket implements Packet
     /**
      * Asserts that the given quality of service level is valid.
      *
+     * @phpstan-return ($identifier is int<1, 65535> ? void : never)
+     *
      * @throws MalformedPacketException
      */
     protected function assertValidIdentifier(int $identifier): void
