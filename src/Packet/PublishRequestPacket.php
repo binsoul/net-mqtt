@@ -7,6 +7,7 @@ namespace BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
+use BinSoul\Net\Mqtt\Validator;
 use InvalidArgumentException;
 
 /**
@@ -18,6 +19,9 @@ class PublishRequestPacket extends BasePacket
 
     protected static int $packetType = Packet::TYPE_PUBLISH;
 
+    /**
+     * @var non-empty-string
+     */
     private string $topic;
 
     private string $payload;
@@ -28,17 +32,18 @@ class PublishRequestPacket extends BasePacket
         $this->assertRemainingPacketLength();
 
         $originalPosition = $stream->getPosition();
-        $this->topic = $stream->readString();
-        $this->assertValidString($this->topic);
+        $topic = $stream->readString();
+        Validator::assertValidTopic($topic, MalformedPacketException::class);
+        $this->topic = $topic;
 
         $qosLevel = ($this->packetFlags & 6) >> 1;
-        $this->assertValidQosLevel($qosLevel);
+        Validator::assertValidQosLevel($qosLevel, MalformedPacketException::class);
 
         $this->identifier = null;
 
         if ($qosLevel > 0) {
             $identifier = $stream->readWord();
-            $this->assertValidIdentifier($identifier);
+            Validator::assertValidIdentifier($identifier, MalformedPacketException::class);
             $this->identifier = $identifier;
         }
 
@@ -66,6 +71,8 @@ class PublishRequestPacket extends BasePacket
 
     /**
      * Returns the topic.
+     *
+     * @return non-empty-string
      */
     public function getTopic(): string
     {
@@ -75,23 +82,13 @@ class PublishRequestPacket extends BasePacket
     /**
      * Sets the topic.
      *
+     * @param non-empty-string $value
+     *
      * @throws InvalidArgumentException
      */
     public function setTopic(string $value): void
     {
-        if ($value === '') {
-            throw new InvalidArgumentException('The topic must not be empty.');
-        }
-
-        if (strpbrk($value, '+#')) {
-            throw new InvalidArgumentException('The topic must not contain wildcards.');
-        }
-
-        try {
-            $this->assertValidString($value);
-        } catch (MalformedPacketException $malformedPacketException) {
-            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
-        }
+        Validator::assertValidTopic($value);
 
         $this->topic = $value;
     }
@@ -173,11 +170,7 @@ class PublishRequestPacket extends BasePacket
      */
     public function setQosLevel(int $value): void
     {
-        try {
-            $this->assertValidQosLevel($value);
-        } catch (MalformedPacketException $malformedPacketException) {
-            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
-        }
+        Validator::assertValidQosLevel($value);
 
         $this->packetFlags = ($this->packetFlags | ($value & 3) << 1) & 0x0F;
     }

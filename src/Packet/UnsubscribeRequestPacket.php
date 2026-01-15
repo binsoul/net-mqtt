@@ -7,6 +7,7 @@ namespace BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
+use BinSoul\Net\Mqtt\Validator;
 use InvalidArgumentException;
 
 /**
@@ -34,7 +35,7 @@ class UnsubscribeRequestPacket extends BasePacket
 
         $originalPosition = $stream->getPosition();
         $identifier = $stream->readWord();
-        $this->assertValidIdentifier($identifier);
+        Validator::assertValidIdentifier($identifier, MalformedPacketException::class);
         $this->identifier = $identifier;
         $this->topics = [];
 
@@ -84,8 +85,8 @@ class UnsubscribeRequestPacket extends BasePacket
             }
 
             try {
-                $this->assertValidString($value);
-            } catch (MalformedPacketException $e) {
+                Validator::assertValidString($value);
+            } catch (InvalidArgumentException $e) {
                 throw new InvalidArgumentException(sprintf('Topic %s: ' . $e->getMessage(), $index), $e->getCode(), $e);
             }
         }

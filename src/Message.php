@@ -11,6 +11,8 @@ interface Message
 {
     /**
      * Returns the topic.
+     *
+     * @return non-empty-string
      */
     public function getTopic(): string;
 
@@ -38,6 +40,8 @@ interface Message
 
     /**
      * Returns a new message with the given topic.
+     *
+     * @param non-empty-string $topic
      *
      * @return static
      */

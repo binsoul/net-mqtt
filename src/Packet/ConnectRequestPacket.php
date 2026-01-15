@@ -8,6 +8,7 @@ use BinSoul\Net\Mqtt\DefaultIdentifierGenerator;
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
+use BinSoul\Net\Mqtt\Validator;
 use InvalidArgumentException;
 
 /**
@@ -65,7 +66,7 @@ class ConnectRequestPacket extends BasePacket
         $this->flags = $stream->readByte();
         $this->keepAlive = $stream->readWord();
         $this->clientID = $stream->readString();
-        $this->assertValidString($this->clientID);
+        Validator::assertValidString($this->clientID, MalformedPacketException::class);
 
         $this->assertValidWill();
         $this->willTopic = null;
@@ -73,19 +74,21 @@ class ConnectRequestPacket extends BasePacket
 
         if ($this->hasWill()) {
             $willTopic = $stream->readString();
-            $this->assertValidTopic($willTopic);
+            Validator::assertValidTopic($willTopic, MalformedPacketException::class);
             $this->willTopic = $willTopic;
 
             $this->willMessage = $stream->readString();
         }
 
         $this->username = null;
+
         if ($this->hasUsername()) {
             $this->username = $stream->readString();
-            $this->assertValidString($this->username);
+            Validator::assertValidString($this->username, MalformedPacketException::class);
         }
 
         $this->password = null;
+
         if ($this->hasPassword()) {
             $this->password = $stream->readString();
         }
@@ -284,13 +287,9 @@ class ConnectRequestPacket extends BasePacket
      */
     public function setWill(string $topic, string $message, int $qosLevel = 0, bool $isRetained = false): void
     {
-        try {
-            $this->assertValidTopic($topic);
-            $this->assertValidStringLength($message);
-            $this->assertValidQosLevel($qosLevel);
-        } catch (MalformedPacketException $malformedPacketException) {
-            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
-        }
+        Validator::assertValidTopic($topic);
+        Validator::assertValidStringLength($message);
+        Validator::assertValidQosLevel($qosLevel);
 
         $this->willTopic = $topic;
         $this->willMessage = $message;
@@ -336,11 +335,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function setUsername(string $value): void
     {
-        try {
-            $this->assertValidString($value);
-        } catch (MalformedPacketException $malformedPacketException) {
-            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
-        }
+        Validator::assertValidString($value);
 
         $this->username = $value;
 
@@ -374,11 +369,7 @@ class ConnectRequestPacket extends BasePacket
      */
     public function setPassword(string $value): void
     {
-        try {
-            $this->assertValidStringLength($value);
-        } catch (MalformedPacketException $malformedPacketException) {
-            throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
-        }
+        Validator::assertValidStringLength($value);
 
         $this->password = $value;
 
@@ -399,7 +390,7 @@ class ConnectRequestPacket extends BasePacket
         $willQosLevel = ($this->flags & 24) >> 3;
 
         if ($this->hasWill()) {
-            $this->assertValidQosLevel($willQosLevel);
+            Validator::assertValidQosLevel($willQosLevel, MalformedPacketException::class);
         } else {
             if ($willQosLevel > 0) {
                 throw new MalformedPacketException(

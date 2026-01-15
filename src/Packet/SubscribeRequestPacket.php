@@ -7,6 +7,7 @@ namespace BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
+use BinSoul\Net\Mqtt\Validator;
 use InvalidArgumentException;
 
 /**
@@ -38,7 +39,7 @@ class SubscribeRequestPacket extends BasePacket
 
         $originalPosition = $stream->getPosition();
         $identifier = $stream->readWord();
-        $this->assertValidIdentifier($identifier);
+        Validator::assertValidIdentifier($identifier, MalformedPacketException::class);
         $this->identifier = $identifier;
         $this->topics = [];
         $this->qosLevels = [];
@@ -47,8 +48,8 @@ class SubscribeRequestPacket extends BasePacket
             $topic = $stream->readString();
             $qosLevel = $stream->readByte();
 
-            $this->assertValidQosLevel($qosLevel);
-            $this->assertValidString($topic);
+            Validator::assertValidQosLevel($qosLevel, MalformedPacketException::class);
+            Validator::assertValidString($topic, MalformedPacketException::class);
 
             $this->topics[] = $topic;
             $this->qosLevels[] = $qosLevel;
@@ -101,12 +102,12 @@ class SubscribeRequestPacket extends BasePacket
             }
 
             try {
-                $this->assertValidString($value);
-            } catch (MalformedPacketException $malformedPacketException) {
+                Validator::assertValidString($value);
+            } catch (InvalidArgumentException $e) {
                 throw new InvalidArgumentException(
-                    sprintf('Topic %s: ' . $malformedPacketException->getMessage(), $index),
-                    $malformedPacketException->getCode(),
-                    $malformedPacketException
+                    sprintf('Topic %s: ' . $e->getMessage(), $index),
+                    $e->getCode(),
+                    $e
                 );
             }
         }
@@ -135,8 +136,8 @@ class SubscribeRequestPacket extends BasePacket
     {
         foreach ($values as $index => $value) {
             try {
-                $this->assertValidQosLevel($value);
-            } catch (MalformedPacketException $malformedPacketException) {
+                Validator::assertValidQosLevel($value);
+            } catch (InvalidArgumentException $malformedPacketException) {
                 throw new InvalidArgumentException(
                     sprintf('QoS level %s: ' . $malformedPacketException->getMessage(), $index),
                     $malformedPacketException->getCode(),

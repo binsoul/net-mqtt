@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt;
 
-use InvalidArgumentException;
-
 /**
  * Provides a default implementation of the {@see Subscription} interface.
  */
@@ -25,7 +23,7 @@ class DefaultSubscription implements Subscription
      */
     public function __construct(string $filter, int $qosLevel = 0)
     {
-        $this->assertValidQosLevel($qosLevel);
+        Validator::assertValidQosLevel($qosLevel);
 
         $this->filter = $filter;
         $this->qosLevel = $qosLevel;
@@ -51,30 +49,11 @@ class DefaultSubscription implements Subscription
 
     public function withQosLevel(int $level): self
     {
-        $this->assertValidQosLevel($level);
+        Validator::assertValidQosLevel($level);
 
         $result = clone $this;
         $result->qosLevel = $level;
 
         return $result;
-    }
-
-    /**
-     * Asserts that the given quality of service level is valid.
-     *
-     * @phpstan-return ($level is 0|1|2 ? void : never)
-     *
-     * @throws InvalidArgumentException
-     */
-    private function assertValidQosLevel(int $level): void
-    {
-        if ($level < 0 || $level > 2) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Expected a quality of service level between 0 and 2 but got %d.',
-                    $level
-                )
-            );
-        }
     }
 }

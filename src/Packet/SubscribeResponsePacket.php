@@ -7,6 +7,7 @@ namespace BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
+use BinSoul\Net\Mqtt\Validator;
 use InvalidArgumentException;
 
 /**
@@ -40,7 +41,7 @@ class SubscribeResponsePacket extends BasePacket
         $this->assertRemainingPacketLength();
 
         $identifier = $stream->readWord();
-        $this->assertValidIdentifier($identifier);
+        Validator::assertValidIdentifier($identifier, MalformedPacketException::class);
         $this->identifier = $identifier;
 
         $returnCodeLength = $this->remainingPacketLength - 2;

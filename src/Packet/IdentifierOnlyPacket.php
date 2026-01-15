@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt\Packet;
 
+use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\PacketStream;
+use BinSoul\Net\Mqtt\Validator;
 
 /**
  * Provides a base class for PUB* packets.
@@ -22,7 +24,7 @@ abstract class IdentifierOnlyPacket extends BasePacket
         $this->assertRemainingPacketLength(2);
 
         $identifier = $stream->readWord();
-        $this->assertValidIdentifier($identifier);
+        Validator::assertValidIdentifier($identifier, MalformedPacketException::class);
         $this->identifier = $identifier;
     }
 
