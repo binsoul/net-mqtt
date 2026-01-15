@@ -47,6 +47,10 @@ interface Packet
 
     /**
      * Returns the type of the packet.
+     *
+     * @return int<0, 15>
+     *
+     * @phpstan-return Packet::TYPE_*
      */
     public function getPacketType(): int;
 

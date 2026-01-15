@@ -25,6 +25,8 @@ abstract class BasePacket implements Packet
 
     /**
      * Flags of the packet.
+     *
+     * @var int<0, 15>
      */
     protected int $packetFlags = 0;
 
@@ -73,6 +75,8 @@ abstract class BasePacket implements Packet
 
     /**
      * Returns the packet flags.
+     *
+     * @return int<0, 15>
      */
     public function getPacketFlags(): int
     {

@@ -124,9 +124,9 @@ class PublishRequestPacket extends BasePacket
     public function setDuplicate(bool $value): void
     {
         if ($value) {
-            $this->packetFlags |= 8;
+            $this->packetFlags = ($this->packetFlags | 8) & 0x0F;
         } else {
-            $this->packetFlags &= ~8;
+            $this->packetFlags = ($this->packetFlags & ~8) & 0x0F;
         }
     }
 
@@ -144,9 +144,9 @@ class PublishRequestPacket extends BasePacket
     public function setRetained(bool $value): void
     {
         if ($value) {
-            $this->packetFlags |= 1;
+            $this->packetFlags = ($this->packetFlags | 1) & 0x0F;
         } else {
-            $this->packetFlags &= ~1;
+            $this->packetFlags = ($this->packetFlags & ~1) & 0x0F;
         }
     }
 
@@ -171,6 +171,6 @@ class PublishRequestPacket extends BasePacket
             throw new InvalidArgumentException($malformedPacketException->getMessage(), $malformedPacketException->getCode(), $malformedPacketException);
         }
 
-        $this->packetFlags |= ($value & 3) << 1;
+        $this->packetFlags = ($this->packetFlags | ($value & 3) << 1) & 0x0F;
     }
 }
