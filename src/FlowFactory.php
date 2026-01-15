@@ -21,7 +21,7 @@ interface FlowFactory
     /**
      * @param int<1, 65535>|null $identifier
      */
-    public function buildIncomingPublishFlow(Message $message, int $identifier = null): Flow;
+    public function buildIncomingPublishFlow(Message $message, ?int $identifier = null): Flow;
 
     /**
      * @param array<int, Subscription> $subscriptions

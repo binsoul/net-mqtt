@@ -56,7 +56,7 @@ class DefaultFlowFactory implements FlowFactory
         return new IncomingPingFlow($this->packetFactory);
     }
 
-    public function buildIncomingPublishFlow(Message $message, int $identifier = null): Flow
+    public function buildIncomingPublishFlow(Message $message, ?int $identifier = null): Flow
     {
         return new IncomingPublishFlow($this->packetFactory, $message, $identifier);
     }

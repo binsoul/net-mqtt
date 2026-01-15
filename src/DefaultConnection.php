@@ -119,7 +119,7 @@ class DefaultConnection implements Connection
         return $result;
     }
 
-    public function withWill(Message $will = null): self
+    public function withWill(?Message $will = null): self
     {
         $result = clone $this;
         $result->will = $will;
