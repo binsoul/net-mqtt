@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace BinSoul\Test\Net\Mqtt;
 
+use BinSoul\Net\Mqtt\Exception\EndOfStreamException;
+use BinSoul\Net\Mqtt\Exception\UnknownPacketTypeException;
 use BinSoul\Net\Mqtt\Packet;
+use BinSoul\Net\Mqtt\PacketFactory;
+use BinSoul\Net\Mqtt\PacketStream;
 use BinSoul\Net\Mqtt\StreamParser;
 use PHPUnit\Framework\TestCase;
 
@@ -75,6 +79,50 @@ class StreamParserTest extends TestCase
         $parser->push("\xF0");
 
         self::assertEquals(2, $called);
+    }
+
+    public function test_handles_packet_factory_exceptions(): void
+    {
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
+            ->method('build')
+            ->willThrowException(new UnknownPacketTypeException());
+
+        $parser = new StreamParser($packetFactory);
+        $called = 0;
+        $parser->onError(
+            static function () use (&$called): void {
+                $called++;
+            }
+        );
+
+        $parser->push($this->packets[Packet::TYPE_CONNECT][0]);
+
+        self::assertGreaterThan(0, $called);
+    }
+
+    public function test_handles_packet_stream_exceptions(): void
+    {
+        $packetStream = $this->createMock(PacketStream::class);
+        $packetStream
+            ->expects(self::once())
+            ->method('getRemainingBytes')
+            ->willReturn(1, 0);
+
+        $packetStream
+            ->expects(self::once())
+            ->method('readByte')
+            ->willThrowException(new EndOfStreamException());
+
+        $parser = new StreamParser(null, $packetStream);
+        $called = 0;
+        $parser->onError(
+            static function () use (&$called): void {
+                $called++;
+            }
+        );
+
+        $parser->push($this->packets[Packet::TYPE_CONNECT][0]);
     }
 
     public function test_handles_malformed_packets(): void
