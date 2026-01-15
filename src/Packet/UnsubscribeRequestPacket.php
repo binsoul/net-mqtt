@@ -22,7 +22,7 @@ class UnsubscribeRequestPacket extends BasePacket
     protected int $packetFlags = 2;
 
     /**
-     * @var array<int, string>
+     * @var array<int, non-empty-string>
      */
     private array $topics = [];
 
@@ -40,7 +40,9 @@ class UnsubscribeRequestPacket extends BasePacket
         $this->topics = [];
 
         do {
-            $this->topics[] = $stream->readString();
+            $topic = $stream->readString();
+            Validator::assertValidNonEmptyString($topic, MalformedPacketException::class);
+            $this->topics[] = $topic;
         } while (($stream->getPosition() - $originalPosition) < $this->remainingPacketLength);
     }
 
@@ -63,7 +65,7 @@ class UnsubscribeRequestPacket extends BasePacket
     /**
      * Returns the topics.
      *
-     * @return array<int, string>
+     * @return array<int, non-empty-string>
      */
     public function getTopics(): array
     {
@@ -73,19 +75,15 @@ class UnsubscribeRequestPacket extends BasePacket
     /**
      * Sets the topics.
      *
-     * @param array<int, string> $values
+     * @param array<int, non-empty-string> $values
      *
      * @throws InvalidArgumentException
      */
     public function setTopics(array $values): void
     {
         foreach ($values as $index => $value) {
-            if ($value === '') {
-                throw new InvalidArgumentException(sprintf('The topic %s must not be empty.', $index));
-            }
-
             try {
-                Validator::assertValidString($value);
+                Validator::assertValidNonEmptyString($value);
             } catch (InvalidArgumentException $e) {
                 throw new InvalidArgumentException(sprintf('Topic %s: ' . $e->getMessage(), $index), $e->getCode(), $e);
             }

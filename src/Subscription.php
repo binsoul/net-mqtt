@@ -11,6 +11,8 @@ interface Subscription
 {
     /**
      * Returns the topic filter.
+     *
+     * @return non-empty-string
      */
     public function getFilter(): string;
 
@@ -23,6 +25,8 @@ interface Subscription
 
     /**
      * Returns a new subscription with the given topic filter.
+     *
+     * @param non-empty-string $filter
      *
      * @return static
      */

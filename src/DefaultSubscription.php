@@ -9,6 +9,9 @@ namespace BinSoul\Net\Mqtt;
  */
 class DefaultSubscription implements Subscription
 {
+    /**
+     * @var non-empty-string
+     */
     private string $filter;
 
     /**
@@ -19,10 +22,12 @@ class DefaultSubscription implements Subscription
     /**
      * Constructs an instance of this class.
      *
-     * @param int<0, 2> $qosLevel
+     * @param non-empty-string $filter
+     * @param int<0, 2>        $qosLevel
      */
     public function __construct(string $filter, int $qosLevel = 0)
     {
+        Validator::assertValidNonEmptyString($filter);
         Validator::assertValidQosLevel($qosLevel);
 
         $this->filter = $filter;
@@ -41,6 +46,8 @@ class DefaultSubscription implements Subscription
 
     public function withFilter(string $filter): self
     {
+        Validator::assertValidNonEmptyString($filter);
+
         $result = clone $this;
         $result->filter = $filter;
 

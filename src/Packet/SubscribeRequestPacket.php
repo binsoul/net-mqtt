@@ -22,7 +22,7 @@ class SubscribeRequestPacket extends BasePacket
     protected int $packetFlags = 2;
 
     /**
-     * @var array<int, string>
+     * @var array<int, non-empty-string>
      */
     private array $topics = [];
 
@@ -49,7 +49,7 @@ class SubscribeRequestPacket extends BasePacket
             $qosLevel = $stream->readByte();
 
             Validator::assertValidQosLevel($qosLevel, MalformedPacketException::class);
-            Validator::assertValidString($topic, MalformedPacketException::class);
+            Validator::assertValidNonEmptyString($topic, MalformedPacketException::class);
 
             $this->topics[] = $topic;
             $this->qosLevels[] = $qosLevel;
@@ -76,7 +76,7 @@ class SubscribeRequestPacket extends BasePacket
     /**
      * Returns the topics.
      *
-     * @return array<int, string>
+     * @return array<int, non-empty-string>
      */
     public function getTopics(): array
     {
@@ -86,23 +86,19 @@ class SubscribeRequestPacket extends BasePacket
     /**
      * Sets the topics.
      *
-     * @param array<int, string> $values
+     * @param array<int, non-empty-string> $values
      *
      * @throws InvalidArgumentException
      */
     public function setTopics(array $values): void
     {
         if ($values === []) {
-            throw new InvalidArgumentException('The topics array cannot be empty.');
+            throw new InvalidArgumentException('The array of topics is empty.');
         }
 
         foreach ($values as $index => $value) {
-            if ($value === '') {
-                throw new InvalidArgumentException(sprintf('The topic %s must not be empty.', $index));
-            }
-
             try {
-                Validator::assertValidString($value);
+                Validator::assertValidNonEmptyString($value);
             } catch (InvalidArgumentException $e) {
                 throw new InvalidArgumentException(
                     sprintf('Topic %s: ' . $e->getMessage(), $index),

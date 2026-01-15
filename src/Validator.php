@@ -76,7 +76,7 @@ class Validator
     public static function assertValidNonEmptyString(string $value, string $exceptionClass = InvalidArgumentException::class): void
     {
         if ($value === '') {
-            throw new $exceptionClass('The topic is empty.');
+            throw new $exceptionClass('The string is empty.');
         }
 
         self::assertValidString($value);
