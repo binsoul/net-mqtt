@@ -53,7 +53,7 @@ class OutgoingConnectFlow extends AbstractFlow
 
         $will = $this->connection->getWill();
 
-        if ($will !== null && $will->getTopic() !== '' && $will->getPayload() !== '') {
+        if ($will !== null) {
             $packet->setWill($will->getTopic(), $will->getPayload(), $will->getQosLevel(), $will->isRetained());
         }
 
