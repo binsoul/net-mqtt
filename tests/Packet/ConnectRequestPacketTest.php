@@ -65,6 +65,15 @@ class ConnectRequestPacketTest extends TestCase
         self::assertEquals($data, (string) $packet);
     }
 
+    public function test_packet_with_invalid_protocol_level(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\x10\x14\x00\x06MQIsdp\x05\x02\x00\x0a\x00\x06foobar";
+        $stream = new PacketStream($data);
+        $packet = new ConnectRequestPacket();
+        $packet->read($stream);
+    }
+
     public function test_with_existing_session(): void
     {
         $data = "\x10\x12\x00\x04MQTT\x04\x00\x00\x0a\x00\x06foobar";
