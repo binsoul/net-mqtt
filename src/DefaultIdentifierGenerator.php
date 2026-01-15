@@ -14,26 +14,45 @@ class DefaultIdentifierGenerator implements PacketIdentifierGenerator, ClientIde
     /**
      * @var int<0, 65535>
      */
-    private int $currentIdentifier = 0;
+    private static int $currentIdentifier = 0;
+
+    public function __construct()
+    {
+        // Reset the current identifier if an instance is created
+        self::$currentIdentifier = 0;
+    }
 
     /**
      * @return int<1, 65535>
      */
     public function generatePacketIdentifier(): int
     {
-        $this->currentIdentifier = ($this->currentIdentifier + 1) & 0xFFFF;
-
-        if ($this->currentIdentifier === 0) {
-            $this->currentIdentifier = 1;
-        }
-
-        return $this->currentIdentifier;
+        return self::buildPacketIdentifier();
     }
 
     public function generateClientIdentifier(): string
     {
+        return self::buildClientIdentifier();
+    }
+
+    /**
+     * @return int<1, 65535>
+     */
+    public static function buildPacketIdentifier(): int
+    {
+        self::$currentIdentifier = (self::$currentIdentifier + 1) & 0xFFFF;
+
+        if (self::$currentIdentifier === 0) {
+            self::$currentIdentifier = 1;
+        }
+
+        return self::$currentIdentifier;
+    }
+
+    public static function buildClientIdentifier(): string
+    {
         try {
-            $data = random_bytes(9);
+            $data = random_bytes(8);
         } catch (Exception $exception) {
             $hash = md5(uniqid((string) microtime(true), true));
             $bytes = hex2bin($hash);
@@ -42,9 +61,9 @@ class DefaultIdentifierGenerator implements PacketIdentifierGenerator, ClientIde
                 $bytes = $hash;
             }
 
-            $data = substr($bytes, 0, 9);
+            $data = substr($bytes, 0, 8);
         }
 
-        return 'BNMCR' . bin2hex($data);
+        return 'binsoul' . bin2hex($data);
     }
 }

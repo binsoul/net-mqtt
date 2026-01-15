@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt\Packet;
 
+use BinSoul\Net\Mqtt\DefaultIdentifierGenerator;
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
-use Exception;
 use InvalidArgumentException;
 
 /**
@@ -85,14 +85,7 @@ class ConnectRequestPacket extends BasePacket
     public function write(PacketStream $stream): void
     {
         if ($this->clientID === '') {
-            try {
-                $number = random_int(100000, 999999);
-            } catch (Exception $e) {
-                $hash = md5(uniqid((string) microtime(true), true));
-                $number = (hexdec(substr($hash, 0, 8)) % 900000) + 100000;
-            }
-
-            $this->clientID = 'BinSoul' . $number;
+            $this->clientID = DefaultIdentifierGenerator::buildClientIdentifier();
         }
 
         $data = new PacketStream();

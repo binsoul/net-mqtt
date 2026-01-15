@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt\Packet;
 
+use BinSoul\Net\Mqtt\DefaultIdentifierGenerator;
 use InvalidArgumentException;
 
 /**
@@ -15,11 +16,6 @@ trait IdentifiablePacket
      * @var int<1, 65535>|null
      */
     protected ?int $identifier = null;
-
-    /**
-     * @var int<0, 65535>
-     */
-    private static int $nextIdentifier = 0;
 
     /**
      * Returns the identifier.
@@ -58,13 +54,7 @@ trait IdentifiablePacket
     protected function generateIdentifier(): int
     {
         if ($this->identifier === null) {
-            self::$nextIdentifier = (self::$nextIdentifier + 1) & 0xFFFF;
-
-            if (self::$nextIdentifier === 0) {
-                self::$nextIdentifier = 1;
-            }
-
-            $this->identifier = self::$nextIdentifier;
+            $this->identifier = DefaultIdentifierGenerator::buildPacketIdentifier();
         }
 
         return $this->identifier;
