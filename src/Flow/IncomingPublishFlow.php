@@ -24,9 +24,9 @@ class IncomingPublishFlow extends AbstractFlow
      * @param int<1, 65535>|null $identifier
      */
     public function __construct(
-        PacketFactory            $packetFactory,
+        PacketFactory $packetFactory,
         private readonly Message $message,
-        private readonly ?int    $identifier = null
+        private readonly ?int $identifier = null
     ) {
         parent::__construct($packetFactory);
     }

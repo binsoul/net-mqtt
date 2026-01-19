@@ -20,15 +20,15 @@ use BinSoul\Net\Mqtt\Flow\OutgoingUnsubscribeFlow;
 /**
  * Provides a default implementation of the {@see FlowFactory} interface.
  */
-class DefaultFlowFactory implements FlowFactory
+readonly class DefaultFlowFactory implements FlowFactory
 {
     /**
      * Constructs an instance of this class.
      */
     public function __construct(
-        private readonly ClientIdentifierGenerator $clientIdentifierGenerator,
-        private readonly PacketIdentifierGenerator $packetIdentifierGenerator,
-        private readonly PacketFactory $packetFactory
+        private ClientIdentifierGenerator $clientIdentifierGenerator,
+        private PacketIdentifierGenerator $packetIdentifierGenerator,
+        private PacketFactory $packetFactory
     ) {
     }
 

@@ -53,7 +53,7 @@ class DefaultIdentifierGenerator implements PacketIdentifierGenerator, ClientIde
     {
         try {
             $data = random_bytes(8);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             $hash = md5(uniqid((string) microtime(true), true));
             $bytes = hex2bin($hash);
 

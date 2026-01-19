@@ -26,21 +26,11 @@ class TopicMatcher
         $parts = [];
 
         foreach ($tokens as $index => $token) {
-            switch ($token) {
-                case '+':
-                    $parts[] = '[^/#\+]*';
-
-                    break;
-
-                case '#':
-                    $parts[] = $index === 0 ? '[^\+\$]*' : '[^\+]*';
-
-                    break;
-                default:
-                    $parts[] = str_replace('+', '\+', $token);
-
-                    break;
-            }
+            $parts[] = match ($token) {
+                '+' => '[^/#\+]*',
+                '#' => $index === 0 ? '[^\+\$]*' : '[^\+]*',
+                default => str_replace('+', '\+', $token),
+            };
         }
 
         $regex = implode('/', $parts);

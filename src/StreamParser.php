@@ -68,7 +68,7 @@ class StreamParser
                 $this->handleError($e);
 
                 continue;
-            } catch (EndOfStreamException $e) {
+            } catch (EndOfStreamException) {
                 break;
             }
 
@@ -79,7 +79,7 @@ class StreamParser
                 $packet->read($this->buffer);
                 $result[] = $packet;
                 $this->buffer->cut();
-            } catch (EndOfStreamException $e) {
+            } catch (EndOfStreamException) {
                 $this->buffer->setPosition($position);
 
                 break;
