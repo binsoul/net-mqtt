@@ -21,7 +21,7 @@ class SubscribeResponsePacket extends BasePacket
     /**
      * @var array<int, array<int, string>>
      */
-    private const QOS_LEVELS = [
+    private const array QOS_LEVELS = [
         0 => ['Maximum QoS 0'],
         1 => ['Maximum QoS 1'],
         2 => ['Maximum QoS 2'],

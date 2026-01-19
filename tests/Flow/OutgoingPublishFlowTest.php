@@ -18,25 +18,25 @@ use PHPUnit\Framework\TestCase;
 
 class OutgoingPublishFlowTest extends TestCase
 {
-    private const CODE_PUBLISH = 'publish';
+    private const string CODE_PUBLISH = 'publish';
 
-    private const PACKET_IDENTIFIER = 42;
+    private const int PACKET_IDENTIFIER = 42;
 
-    private const PAYLOAD_EMPTY = '';
+    private const string PAYLOAD_EMPTY = '';
 
-    private const PAYLOAD_JSON = '{"temperature":23.5}';
+    private const string PAYLOAD_JSON = '{"temperature":23.5}';
 
-    private const PAYLOAD_SIMPLE = 'test message';
+    private const string PAYLOAD_SIMPLE = 'test message';
 
-    private const QOS_LEVEL_AT_LEAST_ONCE = 1;
+    private const int QOS_LEVEL_AT_LEAST_ONCE = 1;
 
-    private const QOS_LEVEL_AT_MOST_ONCE = 0;
+    private const int QOS_LEVEL_AT_MOST_ONCE = 0;
 
-    private const QOS_LEVEL_EXACTLY_ONCE = 2;
+    private const int QOS_LEVEL_EXACTLY_ONCE = 2;
 
-    private const TOPIC_SENSOR = 'sensor/temperature';
+    private const string TOPIC_SENSOR = 'sensor/temperature';
 
-    private const TOPIC_TEST = 'test/topic';
+    private const string TOPIC_TEST = 'test/topic';
 
     private PacketFactory $packetFactory;
 

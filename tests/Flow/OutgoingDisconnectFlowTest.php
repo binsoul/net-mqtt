@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class OutgoingDisconnectFlowTest extends TestCase
 {
-    private const CODE_DISCONNECT = 'disconnect';
+    private const string CODE_DISCONNECT = 'disconnect';
 
     private PacketFactory $packetFactory;
 

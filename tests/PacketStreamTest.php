@@ -11,13 +11,13 @@ use PHPUnit\Framework\TestCase;
 
 class PacketStreamTest extends TestCase
 {
-    private const STRING_UNICODE = 'Hello 世界';
+    private const string STRING_UNICODE = 'Hello 世界';
 
-    private const DATA_BINARY = "\x00\x01\x02\xFF";
+    private const string DATA_BINARY = "\x00\x01\x02\xFF";
 
-    private const DATA_HELLO = 'Hello';
+    private const string DATA_HELLO = 'Hello';
 
-    private const DATA_WORLD = 'World';
+    private const string DATA_WORLD = 'World';
 
     public function test_constructs_empty_stream(): void
     {

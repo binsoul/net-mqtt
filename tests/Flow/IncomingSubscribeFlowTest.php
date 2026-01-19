@@ -13,13 +13,13 @@ use PHPUnit\Framework\TestCase;
 
 class IncomingSubscribeFlowTest extends TestCase
 {
-    private const CODE_SUBSCRIBE = 'subscribe';
+    private const string CODE_SUBSCRIBE = 'subscribe';
 
-    private const PACKET_IDENTIFIER = 42;
+    private const int PACKET_IDENTIFIER = 42;
 
-    private const RETURN_CODE_SUCCESS = 0;
+    private const int RETURN_CODE_SUCCESS = 0;
 
-    private const RETURN_CODE_FAILURE = 128;
+    private const int RETURN_CODE_FAILURE = 128;
 
     private PacketFactory $packetFactory;
 

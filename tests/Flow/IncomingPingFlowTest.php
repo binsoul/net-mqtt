@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class IncomingPingFlowTest extends TestCase
 {
-    private const CODE_PONG = 'pong';
+    private const string CODE_PONG = 'pong';
 
     private PacketFactory $packetFactory;
 

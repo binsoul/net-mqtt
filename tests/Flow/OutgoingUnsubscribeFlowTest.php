@@ -16,23 +16,23 @@ use PHPUnit\Framework\TestCase;
 
 class OutgoingUnsubscribeFlowTest extends TestCase
 {
-    private const CODE_UNSUBSCRIBE = 'unsubscribe';
+    private const string CODE_UNSUBSCRIBE = 'unsubscribe';
 
-    private const PACKET_IDENTIFIER = 54321;
+    private const int PACKET_IDENTIFIER = 54321;
 
-    private const QOS_LEVEL_AT_LEAST_ONCE = 1;
+    private const int QOS_LEVEL_AT_LEAST_ONCE = 1;
 
-    private const QOS_LEVEL_AT_MOST_ONCE = 0;
+    private const int QOS_LEVEL_AT_MOST_ONCE = 0;
 
-    private const QOS_LEVEL_EXACTLY_ONCE = 2;
+    private const int QOS_LEVEL_EXACTLY_ONCE = 2;
 
-    private const TOPIC_FILTER_ALL = '#';
+    private const string TOPIC_FILTER_ALL = '#';
 
-    private const TOPIC_FILTER_DEVICE = 'device/+/status';
+    private const string TOPIC_FILTER_DEVICE = 'device/+/status';
 
-    private const TOPIC_FILTER_SENSOR = 'sensor/+/temperature';
+    private const string TOPIC_FILTER_SENSOR = 'sensor/+/temperature';
 
-    private const TOPIC_FILTER_TEST = 'test/topic';
+    private const string TOPIC_FILTER_TEST = 'test/topic';
 
     private PacketFactory $packetFactory;
 

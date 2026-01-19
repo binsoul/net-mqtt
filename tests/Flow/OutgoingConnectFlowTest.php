@@ -17,35 +17,35 @@ use PHPUnit\Framework\TestCase;
 
 class OutgoingConnectFlowTest extends TestCase
 {
-    private const CLIENT_ID_AUTO = 'auto-generated-id';
+    private const string CLIENT_ID_AUTO = 'auto-generated-id';
 
-    private const CLIENT_ID_TEST = 'test-client-123';
+    private const string CLIENT_ID_TEST = 'test-client-123';
 
-    private const CODE_CONNECT = 'connect';
+    private const string CODE_CONNECT = 'connect';
 
-    private const ERROR_MESSAGE_UNAUTHORIZED = 'Not authorized';
+    private const string ERROR_MESSAGE_UNAUTHORIZED = 'Not authorized';
 
-    private const KEEP_ALIVE_DEFAULT = 60;
+    private const int KEEP_ALIVE_DEFAULT = 60;
 
-    private const KEEP_ALIVE_LONG = 300;
+    private const int KEEP_ALIVE_LONG = 300;
 
-    private const PASSWORD_TEST = 'secret';
+    private const string PASSWORD_TEST = 'secret';
 
-    private const PROTOCOL_LEVEL_3 = 3;
+    private const int PROTOCOL_LEVEL_3 = 3;
 
-    private const PROTOCOL_LEVEL_4 = 4;
+    private const int PROTOCOL_LEVEL_4 = 4;
 
-    private const QOS_LEVEL_AT_LEAST_ONCE = 1;
+    private const int QOS_LEVEL_AT_LEAST_ONCE = 1;
 
-    private const RETURN_CODE_ERROR = 5;
+    private const int RETURN_CODE_ERROR = 5;
 
-    private const RETURN_CODE_SUCCESS = 0;
+    private const int RETURN_CODE_SUCCESS = 0;
 
-    private const USERNAME_TEST = 'testuser';
+    private const string USERNAME_TEST = 'testuser';
 
-    private const WILL_PAYLOAD = 'offline';
+    private const string WILL_PAYLOAD = 'offline';
 
-    private const WILL_TOPIC = 'status/client';
+    private const string WILL_TOPIC = 'status/client';
 
     private PacketFactory $packetFactory;
 

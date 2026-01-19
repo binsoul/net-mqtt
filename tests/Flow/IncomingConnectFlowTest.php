@@ -13,11 +13,11 @@ use PHPUnit\Framework\TestCase;
 
 class IncomingConnectFlowTest extends TestCase
 {
-    private const CODE_CONNECT = 'connect';
+    private const string CODE_CONNECT = 'connect';
 
-    private const RETURN_CODE_ERROR = 5;
+    private const int RETURN_CODE_ERROR = 5;
 
-    private const RETURN_CODE_SUCCESS = 0;
+    private const int RETURN_CODE_SUCCESS = 0;
 
     private PacketFactory $packetFactory;
 

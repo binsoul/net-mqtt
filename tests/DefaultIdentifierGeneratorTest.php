@@ -24,9 +24,9 @@ use PHPUnit\Framework\TestCase;
 
 class DefaultIdentifierGeneratorTest extends TestCase
 {
-    private static $randomBytesFails = false;
+    private static bool $randomBytesFails = false;
 
-    private static $hex2binFails = false;
+    private static bool $hex2binFails = false;
 
     public function test_generates_packet_id(): void
     {

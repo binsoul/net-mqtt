@@ -30,7 +30,7 @@ class DefaultPacketFactory implements PacketFactory
      *
      * @var array<int, class-string<Packet>>
      */
-    private const MAPPING = [
+    private const array MAPPING = [
         Packet::TYPE_CONNECT => ConnectRequestPacket::class,
         Packet::TYPE_CONNACK => ConnectResponsePacket::class,
         Packet::TYPE_PUBLISH => PublishRequestPacket::class,

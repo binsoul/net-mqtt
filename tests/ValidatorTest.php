@@ -11,11 +11,11 @@ use RuntimeException;
 
 class ValidatorTest extends TestCase
 {
-    private const EXCEPTION_CLASS_DEFAULT = InvalidArgumentException::class;
+    private const string EXCEPTION_CLASS_DEFAULT = InvalidArgumentException::class;
 
-    private const EXCEPTION_CLASS_ALTERNATIVE = RuntimeException::class;
+    private const string EXCEPTION_CLASS_ALTERNATIVE = RuntimeException::class;
 
-    private const MAX_STRING_LENGTH = 0xFFFF;
+    private const int MAX_STRING_LENGTH = 0xFFFF;
 
     public function test_accepts_valid_string_length(): void
     {

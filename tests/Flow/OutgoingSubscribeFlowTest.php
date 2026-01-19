@@ -18,23 +18,23 @@ use RuntimeException;
 
 class OutgoingSubscribeFlowTest extends TestCase
 {
-    private const CODE_SUBSCRIBE = 'subscribe';
+    private const string CODE_SUBSCRIBE = 'subscribe';
 
-    private const ERROR_CODE_FAILURE = 128;
+    private const int ERROR_CODE_FAILURE = 128;
 
-    private const PACKET_IDENTIFIER = 12345;
+    private const int PACKET_IDENTIFIER = 12345;
 
-    private const QOS_LEVEL_AT_MOST_ONCE = 0;
+    private const int QOS_LEVEL_AT_MOST_ONCE = 0;
 
-    private const QOS_LEVEL_AT_LEAST_ONCE = 1;
+    private const int QOS_LEVEL_AT_LEAST_ONCE = 1;
 
-    private const QOS_LEVEL_EXACTLY_ONCE = 2;
+    private const int QOS_LEVEL_EXACTLY_ONCE = 2;
 
-    private const TOPIC_FILTER_ALL = '#';
+    private const string TOPIC_FILTER_ALL = '#';
 
-    private const TOPIC_FILTER_SENSOR = 'sensor/+/temperature';
+    private const string TOPIC_FILTER_SENSOR = 'sensor/+/temperature';
 
-    private const TOPIC_FILTER_TEST = 'test/topic';
+    private const string TOPIC_FILTER_TEST = 'test/topic';
 
     private PacketFactory $packetFactory;
 

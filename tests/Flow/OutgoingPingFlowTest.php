@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class OutgoingPingFlowTest extends TestCase
 {
-    private const CODE_PING = 'ping';
+    private const string CODE_PING = 'ping';
 
     private PacketFactory $packetFactory;
 

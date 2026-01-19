@@ -14,9 +14,9 @@ use PHPUnit\Framework\TestCase;
 
 class IncomingUnsubscribeFlowTest extends TestCase
 {
-    private const CODE_UNSUBSCRIBE = 'unsubscribe';
+    private const string CODE_UNSUBSCRIBE = 'unsubscribe';
 
-    private const PACKET_IDENTIFIER = 42;
+    private const int PACKET_IDENTIFIER = 42;
 
     private PacketFactory $packetFactory;
 

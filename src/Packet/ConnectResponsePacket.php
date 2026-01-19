@@ -16,7 +16,7 @@ class ConnectResponsePacket extends BasePacket
     /**
      * @var array<int, array<int, string>>
      */
-    private const RETURN_CODES = [
+    private const array RETURN_CODES = [
         0 => [
             'Connection accepted',
             '',

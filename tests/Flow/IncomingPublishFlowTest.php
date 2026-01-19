@@ -16,19 +16,19 @@ use PHPUnit\Framework\TestCase;
 
 class IncomingPublishFlowTest extends TestCase
 {
-    private const CODE_MESSAGE = 'message';
+    private const string CODE_MESSAGE = 'message';
 
-    private const PACKET_IDENTIFIER = 42;
+    private const int PACKET_IDENTIFIER = 42;
 
-    private const PAYLOAD_SIMPLE = 'test message';
+    private const string PAYLOAD_SIMPLE = 'test message';
 
-    private const QOS_LEVEL_AT_LEAST_ONCE = 1;
+    private const int QOS_LEVEL_AT_LEAST_ONCE = 1;
 
-    private const QOS_LEVEL_AT_MOST_ONCE = 0;
+    private const int QOS_LEVEL_AT_MOST_ONCE = 0;
 
-    private const QOS_LEVEL_EXACTLY_ONCE = 2;
+    private const int QOS_LEVEL_EXACTLY_ONCE = 2;
 
-    private const TOPIC_TEST = 'test/topic';
+    private const string TOPIC_TEST = 'test/topic';
 
     private PacketFactory $packetFactory;
 
