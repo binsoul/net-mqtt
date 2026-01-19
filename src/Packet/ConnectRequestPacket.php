@@ -230,11 +230,7 @@ class ConnectRequestPacket extends BasePacket
             $value = true;
         }
 
-        if ($value) {
-            $this->flags = ($this->flags | 2) & 0xFF;
-        } else {
-            $this->flags = ($this->flags & ~2) & 0xFF;
-        }
+        $this->flags = $value ? ($this->flags | 2) & 0xFF : ($this->flags & ~2) & 0xFF;
     }
 
     /**
@@ -300,11 +296,7 @@ class ConnectRequestPacket extends BasePacket
         $this->flags = ($this->flags | 4) & 0xFF;
         $this->flags = ($this->flags | ($qosLevel << 3)) & 0xFF;
 
-        if ($isRetained) {
-            $this->flags = ($this->flags | 32) & 0xFF;
-        } else {
-            $this->flags = ($this->flags & ~32) & 0xFF;
-        }
+        $this->flags = $isRetained ? ($this->flags | 32) & 0xFF : ($this->flags & ~32) & 0xFF;
     }
 
     /**
@@ -342,11 +334,7 @@ class ConnectRequestPacket extends BasePacket
 
         $this->username = $value;
 
-        if ($this->username !== '') {
-            $this->flags = ($this->flags | 64) & 0xFF;
-        } else {
-            $this->flags = ($this->flags & ~64) & 0xFF;
-        }
+        $this->flags = $this->username !== '' ? ($this->flags | 64) & 0xFF : ($this->flags & ~64) & 0xFF;
     }
 
     /**
@@ -376,11 +364,7 @@ class ConnectRequestPacket extends BasePacket
 
         $this->password = $value;
 
-        if ($this->password !== '') {
-            $this->flags = ($this->flags | 128) & 0xFF;
-        } else {
-            $this->flags = ($this->flags & ~128) & 0xFF;
-        }
+        $this->flags = $this->password !== '' ? ($this->flags | 128) & 0xFF : ($this->flags & ~128) & 0xFF;
     }
 
     /**

@@ -125,11 +125,7 @@ class PublishRequestPacket extends BasePacket
      */
     public function setDuplicate(bool $value): void
     {
-        if ($value) {
-            $this->packetFlags = ($this->packetFlags | 8) & 0x0F;
-        } else {
-            $this->packetFlags = ($this->packetFlags & ~8) & 0x0F;
-        }
+        $this->packetFlags = $value ? ($this->packetFlags | 8) & 0x0F : ($this->packetFlags & ~8) & 0x0F;
     }
 
     /**
@@ -145,11 +141,7 @@ class PublishRequestPacket extends BasePacket
      */
     public function setRetained(bool $value): void
     {
-        if ($value) {
-            $this->packetFlags = ($this->packetFlags | 1) & 0x0F;
-        } else {
-            $this->packetFlags = ($this->packetFlags & ~1) & 0x0F;
-        }
+        $this->packetFlags = $value ? ($this->packetFlags | 1) & 0x0F : ($this->packetFlags & ~1) & 0x0F;
     }
 
     /**
