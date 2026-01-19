@@ -12,8 +12,6 @@ use InvalidArgumentException;
  */
 class PacketStream
 {
-    private string $data;
-
     /**
      * @var int<0, max>
      */
@@ -24,9 +22,9 @@ class PacketStream
      *
      * @param string $data initial data of the stream
      */
-    public function __construct(string $data = '')
-    {
-        $this->data = $data;
+    public function __construct(
+        private string $data = ''
+    ) {
     }
 
     public function __toString(): string

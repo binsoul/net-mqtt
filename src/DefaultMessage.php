@@ -10,37 +10,20 @@ namespace BinSoul\Net\Mqtt;
 class DefaultMessage implements Message
 {
     /**
-     * @var non-empty-string
-     */
-    private string $topic;
-
-    private string $payload;
-
-    private bool $isRetained;
-
-    private bool $isDuplicate;
-
-    /**
-     * @var int<0, 2>
-     */
-    private int $qosLevel;
-
-    /**
      * Constructs an instance of this class.
      *
      * @param non-empty-string $topic
      * @param int<0, 2>        $qosLevel
      */
-    public function __construct(string $topic, string $payload = '', int $qosLevel = 0, bool $retain = false, bool $isDuplicate = false)
-    {
+    public function __construct(
+        private string $topic,
+        private string $payload = '',
+        private int $qosLevel = 0,
+        private bool $isRetained = false,
+        private bool $isDuplicate = false
+    ) {
         Validator::assertValidTopic($topic);
         Validator::assertValidQosLevel($qosLevel);
-
-        $this->topic = $topic;
-        $this->payload = $payload;
-        $this->isRetained = $retain;
-        $this->qosLevel = $qosLevel;
-        $this->isDuplicate = $isDuplicate;
     }
 
     public function getTopic(): string

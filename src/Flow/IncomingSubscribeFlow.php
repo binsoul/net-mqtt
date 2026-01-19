@@ -15,34 +15,22 @@ use BinSoul\Net\Mqtt\Subscription;
 class IncomingSubscribeFlow extends AbstractFlow
 {
     /**
-     * @var int<1, 65535>
-     */
-    private int $identifier;
-
-    /**
-     * @var array<int, Subscription>
-     */
-    private array $subscriptions;
-
-    /**
-     * @var array<int, int<0, 128>>
-     */
-    private array $returnCodes;
-
-    /**
      * Constructs an instance of this class.
      *
      * @param array<int, Subscription> $subscriptions
      * @param array<int, int<0, 128>>  $returnCodes
      * @param int<1, 65535>            $identifier
      */
-    public function __construct(PacketFactory $packetFactory, array $subscriptions, array $returnCodes, int $identifier)
-    {
+    public function __construct(
+        PacketFactory $packetFactory,
+        private array $subscriptions,
+        private array $returnCodes,
+        private readonly int $identifier
+    ) {
         parent::__construct($packetFactory);
 
         $this->subscriptions = array_values($subscriptions);
         $this->returnCodes = array_values($returnCodes);
-        $this->identifier = $identifier;
     }
 
     public function getCode(): string

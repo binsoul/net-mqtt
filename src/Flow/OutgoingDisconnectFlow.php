@@ -14,16 +14,14 @@ use BinSoul\Net\Mqtt\PacketFactory;
  */
 class OutgoingDisconnectFlow extends AbstractFlow
 {
-    private Connection $connection;
-
     /**
      * Constructs an instance of this class.
      */
-    public function __construct(PacketFactory $packetFactory, Connection $connection)
-    {
+    public function __construct(
+        PacketFactory $packetFactory,
+        private readonly Connection $connection
+    ) {
         parent::__construct($packetFactory);
-
-        $this->connection = $connection;
     }
 
     public function getCode(): string

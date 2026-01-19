@@ -22,14 +22,12 @@ abstract class AbstractFlow implements Flow
 
     private string $error = '';
 
-    private PacketFactory $packetFactory;
-
     /**
      * Constructs an instance of this class.
      */
-    public function __construct(PacketFactory $packetFactory)
-    {
-        $this->packetFactory = $packetFactory;
+    public function __construct(
+        private readonly PacketFactory $packetFactory
+    ) {
     }
 
     public function accept(Packet $packet): bool

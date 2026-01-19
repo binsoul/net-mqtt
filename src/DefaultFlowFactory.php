@@ -22,23 +22,14 @@ use BinSoul\Net\Mqtt\Flow\OutgoingUnsubscribeFlow;
  */
 class DefaultFlowFactory implements FlowFactory
 {
-    private ClientIdentifierGenerator $clientIdentifierGenerator;
-
-    private PacketIdentifierGenerator $packetIdentifierGenerator;
-
-    private PacketFactory $packetFactory;
-
     /**
      * Constructs an instance of this class.
      */
     public function __construct(
-        ClientIdentifierGenerator $clientIdentifierGenerator,
-        PacketIdentifierGenerator $packetIdentifierGenerator,
-        PacketFactory $packetFactory
+        private readonly ClientIdentifierGenerator $clientIdentifierGenerator,
+        private readonly PacketIdentifierGenerator $packetIdentifierGenerator,
+        private readonly PacketFactory $packetFactory
     ) {
-        $this->clientIdentifierGenerator = $clientIdentifierGenerator;
-        $this->packetIdentifierGenerator = $packetIdentifierGenerator;
-        $this->packetFactory = $packetFactory;
     }
 
     public function buildIncomingConnectFlow(Connection $connection, int $returnCode, bool $sessionPresent): Flow

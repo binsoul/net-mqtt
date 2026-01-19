@@ -14,27 +14,18 @@ use BinSoul\Net\Mqtt\PacketFactory;
  */
 class IncomingConnectFlow extends AbstractFlow
 {
-    private Connection $connection;
-
-    /**
-     * @var int<0, 255>
-     */
-    private int $returnCode;
-
-    private bool $sessionPresent;
-
     /**
      * Constructs an instance of this class.
      *
      * @param int<0, 255> $returnCode
      */
-    public function __construct(PacketFactory $packetFactory, Connection $connection, int $returnCode, bool $sessionPresent)
-    {
+    public function __construct(
+        PacketFactory $packetFactory,
+        private readonly Connection $connection,
+        private readonly int $returnCode,
+        private readonly bool $sessionPresent
+    ) {
         parent::__construct($packetFactory);
-
-        $this->connection = $connection;
-        $this->returnCode = $returnCode;
-        $this->sessionPresent = $sessionPresent;
     }
 
     public function getCode(): string

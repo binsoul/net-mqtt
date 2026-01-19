@@ -23,20 +23,18 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
     private int $identifier;
 
     /**
-     * @var array<int, Subscription>
-     */
-    private array $subscriptions;
-
-    /**
      * Constructs an instance of this class.
      *
      * @param array<int, Subscription> $subscriptions
      */
-    public function __construct(PacketFactory $packetFactory, array $subscriptions, PacketIdentifierGenerator $generator)
-    {
+    public function __construct(
+        PacketFactory $packetFactory,
+        private array $subscriptions,
+        PacketIdentifierGenerator $generator
+    ) {
         parent::__construct($packetFactory);
 
-        $this->subscriptions = $subscriptions;
+        $this->subscriptions = array_values($subscriptions);
         $this->identifier = $generator->generatePacketIdentifier();
     }
 

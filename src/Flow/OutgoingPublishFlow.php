@@ -25,18 +25,17 @@ class OutgoingPublishFlow extends AbstractFlow
      */
     private ?int $identifier = null;
 
-    private Message $message;
-
     private bool $receivedPubRec = false;
 
     /**
      * Constructs an instance of this class.
      */
-    public function __construct(PacketFactory $packetFactory, Message $message, PacketIdentifierGenerator $generator)
-    {
+    public function __construct(
+        PacketFactory $packetFactory,
+        private readonly Message $message,
+        PacketIdentifierGenerator $generator
+    ) {
         parent::__construct($packetFactory);
-
-        $this->message = $message;
 
         if ($this->message->getQosLevel() > 0) {
             $this->identifier = $generator->generatePacketIdentifier();

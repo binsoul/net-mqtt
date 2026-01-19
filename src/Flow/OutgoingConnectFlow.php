@@ -17,16 +17,15 @@ use Override;
  */
 class OutgoingConnectFlow extends AbstractFlow
 {
-    private Connection $connection;
-
     /**
      * Constructs an instance of this class.
      */
-    public function __construct(PacketFactory $packetFactory, Connection $connection, ClientIdentifierGenerator $generator)
-    {
+    public function __construct(
+        PacketFactory $packetFactory,
+        private Connection $connection,
+        ClientIdentifierGenerator $generator
+    ) {
         parent::__construct($packetFactory);
-
-        $this->connection = $connection;
 
         if ($this->connection->getClientID() === '') {
             $this->connection = $this->connection->withClientID($generator->generateClientIdentifier());

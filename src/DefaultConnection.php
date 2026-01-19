@@ -11,26 +11,6 @@ use InvalidArgumentException;
  */
 class DefaultConnection implements Connection
 {
-    private string $username;
-
-    private string $password;
-
-    private ?Message $will;
-
-    private string $clientID;
-
-    /**
-     * @var int<0, 65535>
-     */
-    private int $keepAlive;
-
-    /**
-     * @var int<3,4>
-     */
-    private int $protocol;
-
-    private bool $clean;
-
     /**
      * Constructs an instance of this class.
      *
@@ -38,21 +18,14 @@ class DefaultConnection implements Connection
      * @param int<3, 4>     $protocol
      */
     public function __construct(
-        string $username = '',
-        string $password = '',
-        Message $will = null,
-        string $clientID = '',
-        int $keepAlive = 60,
-        int $protocol = 4,
-        bool $clean = true
+        private string $username = '',
+        private string $password = '',
+        private ?Message $will = null,
+        private string $clientID = '',
+        private int $keepAlive = 60,
+        private int $protocol = 4,
+        private bool $clean = true
     ) {
-        $this->username = $username;
-        $this->password = $password;
-        $this->will = $will;
-        $this->clientID = $clientID;
-        $this->keepAlive = $keepAlive;
-        $this->protocol = $protocol;
-        $this->clean = $clean;
     }
 
     public function getProtocol(): int
