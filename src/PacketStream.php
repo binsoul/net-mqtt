@@ -29,10 +29,7 @@ class PacketStream
         $this->data = $data;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->data;
     }
@@ -59,7 +56,7 @@ class PacketStream
             );
         }
 
-        $chunk = (string) substr($this->data, $this->position, $count);
+        $chunk = substr($this->data, $this->position, $count);
         $readBytes = strlen($chunk);
         $this->position += $readBytes;
 
@@ -208,7 +205,7 @@ class PacketStream
      */
     public function cut(): void
     {
-        $this->data = (string) substr($this->data, $this->position);
+        $this->data = substr($this->data, $this->position);
         $this->position = 0;
     }
 }
