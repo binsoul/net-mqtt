@@ -22,7 +22,7 @@ namespace BinSoul\Test\Net\Mqtt;
 use BinSoul\Net\Mqtt\DefaultIdentifierGenerator;
 use PHPUnit\Framework\TestCase;
 
-class DefaultIdentifierGeneratorTest extends TestCase
+final class DefaultIdentifierGeneratorTest extends TestCase
 {
     private static bool $randomBytesFails = false;
 
@@ -36,15 +36,15 @@ class DefaultIdentifierGeneratorTest extends TestCase
 
         for ($i = 1; $i < 10; $i++) {
             $current = $generator->generatePacketIdentifier();
-            self::assertGreaterThanOrEqual(0x0001, $current);
-            self::assertLessThanOrEqual(0xFFFF, $current);
+            $this->assertGreaterThanOrEqual(0x0001, $current);
+            $this->assertLessThanOrEqual(0xFFFF, $current);
 
             if ($i === 1) {
                 $previous = $generator->generatePacketIdentifier();
-                self::assertLessThanOrEqual(0xFFFF, $previous);
+                $this->assertLessThanOrEqual(0xFFFF, $previous);
             }
 
-            self::assertNotEquals($current, $previous);
+            $this->assertNotSame($current, $previous);
             $previous = $current;
         }
     }
@@ -57,7 +57,7 @@ class DefaultIdentifierGeneratorTest extends TestCase
             $generator->generatePacketIdentifier();
         }
 
-        self::assertEquals(1, $generator->generatePacketIdentifier());
+        $this->assertSame(1, $generator->generatePacketIdentifier());
     }
 
     public function test_generates_client_id(): void
@@ -71,14 +71,14 @@ class DefaultIdentifierGeneratorTest extends TestCase
 
         for ($i = 1; $i < 10; $i++) {
             $current = $generator->generateClientIdentifier();
-            self::assertLessThanOrEqual(23, strlen($current));
+            $this->assertLessThanOrEqual(23, strlen($current));
 
             if ($i === 1) {
                 $previous = $generator->generateClientIdentifier();
-                self::assertLessThanOrEqual(23, strlen($previous));
+                $this->assertLessThanOrEqual(23, strlen($previous));
             }
 
-            self::assertNotEquals($current, $previous);
+            $this->assertNotSame($current, $previous);
             $previous = $current;
         }
     }
@@ -93,14 +93,14 @@ class DefaultIdentifierGeneratorTest extends TestCase
 
         for ($i = 1; $i < 10; $i++) {
             $current = $generator->generateClientIdentifier();
-            self::assertLessThanOrEqual(23, strlen($current));
+            $this->assertLessThanOrEqual(23, strlen($current));
 
             if ($i === 1) {
                 $previous = $generator->generateClientIdentifier();
-                self::assertLessThanOrEqual(23, strlen($previous));
+                $this->assertLessThanOrEqual(23, strlen($previous));
             }
 
-            self::assertNotEquals($current, $previous);
+            $this->assertNotSame($current, $previous);
             $previous = $current;
         }
     }
@@ -115,14 +115,14 @@ class DefaultIdentifierGeneratorTest extends TestCase
 
         for ($i = 1; $i < 10; $i++) {
             $current = $generator->generateClientIdentifier();
-            self::assertLessThanOrEqual(23, strlen($current));
+            $this->assertLessThanOrEqual(23, strlen($current));
 
             if ($i === 1) {
                 $previous = $generator->generateClientIdentifier();
-                self::assertLessThanOrEqual(23, strlen($previous));
+                $this->assertLessThanOrEqual(23, strlen($previous));
             }
 
-            self::assertNotEquals($current, $previous);
+            $this->assertNotSame($current, $previous);
             $previous = $current;
         }
     }
@@ -136,7 +136,7 @@ class DefaultIdentifierGeneratorTest extends TestCase
         return \random_bytes($length);
     }
 
-    public static function hex2bin(string $string)
+    public static function hex2bin(string $string): false|string
     {
         if (self::$hex2binFails) {
             return false;

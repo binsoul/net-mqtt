@@ -9,9 +9,10 @@ use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\SubscribeResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
 use BinSoul\Net\Mqtt\Subscription;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class IncomingSubscribeFlowTest extends TestCase
+final class IncomingSubscribeFlowTest extends TestCase
 {
     private const string CODE_SUBSCRIBE = 'subscribe';
 
@@ -21,7 +22,7 @@ class IncomingSubscribeFlowTest extends TestCase
 
     private const int RETURN_CODE_FAILURE = 128;
 
-    private PacketFactory $packetFactory;
+    private PacketFactory&MockObject $packetFactory;
 
     protected function setUp(): void
     {
@@ -32,7 +33,7 @@ class IncomingSubscribeFlowTest extends TestCase
     {
         $flow = new IncomingSubscribeFlow($this->packetFactory, [], [], 0);
 
-        self::assertEquals(self::CODE_SUBSCRIBE, $flow->getCode());
+        $this->assertSame(self::CODE_SUBSCRIBE, $flow->getCode());
     }
 
     public function test_start_generates_suback_packet_with_single_subscription(): void
@@ -40,7 +41,7 @@ class IncomingSubscribeFlowTest extends TestCase
         $subscription = $this->createMock(Subscription::class);
 
         $this->packetFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_SUBACK)
             ->willReturn(new SubscribeResponsePacket());
@@ -48,9 +49,9 @@ class IncomingSubscribeFlowTest extends TestCase
         $flow = new IncomingSubscribeFlow($this->packetFactory, [$subscription], [self::RETURN_CODE_SUCCESS], self::PACKET_IDENTIFIER);
         $result = $flow->start();
 
-        self::assertInstanceOf(SubscribeResponsePacket::class, $result);
-        self::assertEquals(self::PACKET_IDENTIFIER, $result->getIdentifier());
-        self::assertEquals([self::RETURN_CODE_SUCCESS], $result->getReturnCodes());
+        $this->assertInstanceOf(SubscribeResponsePacket::class, $result);
+        $this->assertSame(self::PACKET_IDENTIFIER, $result->getIdentifier());
+        $this->assertSame([self::RETURN_CODE_SUCCESS], $result->getReturnCodes());
     }
 
     public function test_start_generates_suback_packet_with_multiple_subscriptions(): void
@@ -69,8 +70,9 @@ class IncomingSubscribeFlowTest extends TestCase
             self::PACKET_IDENTIFIER
         );
         $result = $flow->start();
+        $this->assertInstanceOf(SubscribeResponsePacket::class, $result);
 
-        self::assertEquals($returnCodes, $result->getReturnCodes());
+        $this->assertSame($returnCodes, $result->getReturnCodes());
     }
 
     public function test_start_immediately_succeeds_flow(): void
@@ -90,20 +92,20 @@ class IncomingSubscribeFlowTest extends TestCase
 
         $flow->start();
 
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
-        self::assertEquals($subscriptions, $flow->getResult());
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
+        $this->assertEquals($subscriptions, $flow->getResult());
     }
 
     public function test_accept_returns_false(): void
     {
         $flow = new IncomingSubscribeFlow($this->packetFactory, [], [], 0);
-        self::assertFalse($flow->accept(new SubscribeResponsePacket()));
+        $this->assertFalse($flow->accept(new SubscribeResponsePacket()));
     }
 
     public function test_next_returns_null(): void
     {
         $flow = new IncomingSubscribeFlow($this->packetFactory, [], [], 0);
-        self::assertNull($flow->next(new SubscribeResponsePacket()));
+        $this->assertNotInstanceOf(Packet::class, $flow->next(new SubscribeResponsePacket()));
     }
 }

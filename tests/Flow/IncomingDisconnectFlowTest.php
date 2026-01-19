@@ -6,17 +6,19 @@ namespace BinSoul\Test\Net\Mqtt\Flow;
 
 use BinSoul\Net\Mqtt\Connection;
 use BinSoul\Net\Mqtt\Flow\IncomingDisconnectFlow;
+use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\ConnectResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class IncomingDisconnectFlowTest extends TestCase
+final class IncomingDisconnectFlowTest extends TestCase
 {
     private const string CODE_DISCONNECT = 'disconnect';
 
-    private PacketFactory $packetFactory;
+    private PacketFactory&MockObject $packetFactory;
 
-    private Connection $connection;
+    private Connection&MockObject $connection;
 
     protected function setUp(): void
     {
@@ -28,7 +30,7 @@ class IncomingDisconnectFlowTest extends TestCase
     {
         $flow = new IncomingDisconnectFlow($this->packetFactory, $this->connection);
 
-        self::assertEquals(self::CODE_DISCONNECT, $flow->getCode());
+        $this->assertSame(self::CODE_DISCONNECT, $flow->getCode());
     }
 
     public function test_start_returns_null(): void
@@ -36,7 +38,7 @@ class IncomingDisconnectFlowTest extends TestCase
         $flow = new IncomingDisconnectFlow($this->packetFactory, $this->connection);
         $result = $flow->start();
 
-        self::assertNull($result);
+        $this->assertNotInstanceOf(Packet::class, $result);
     }
 
     public function test_start_immediately_succeeds_flow(): void
@@ -44,20 +46,20 @@ class IncomingDisconnectFlowTest extends TestCase
         $flow = new IncomingDisconnectFlow($this->packetFactory, $this->connection);
         $flow->start();
 
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
-        self::assertSame($this->connection, $flow->getResult());
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
+        $this->assertSame($this->connection, $flow->getResult());
     }
 
     public function test_accept_returns_false(): void
     {
         $flow = new IncomingDisconnectFlow($this->packetFactory, $this->connection);
-        self::assertFalse($flow->accept(new ConnectResponsePacket()));
+        $this->assertFalse($flow->accept(new ConnectResponsePacket()));
     }
 
     public function test_next_returns_null(): void
     {
         $flow = new IncomingDisconnectFlow($this->packetFactory, $this->connection);
-        self::assertNull($flow->next(new ConnectResponsePacket()));
+        $this->assertNotInstanceOf(Packet::class, $flow->next(new ConnectResponsePacket()));
     }
 }

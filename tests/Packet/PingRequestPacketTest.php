@@ -9,7 +9,7 @@ use BinSoul\Net\Mqtt\Packet\PingRequestPacket;
 use BinSoul\Net\Mqtt\PacketStream;
 use PHPUnit\Framework\TestCase;
 
-class PingRequestPacketTest extends TestCase
+final class PingRequestPacketTest extends TestCase
 {
     public function test_write(): void
     {
@@ -17,7 +17,7 @@ class PingRequestPacketTest extends TestCase
         $stream = new PacketStream();
         $packet->write($stream);
 
-        self::assertEquals($this->getDefaultData(), $stream->getData());
+        $this->assertSame($this->getDefaultData(), $stream->getData());
     }
 
     public function test_read(): void
@@ -26,7 +26,7 @@ class PingRequestPacketTest extends TestCase
         $packet = new PingRequestPacket();
         $packet->read($stream);
 
-        self::assertEquals(Packet::TYPE_PINGREQ, $packet->getPacketType());
+        $this->assertSame(Packet::TYPE_PINGREQ, $packet->getPacketType());
     }
 
     public function test_can_read_what_it_writes(): void
@@ -39,7 +39,7 @@ class PingRequestPacketTest extends TestCase
 
         $packet = new PingRequestPacket();
         $packet->read($stream);
-        self::assertEquals($this->getDefaultData(), $stream->getData());
+        $this->assertSame($this->getDefaultData(), $stream->getData());
     }
 
     private function getDefaultData(): string

@@ -9,7 +9,7 @@ use BinSoul\Net\Mqtt\PacketStream;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-class PacketStreamTest extends TestCase
+final class PacketStreamTest extends TestCase
 {
     private const string STRING_UNICODE = 'Hello 世界';
 
@@ -23,18 +23,18 @@ class PacketStreamTest extends TestCase
     {
         $stream = new PacketStream('');
 
-        self::assertSame(0, $stream->length());
-        self::assertSame('', $stream->getData());
-        self::assertSame(0, $stream->getPosition());
+        $this->assertSame(0, $stream->length());
+        $this->assertSame('', $stream->getData());
+        $this->assertSame(0, $stream->getPosition());
     }
 
     public function test_constructs_with_initial_data(): void
     {
         $stream = new PacketStream(self::DATA_HELLO);
 
-        self::assertSame(strlen(self::DATA_HELLO), $stream->length());
-        self::assertSame(self::DATA_HELLO, $stream->getData());
-        self::assertSame(self::DATA_HELLO, (string) $stream);
+        $this->assertSame(strlen(self::DATA_HELLO), $stream->length());
+        $this->assertSame(self::DATA_HELLO, $stream->getData());
+        $this->assertSame(self::DATA_HELLO, (string) $stream);
     }
 
     public function test_reads_exact_number_of_bytes(): void
@@ -43,8 +43,8 @@ class PacketStreamTest extends TestCase
 
         $result = $stream->read(strlen(self::DATA_HELLO));
 
-        self::assertSame(self::DATA_HELLO, $result);
-        self::assertSame(strlen(self::DATA_HELLO), $stream->getPosition());
+        $this->assertSame(self::DATA_HELLO, $result);
+        $this->assertSame(strlen(self::DATA_HELLO), $stream->getPosition());
     }
 
     public function test_reads_partial_data(): void
@@ -53,8 +53,8 @@ class PacketStreamTest extends TestCase
 
         $result = $stream->read(2);
 
-        self::assertSame('He', $result);
-        self::assertSame(2, $stream->getPosition());
+        $this->assertSame('He', $result);
+        $this->assertSame(2, $stream->getPosition());
     }
 
     public function test_reads_sequentially(): void
@@ -64,9 +64,9 @@ class PacketStreamTest extends TestCase
         $first = $stream->read(2);
         $second = $stream->read(3);
 
-        self::assertSame('He', $first);
-        self::assertSame('llo', $second);
-        self::assertSame(5, $stream->getPosition());
+        $this->assertSame('He', $first);
+        $this->assertSame('llo', $second);
+        $this->assertSame(5, $stream->getPosition());
     }
 
     public function test_read_throws_exception_at_end_of_stream(): void
@@ -102,18 +102,18 @@ class PacketStreamTest extends TestCase
     {
         $stream = new PacketStream("\x00\xFF\x80");
 
-        self::assertSame(0, $stream->readByte());
-        self::assertSame(255, $stream->readByte());
-        self::assertSame(128, $stream->readByte());
+        $this->assertSame(0, $stream->readByte());
+        $this->assertSame(255, $stream->readByte());
+        $this->assertSame(128, $stream->readByte());
     }
 
     public function test_reads_word_as_integer(): void
     {
         $stream = new PacketStream("\x00\x00\xFF\xFF\x80\x00");
 
-        self::assertSame(0, $stream->readWord());
-        self::assertSame(65535, $stream->readWord());
-        self::assertSame(32768, $stream->readWord());
+        $this->assertSame(0, $stream->readWord());
+        $this->assertSame(65535, $stream->readWord());
+        $this->assertSame(32768, $stream->readWord());
     }
 
     public function test_read_word_throws_exception_at_end_of_stream(): void
@@ -131,8 +131,8 @@ class PacketStreamTest extends TestCase
 
         $result = $stream->readString();
 
-        self::assertSame(self::DATA_HELLO, $result);
-        self::assertSame(7, $stream->getPosition());
+        $this->assertSame(self::DATA_HELLO, $result);
+        $this->assertSame(7, $stream->getPosition());
     }
 
     public function test_reads_empty_string(): void
@@ -141,8 +141,8 @@ class PacketStreamTest extends TestCase
 
         $result = $stream->readString();
 
-        self::assertSame('', $result);
-        self::assertSame(2, $stream->getPosition());
+        $this->assertSame('', $result);
+        $this->assertSame(2, $stream->getPosition());
     }
 
     public function test_read_string_throws_exception_when_length_prefix_missing(): void
@@ -169,8 +169,8 @@ class PacketStreamTest extends TestCase
 
         $stream->write(self::DATA_HELLO);
 
-        self::assertSame(self::DATA_HELLO, $stream->getData());
-        self::assertSame(strlen(self::DATA_HELLO), $stream->length());
+        $this->assertSame(self::DATA_HELLO, $stream->getData());
+        $this->assertSame(strlen(self::DATA_HELLO), $stream->length());
     }
 
     public function test_writes_appends_data(): void
@@ -179,8 +179,8 @@ class PacketStreamTest extends TestCase
 
         $stream->write(self::DATA_WORLD);
 
-        self::assertSame(self::DATA_HELLO . self::DATA_WORLD, $stream->getData());
-        self::assertSame(strlen(self::DATA_HELLO . self::DATA_WORLD), $stream->length());
+        $this->assertSame(self::DATA_HELLO . self::DATA_WORLD, $stream->getData());
+        $this->assertSame(strlen(self::DATA_HELLO . self::DATA_WORLD), $stream->length());
     }
 
     public function test_writes_binary_data(): void
@@ -189,7 +189,7 @@ class PacketStreamTest extends TestCase
 
         $stream->write(self::DATA_BINARY);
 
-        self::assertSame(self::DATA_BINARY, $stream->getData());
+        $this->assertSame(self::DATA_BINARY, $stream->getData());
     }
 
     public function test_writes_byte_as_character(): void
@@ -200,7 +200,7 @@ class PacketStreamTest extends TestCase
         $stream->writeByte(255);
         $stream->writeByte(128);
 
-        self::assertSame("\x00\xFF\x80", $stream->getData());
+        $this->assertSame("\x00\xFF\x80", $stream->getData());
     }
 
     public function test_writes_word_as_two_bytes(): void
@@ -211,7 +211,7 @@ class PacketStreamTest extends TestCase
         $stream->writeWord(65535);
         $stream->writeWord(32768);
 
-        self::assertSame("\x00\x00\xFF\xFF\x80\x00", $stream->getData());
+        $this->assertSame("\x00\x00\xFF\xFF\x80\x00", $stream->getData());
     }
 
     public function test_writes_word_with_high_byte_first(): void
@@ -220,7 +220,7 @@ class PacketStreamTest extends TestCase
 
         $stream->writeWord(258);
 
-        self::assertSame("\x01\x02", $stream->getData());
+        $this->assertSame("\x01\x02", $stream->getData());
     }
 
     public function test_writes_length_prefixed_string(): void
@@ -229,7 +229,7 @@ class PacketStreamTest extends TestCase
 
         $stream->writeString(self::DATA_HELLO);
 
-        self::assertSame("\x00\x05Hello", $stream->getData());
+        $this->assertSame("\x00\x05Hello", $stream->getData());
     }
 
     public function test_writes_empty_string_with_zero_length(): void
@@ -238,7 +238,7 @@ class PacketStreamTest extends TestCase
 
         $stream->writeString('');
 
-        self::assertSame("\x00\x00", $stream->getData());
+        $this->assertSame("\x00\x00", $stream->getData());
     }
 
     public function test_writes_unicode_string(): void
@@ -248,7 +248,7 @@ class PacketStreamTest extends TestCase
         $stream->writeString(self::STRING_UNICODE);
 
         $expectedLength = strlen(self::STRING_UNICODE);
-        self::assertSame("\x00" . chr($expectedLength) . self::STRING_UNICODE, $stream->getData());
+        $this->assertSame("\x00" . chr($expectedLength) . self::STRING_UNICODE, $stream->getData());
     }
 
     public function test_write_string_throws_exception_when_too_long(): void
@@ -265,7 +265,7 @@ class PacketStreamTest extends TestCase
     {
         $stream = new PacketStream(self::DATA_HELLO);
 
-        self::assertSame(strlen(self::DATA_HELLO), $stream->length());
+        $this->assertSame(strlen(self::DATA_HELLO), $stream->length());
     }
 
     public function test_returns_remaining_bytes(): void
@@ -273,7 +273,7 @@ class PacketStreamTest extends TestCase
         $stream = new PacketStream(self::DATA_HELLO);
         $stream->read(2);
 
-        self::assertSame(3, $stream->getRemainingBytes());
+        $this->assertSame(3, $stream->getRemainingBytes());
     }
 
     public function test_returns_zero_remaining_bytes_at_end(): void
@@ -281,7 +281,7 @@ class PacketStreamTest extends TestCase
         $stream = new PacketStream(self::DATA_HELLO);
         $stream->read(strlen(self::DATA_HELLO));
 
-        self::assertSame(0, $stream->getRemainingBytes());
+        $this->assertSame(0, $stream->getRemainingBytes());
     }
 
     public function test_returns_zero_remaining_bytes_beyond_end(): void
@@ -289,7 +289,7 @@ class PacketStreamTest extends TestCase
         $stream = new PacketStream(self::DATA_HELLO);
         $stream->setPosition(strlen(self::DATA_HELLO) * 2);
 
-        self::assertSame(0, $stream->getRemainingBytes());
+        $this->assertSame(0, $stream->getRemainingBytes());
     }
 
     public function test_returns_whole_data(): void
@@ -297,7 +297,7 @@ class PacketStreamTest extends TestCase
         $stream = new PacketStream(self::DATA_HELLO);
         $stream->read(2);
 
-        self::assertSame(self::DATA_HELLO, $stream->getData());
+        $this->assertSame(self::DATA_HELLO, $stream->getData());
     }
 
     public function test_seeks_forward(): void
@@ -306,7 +306,7 @@ class PacketStreamTest extends TestCase
 
         $stream->seek(2);
 
-        self::assertSame(2, $stream->getPosition());
+        $this->assertSame(2, $stream->getPosition());
     }
 
     public function test_seeks_backward(): void
@@ -316,7 +316,7 @@ class PacketStreamTest extends TestCase
 
         $stream->seek(-3);
 
-        self::assertSame(2, $stream->getPosition());
+        $this->assertSame(2, $stream->getPosition());
     }
 
     public function test_seek_prevents_negative_position(): void
@@ -325,7 +325,7 @@ class PacketStreamTest extends TestCase
 
         $stream->seek(-10);
 
-        self::assertSame(0, $stream->getPosition());
+        $this->assertSame(0, $stream->getPosition());
     }
 
     public function test_seek_allows_position_beyond_length(): void
@@ -334,7 +334,7 @@ class PacketStreamTest extends TestCase
 
         $stream->seek(10);
 
-        self::assertSame(10, $stream->getPosition());
+        $this->assertSame(10, $stream->getPosition());
     }
 
     public function test_gets_current_position(): void
@@ -342,7 +342,7 @@ class PacketStreamTest extends TestCase
         $stream = new PacketStream(self::DATA_HELLO);
         $stream->read(3);
 
-        self::assertSame(3, $stream->getPosition());
+        $this->assertSame(3, $stream->getPosition());
     }
 
     public function test_sets_position_directly(): void
@@ -351,7 +351,7 @@ class PacketStreamTest extends TestCase
 
         $stream->setPosition(3);
 
-        self::assertSame(3, $stream->getPosition());
+        $this->assertSame(3, $stream->getPosition());
     }
 
     public function test_set_position_prevents_negative_value(): void
@@ -360,7 +360,7 @@ class PacketStreamTest extends TestCase
 
         $stream->setPosition(-5);
 
-        self::assertSame(0, $stream->getPosition());
+        $this->assertSame(0, $stream->getPosition());
     }
 
     public function test_cuts_data_from_beginning_to_position(): void
@@ -370,8 +370,8 @@ class PacketStreamTest extends TestCase
 
         $stream->cut();
 
-        self::assertSame('llo', $stream->getData());
-        self::assertSame(0, $stream->getPosition());
+        $this->assertSame('llo', $stream->getData());
+        $this->assertSame(0, $stream->getPosition());
     }
 
     public function test_cut_removes_all_data_when_position_at_end(): void
@@ -381,8 +381,8 @@ class PacketStreamTest extends TestCase
 
         $stream->cut();
 
-        self::assertSame('', $stream->getData());
-        self::assertSame(0, $stream->getPosition());
+        $this->assertSame('', $stream->getData());
+        $this->assertSame(0, $stream->getPosition());
     }
 
     public function test_cut_does_nothing_when_position_at_beginning(): void
@@ -391,8 +391,8 @@ class PacketStreamTest extends TestCase
 
         $stream->cut();
 
-        self::assertSame(self::DATA_HELLO, $stream->getData());
-        self::assertSame(0, $stream->getPosition());
+        $this->assertSame(self::DATA_HELLO, $stream->getData());
+        $this->assertSame(0, $stream->getPosition());
     }
 
     public function test_cut_handles_position_beyond_length(): void
@@ -402,8 +402,8 @@ class PacketStreamTest extends TestCase
 
         $stream->cut();
 
-        self::assertSame('', $stream->getData());
-        self::assertSame(0, $stream->getPosition());
+        $this->assertSame('', $stream->getData());
+        $this->assertSame(0, $stream->getPosition());
     }
 
     public function test_handles_mixed_read_write_operations(): void
@@ -412,9 +412,9 @@ class PacketStreamTest extends TestCase
         $stream->read(2);
         $stream->write(self::DATA_WORLD);
 
-        self::assertSame(self::DATA_HELLO . self::DATA_WORLD, $stream->getData());
-        self::assertSame(2, $stream->getPosition());
-        self::assertSame(8, $stream->getRemainingBytes());
+        $this->assertSame(self::DATA_HELLO . self::DATA_WORLD, $stream->getData());
+        $this->assertSame(2, $stream->getPosition());
+        $this->assertSame(8, $stream->getRemainingBytes());
     }
 
     public function test_handles_complex_workflow(): void
@@ -426,8 +426,8 @@ class PacketStreamTest extends TestCase
 
         $stream->setPosition(0);
 
-        self::assertSame(255, $stream->readByte());
-        self::assertSame(32768, $stream->readWord());
-        self::assertSame(self::DATA_HELLO, $stream->readString());
+        $this->assertSame(255, $stream->readByte());
+        $this->assertSame(32768, $stream->readWord());
+        $this->assertSame(self::DATA_HELLO, $stream->readString());
     }
 }

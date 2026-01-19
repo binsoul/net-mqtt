@@ -10,19 +10,19 @@ use BinSoul\Net\Mqtt\PacketStream;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-class SubscribeRequestPacketTest extends TestCase
+final class SubscribeRequestPacketTest extends TestCase
 {
     public function test_getters_and_setters(): void
     {
         $packet = new SubscribeRequestPacket();
         $packet->setIdentifier(1);
-        self::assertEquals(1, $packet->getIdentifier());
+        $this->assertSame(1, $packet->getIdentifier());
 
         $packet->setFilters(['#', 'test/a/b/c']);
-        self::assertEquals(['#', 'test/a/b/c'], $packet->getFilters());
+        $this->assertSame(['#', 'test/a/b/c'], $packet->getFilters());
 
         $packet->setQosLevels([1, 2]);
-        self::assertEquals([1, 2], $packet->getQosLevels());
+        $this->assertSame([1, 2], $packet->getQosLevels());
     }
 
     public function test_cannot_set_negative_identifier(): void
@@ -77,7 +77,7 @@ class SubscribeRequestPacketTest extends TestCase
         $stream = new PacketStream();
         $packet->write($stream);
 
-        self::assertEquals($this->getDefaultDataMultipleFilters(), $stream->getData());
+        $this->assertSame($this->getDefaultDataMultipleFilters(), $stream->getData());
     }
 
     public function test_write(): void
@@ -90,7 +90,7 @@ class SubscribeRequestPacketTest extends TestCase
         $stream = new PacketStream();
         $packet->write($stream);
 
-        self::assertEquals($this->getDefaultDataSingleFilter(), $stream->getData());
+        $this->assertSame($this->getDefaultDataSingleFilter(), $stream->getData());
 
         $packet = new SubscribeRequestPacket();
         $packet->setIdentifier(1);
@@ -100,7 +100,7 @@ class SubscribeRequestPacketTest extends TestCase
         $stream = new PacketStream();
         $packet->write($stream);
 
-        self::assertEquals($this->getDefaultDataMultipleFilters(), $stream->getData());
+        $this->assertSame($this->getDefaultDataMultipleFilters(), $stream->getData());
     }
 
     public function test_read(): void
@@ -109,17 +109,17 @@ class SubscribeRequestPacketTest extends TestCase
         $packet = new SubscribeRequestPacket();
         $packet->read($stream);
 
-        self::assertEquals(Packet::TYPE_SUBSCRIBE, $packet->getPacketType());
-        self::assertEquals(['#'], $packet->getFilters());
-        self::assertEquals([0], $packet->getQosLevels());
+        $this->assertSame(Packet::TYPE_SUBSCRIBE, $packet->getPacketType());
+        $this->assertSame(['#'], $packet->getFilters());
+        $this->assertSame([0], $packet->getQosLevels());
 
         $stream = new PacketStream($this->getDefaultDataMultipleFilters());
         $packet = new SubscribeRequestPacket();
         $packet->read($stream);
 
-        self::assertEquals(Packet::TYPE_SUBSCRIBE, $packet->getPacketType());
-        self::assertEquals(['#', 'test/a/b/c'], $packet->getFilters());
-        self::assertEquals([0, 1], $packet->getQosLevels());
+        $this->assertSame(Packet::TYPE_SUBSCRIBE, $packet->getPacketType());
+        $this->assertSame(['#', 'test/a/b/c'], $packet->getFilters());
+        $this->assertSame([0, 1], $packet->getQosLevels());
     }
 
     public function test_can_read_what_it_writes(): void
@@ -136,8 +136,8 @@ class SubscribeRequestPacketTest extends TestCase
         $packetRead = new SubscribeRequestPacket();
         $packetRead->read($stream);
 
-        self::assertEquals(['#', 'test/a/b/c'], $packetRead->getFilters());
-        self::assertEquals([0, 1], $packetRead->getQosLevels());
+        $this->assertSame(['#', 'test/a/b/c'], $packetRead->getFilters());
+        $this->assertSame([0, 1], $packetRead->getQosLevels());
     }
 
     private function getDefaultDataSingleFilter(): string

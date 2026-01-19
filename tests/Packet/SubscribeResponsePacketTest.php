@@ -10,16 +10,16 @@ use BinSoul\Net\Mqtt\PacketStream;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-class SubscribeResponsePacketTest extends TestCase
+final class SubscribeResponsePacketTest extends TestCase
 {
     public function test_getters_and_setters(): void
     {
         $packet = new SubscribeResponsePacket();
         $packet->setIdentifier(1);
-        self::assertEquals(1, $packet->getIdentifier());
+        $this->assertSame(1, $packet->getIdentifier());
 
         $packet->setReturnCodes([0, 128]);
-        self::assertEquals([0, 128], $packet->getReturnCodes());
+        $this->assertSame([0, 128], $packet->getReturnCodes());
     }
 
     public function test_cannot_set_negative_identifier(): void
@@ -46,12 +46,12 @@ class SubscribeResponsePacketTest extends TestCase
     public function test_knows_error_return_code(): void
     {
         $packet = new SubscribeResponsePacket();
-        self::assertFalse($packet->isError(0));
-        self::assertFalse($packet->isError(1));
-        self::assertFalse($packet->isError(2));
-        self::assertTrue($packet->isError(3));
-        self::assertTrue($packet->isError(128));
-        self::assertTrue($packet->isError(255));
+        $this->assertFalse($packet->isError(0));
+        $this->assertFalse($packet->isError(1));
+        $this->assertFalse($packet->isError(2));
+        $this->assertTrue($packet->isError(3));
+        $this->assertTrue($packet->isError(128));
+        $this->assertTrue($packet->isError(255));
     }
 
     public function test_returns_names(): void
@@ -59,13 +59,13 @@ class SubscribeResponsePacketTest extends TestCase
         $packet = new SubscribeResponsePacket();
 
         foreach ([0, 1, 2, 128] as $code) {
-            self::assertNotEmpty($packet->getReturnCodeName($code));
-            self::assertStringNotContainsString('Unknown', $packet->getReturnCodeName($code));
+            $this->assertNotEmpty($packet->getReturnCodeName($code));
+            $this->assertStringNotContainsString('Unknown', $packet->getReturnCodeName($code));
         }
 
         foreach ([3, 255] as $code) {
-            self::assertNotEmpty($packet->getReturnCodeName($code));
-            self::assertStringContainsString('Unknown', $packet->getReturnCodeName($code));
+            $this->assertNotEmpty($packet->getReturnCodeName($code));
+            $this->assertStringContainsString('Unknown', $packet->getReturnCodeName($code));
         }
     }
 
@@ -78,7 +78,7 @@ class SubscribeResponsePacketTest extends TestCase
         $stream = new PacketStream();
         $packet->write($stream);
 
-        self::assertEquals($this->getDefaultData(), $stream->getData());
+        $this->assertSame($this->getDefaultData(), $stream->getData());
     }
 
     public function test_read(): void
@@ -87,7 +87,7 @@ class SubscribeResponsePacketTest extends TestCase
         $packet = new SubscribeResponsePacket();
         $packet->read($stream);
 
-        self::assertEquals(Packet::TYPE_SUBACK, $packet->getPacketType());
+        $this->assertSame(Packet::TYPE_SUBACK, $packet->getPacketType());
     }
 
     public function test_can_read_what_it_writes(): void
@@ -102,7 +102,7 @@ class SubscribeResponsePacketTest extends TestCase
 
         $packet = new SubscribeResponsePacket();
         $packet->read($stream);
-        self::assertEquals($this->getDefaultData(), $stream->getData());
+        $this->assertSame($this->getDefaultData(), $stream->getData());
     }
 
     private function getDefaultData(): string

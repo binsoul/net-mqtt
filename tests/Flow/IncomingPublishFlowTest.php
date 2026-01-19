@@ -12,9 +12,10 @@ use BinSoul\Net\Mqtt\Packet\PublishCompletePacket;
 use BinSoul\Net\Mqtt\Packet\PublishReceivedPacket;
 use BinSoul\Net\Mqtt\Packet\PublishReleasePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class IncomingPublishFlowTest extends TestCase
+final class IncomingPublishFlowTest extends TestCase
 {
     private const string CODE_MESSAGE = 'message';
 
@@ -30,7 +31,7 @@ class IncomingPublishFlowTest extends TestCase
 
     private const string TOPIC_TEST = 'test/topic';
 
-    private PacketFactory $packetFactory;
+    private PacketFactory&MockObject $packetFactory;
 
     protected function setUp(): void
     {
@@ -42,7 +43,7 @@ class IncomingPublishFlowTest extends TestCase
         $message = new DefaultMessage(self::TOPIC_TEST);
         $flow = new IncomingPublishFlow($this->packetFactory, $message);
 
-        self::assertEquals(self::CODE_MESSAGE, $flow->getCode());
+        $this->assertSame(self::CODE_MESSAGE, $flow->getCode());
     }
 
     public function test_start_returns_null_for_qos_0(): void
@@ -52,10 +53,10 @@ class IncomingPublishFlowTest extends TestCase
         $flow = new IncomingPublishFlow($this->packetFactory, $message);
         $result = $flow->start();
 
-        self::assertNull($result);
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
-        self::assertEquals($message, $flow->getResult());
+        $this->assertNull($result);
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
+        $this->assertEquals($message, $flow->getResult());
     }
 
     public function test_start_returns_puback_for_qos_1(): void
@@ -63,7 +64,7 @@ class IncomingPublishFlowTest extends TestCase
         $message = new DefaultMessage(self::TOPIC_TEST, self::PAYLOAD_SIMPLE, self::QOS_LEVEL_AT_LEAST_ONCE);
 
         $this->packetFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_PUBACK)
             ->willReturn(new PublishAckPacket());
@@ -71,11 +72,11 @@ class IncomingPublishFlowTest extends TestCase
         $flow = new IncomingPublishFlow($this->packetFactory, $message, self::PACKET_IDENTIFIER);
         $result = $flow->start();
 
-        self::assertInstanceOf(PublishAckPacket::class, $result);
-        self::assertEquals(self::PACKET_IDENTIFIER, $result->getIdentifier());
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
-        self::assertEquals($message, $flow->getResult());
+        $this->assertInstanceOf(PublishAckPacket::class, $result);
+        $this->assertSame(self::PACKET_IDENTIFIER, $result->getIdentifier());
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
+        $this->assertEquals($message, $flow->getResult());
     }
 
     public function test_start_returns_pubrec_for_qos_2(): void
@@ -83,7 +84,7 @@ class IncomingPublishFlowTest extends TestCase
         $message = new DefaultMessage(self::TOPIC_TEST, self::PAYLOAD_SIMPLE, self::QOS_LEVEL_EXACTLY_ONCE);
 
         $this->packetFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_PUBREC)
             ->willReturn(new PublishReceivedPacket());
@@ -91,9 +92,9 @@ class IncomingPublishFlowTest extends TestCase
         $flow = new IncomingPublishFlow($this->packetFactory, $message, self::PACKET_IDENTIFIER);
         $result = $flow->start();
 
-        self::assertInstanceOf(PublishReceivedPacket::class, $result);
-        self::assertEquals(self::PACKET_IDENTIFIER, $result->getIdentifier());
-        self::assertFalse($flow->isFinished());
+        $this->assertInstanceOf(PublishReceivedPacket::class, $result);
+        $this->assertSame(self::PACKET_IDENTIFIER, $result->getIdentifier());
+        $this->assertFalse($flow->isFinished());
     }
 
     public function test_accept_returns_false_for_qos_0(): void
@@ -101,7 +102,7 @@ class IncomingPublishFlowTest extends TestCase
         $message = new DefaultMessage(self::TOPIC_TEST, self::PAYLOAD_SIMPLE, self::QOS_LEVEL_AT_MOST_ONCE);
         $flow = new IncomingPublishFlow($this->packetFactory, $message);
 
-        self::assertFalse($flow->accept(new PublishReleasePacket()));
+        $this->assertFalse($flow->accept(new PublishReleasePacket()));
     }
 
     public function test_accept_returns_false_for_qos_1(): void
@@ -112,7 +113,7 @@ class IncomingPublishFlowTest extends TestCase
         $packet = new PublishReleasePacket();
         $packet->setIdentifier(self::PACKET_IDENTIFIER);
 
-        self::assertFalse($flow->accept($packet));
+        $this->assertFalse($flow->accept($packet));
     }
 
     public function test_accept_returns_false_for_wrong_packet_type_with_qos_2(): void
@@ -120,7 +121,7 @@ class IncomingPublishFlowTest extends TestCase
         $message = new DefaultMessage(self::TOPIC_TEST, self::PAYLOAD_SIMPLE, self::QOS_LEVEL_EXACTLY_ONCE);
         $flow = new IncomingPublishFlow($this->packetFactory, $message, self::PACKET_IDENTIFIER);
 
-        self::assertFalse($flow->accept(new PublishAckPacket()));
+        $this->assertFalse($flow->accept(new PublishAckPacket()));
     }
 
     public function test_accept_returns_true_for_pubrel_with_qos_2_and_correct_identifier(): void
@@ -131,7 +132,7 @@ class IncomingPublishFlowTest extends TestCase
         $packet = new PublishReleasePacket();
         $packet->setIdentifier(self::PACKET_IDENTIFIER);
 
-        self::assertTrue($flow->accept($packet));
+        $this->assertTrue($flow->accept($packet));
     }
 
     public function test_accept_returns_false_for_pubrel_with_qos_2_and_wrong_identifier(): void
@@ -142,7 +143,7 @@ class IncomingPublishFlowTest extends TestCase
         $packet = new PublishReleasePacket();
         $packet->setIdentifier(self::PACKET_IDENTIFIER + 1);
 
-        self::assertFalse($flow->accept($packet));
+        $this->assertFalse($flow->accept($packet));
     }
 
     public function test_next_completes_flow_and_returns_pubcomp(): void
@@ -154,7 +155,7 @@ class IncomingPublishFlowTest extends TestCase
         $this->packetFactory
             ->method('build')
             ->willReturnCallback(
-                function (int $type) {
+                function (int $type): PublishReceivedPacket|PublishCompletePacket|null {
                     if ($type === Packet::TYPE_PUBREC) {
                         return new PublishReceivedPacket();
                     }
@@ -169,13 +170,14 @@ class IncomingPublishFlowTest extends TestCase
 
         $flow = new IncomingPublishFlow($this->packetFactory, $message, self::PACKET_IDENTIFIER);
         $flow->start();
+
         $result = $flow->next($publishReleasePacket);
 
-        self::assertInstanceOf(PublishCompletePacket::class, $result);
-        self::assertEquals(self::PACKET_IDENTIFIER, $result->getIdentifier());
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
-        self::assertEquals($message, $flow->getResult());
+        $this->assertInstanceOf(PublishCompletePacket::class, $result);
+        $this->assertSame(self::PACKET_IDENTIFIER, $result->getIdentifier());
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
+        $this->assertEquals($message, $flow->getResult());
     }
 
     public function test_flow_is_finished_after_start_for_qos_0(): void
@@ -185,8 +187,8 @@ class IncomingPublishFlowTest extends TestCase
         $flow = new IncomingPublishFlow($this->packetFactory, $message, self::PACKET_IDENTIFIER);
         $flow->start();
 
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
     }
 
     public function test_flow_is_finished_after_start_for_qos_1(): void
@@ -197,8 +199,8 @@ class IncomingPublishFlowTest extends TestCase
         $flow = new IncomingPublishFlow($this->packetFactory, $message, self::PACKET_IDENTIFIER);
         $flow->start();
 
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
     }
 
     public function test_flow_is_not_finished_after_start_for_qos_2(): void
@@ -209,7 +211,7 @@ class IncomingPublishFlowTest extends TestCase
         $flow = new IncomingPublishFlow($this->packetFactory, $message, self::PACKET_IDENTIFIER);
         $flow->start();
 
-        self::assertFalse($flow->isFinished());
-        self::assertFalse($flow->isSuccess());
+        $this->assertFalse($flow->isFinished());
+        $this->assertFalse($flow->isSuccess());
     }
 }

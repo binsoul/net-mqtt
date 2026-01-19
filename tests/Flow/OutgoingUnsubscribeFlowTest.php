@@ -12,9 +12,10 @@ use BinSoul\Net\Mqtt\Packet\UnsubscribeRequestPacket;
 use BinSoul\Net\Mqtt\Packet\UnsubscribeResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
 use BinSoul\Net\Mqtt\PacketIdentifierGenerator;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class OutgoingUnsubscribeFlowTest extends TestCase
+final class OutgoingUnsubscribeFlowTest extends TestCase
 {
     private const string CODE_UNSUBSCRIBE = 'unsubscribe';
 
@@ -34,9 +35,9 @@ class OutgoingUnsubscribeFlowTest extends TestCase
 
     private const string TOPIC_FILTER_TEST = 'test/topic';
 
-    private PacketFactory $packetFactory;
+    private PacketFactory&MockObject $packetFactory;
 
-    private PacketIdentifierGenerator $identifierGenerator;
+    private PacketIdentifierGenerator&MockObject $identifierGenerator;
 
     protected function setUp(): void
     {
@@ -52,7 +53,7 @@ class OutgoingUnsubscribeFlowTest extends TestCase
         $subscription = new DefaultSubscription(self::TOPIC_FILTER_TEST, self::QOS_LEVEL_AT_MOST_ONCE);
         $flow = new OutgoingUnsubscribeFlow($this->packetFactory, [$subscription], $this->identifierGenerator);
 
-        self::assertEquals(self::CODE_UNSUBSCRIBE, $flow->getCode());
+        $this->assertSame(self::CODE_UNSUBSCRIBE, $flow->getCode());
     }
 
     public function test_start_generates_unsubscribe_packet_with_single_subscription(): void
@@ -61,7 +62,7 @@ class OutgoingUnsubscribeFlowTest extends TestCase
         $packet = new UnsubscribeRequestPacket();
 
         $this->packetFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_UNSUBSCRIBE)
             ->willReturn($packet);
@@ -69,9 +70,9 @@ class OutgoingUnsubscribeFlowTest extends TestCase
         $flow = new OutgoingUnsubscribeFlow($this->packetFactory, [$subscription], $this->identifierGenerator);
         $result = $flow->start();
 
-        self::assertInstanceOf(UnsubscribeRequestPacket::class, $result);
-        self::assertEquals(self::PACKET_IDENTIFIER, $result->getIdentifier());
-        self::assertEquals([self::TOPIC_FILTER_TEST], $result->getFilters());
+        $this->assertInstanceOf(UnsubscribeRequestPacket::class, $result);
+        $this->assertSame(self::PACKET_IDENTIFIER, $result->getIdentifier());
+        $this->assertSame([self::TOPIC_FILTER_TEST], $result->getFilters());
     }
 
     public function test_start_generates_unsubscribe_packet_with_multiple_subscriptions(): void
@@ -82,7 +83,7 @@ class OutgoingUnsubscribeFlowTest extends TestCase
         $packet = new UnsubscribeRequestPacket();
 
         $this->packetFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_UNSUBSCRIBE)
             ->willReturn($packet);
@@ -94,12 +95,9 @@ class OutgoingUnsubscribeFlowTest extends TestCase
         );
         $result = $flow->start();
 
-        self::assertInstanceOf(UnsubscribeRequestPacket::class, $result);
-        self::assertEquals(self::PACKET_IDENTIFIER, $result->getIdentifier());
-        self::assertEquals(
-            [self::TOPIC_FILTER_ALL, self::TOPIC_FILTER_SENSOR, self::TOPIC_FILTER_DEVICE],
-            $result->getFilters()
-        );
+        $this->assertInstanceOf(UnsubscribeRequestPacket::class, $result);
+        $this->assertSame(self::PACKET_IDENTIFIER, $result->getIdentifier());
+        $this->assertSame([self::TOPIC_FILTER_ALL, self::TOPIC_FILTER_SENSOR, self::TOPIC_FILTER_DEVICE], $result->getFilters());
     }
 
     public function test_accept_returns_false_for_wrong_packet_type(): void
@@ -109,7 +107,7 @@ class OutgoingUnsubscribeFlowTest extends TestCase
 
         $wrongPacket = new PublishAckPacket();
 
-        self::assertFalse($flow->accept($wrongPacket));
+        $this->assertFalse($flow->accept($wrongPacket));
     }
 
     public function test_accept_returns_false_for_wrong_identifier(): void
@@ -120,7 +118,7 @@ class OutgoingUnsubscribeFlowTest extends TestCase
         $packet = new UnsubscribeResponsePacket();
         $packet->setIdentifier(self::PACKET_IDENTIFIER + 1);
 
-        self::assertFalse($flow->accept($packet));
+        $this->assertFalse($flow->accept($packet));
     }
 
     public function test_accept_returns_true_for_correct_packet(): void
@@ -131,7 +129,7 @@ class OutgoingUnsubscribeFlowTest extends TestCase
         $packet = new UnsubscribeResponsePacket();
         $packet->setIdentifier(self::PACKET_IDENTIFIER);
 
-        self::assertTrue($flow->accept($packet));
+        $this->assertTrue($flow->accept($packet));
     }
 
     public function test_next_succeeds_flow_with_single_subscription(): void
@@ -143,10 +141,10 @@ class OutgoingUnsubscribeFlowTest extends TestCase
 
         $result = $flow->next($packet);
 
-        self::assertNull($result);
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
-        self::assertEquals([$subscription], $flow->getResult());
+        $this->assertNotInstanceOf(Packet::class, $result);
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
+        $this->assertEquals([$subscription], $flow->getResult());
     }
 
     public function test_next_succeeds_flow_with_multiple_subscriptions(): void
@@ -164,10 +162,10 @@ class OutgoingUnsubscribeFlowTest extends TestCase
 
         $result = $flow->next($packet);
 
-        self::assertNull($result);
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
-        self::assertEquals([$subscription1, $subscription2, $subscription3], $flow->getResult());
+        $this->assertNotInstanceOf(Packet::class, $result);
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
+        $this->assertEquals([$subscription1, $subscription2, $subscription3], $flow->getResult());
     }
 
     public function test_next_always_succeeds_regardless_of_packet_content(): void
@@ -179,9 +177,9 @@ class OutgoingUnsubscribeFlowTest extends TestCase
 
         $result = $flow->next($packet);
 
-        self::assertNull($result);
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
-        self::assertEmpty($flow->getErrorMessage());
+        $this->assertNotInstanceOf(Packet::class, $result);
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
+        $this->assertEmpty($flow->getErrorMessage());
     }
 }

@@ -9,7 +9,7 @@ use BinSoul\Net\Mqtt\Packet\DisconnectRequestPacket;
 use BinSoul\Net\Mqtt\PacketStream;
 use PHPUnit\Framework\TestCase;
 
-class DisconnectRequestPacketTest extends TestCase
+final class DisconnectRequestPacketTest extends TestCase
 {
     public function test_write(): void
     {
@@ -17,7 +17,7 @@ class DisconnectRequestPacketTest extends TestCase
         $stream = new PacketStream();
         $packet->write($stream);
 
-        self::assertEquals($this->getDefaultData(), $stream->getData());
+        $this->assertSame($this->getDefaultData(), $stream->getData());
     }
 
     public function test_read(): void
@@ -26,7 +26,7 @@ class DisconnectRequestPacketTest extends TestCase
         $packet = new DisconnectRequestPacket();
         $packet->read($stream);
 
-        self::assertEquals(Packet::TYPE_DISCONNECT, $packet->getPacketType());
+        $this->assertSame(Packet::TYPE_DISCONNECT, $packet->getPacketType());
     }
 
     public function test_can_read_what_it_writes(): void
@@ -39,7 +39,7 @@ class DisconnectRequestPacketTest extends TestCase
 
         $packet = new DisconnectRequestPacket();
         $packet->read($stream);
-        self::assertEquals($this->getDefaultData(), $stream->getData());
+        $this->assertSame($this->getDefaultData(), $stream->getData());
     }
 
     private function getDefaultData(): string

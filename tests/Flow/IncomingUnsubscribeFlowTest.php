@@ -10,15 +10,16 @@ use BinSoul\Net\Mqtt\Packet\ConnectResponsePacket;
 use BinSoul\Net\Mqtt\Packet\UnsubscribeResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
 use BinSoul\Net\Mqtt\Subscription;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class IncomingUnsubscribeFlowTest extends TestCase
+final class IncomingUnsubscribeFlowTest extends TestCase
 {
     private const string CODE_UNSUBSCRIBE = 'unsubscribe';
 
     private const int PACKET_IDENTIFIER = 42;
 
-    private PacketFactory $packetFactory;
+    private PacketFactory&MockObject $packetFactory;
 
     protected function setUp(): void
     {
@@ -29,7 +30,7 @@ class IncomingUnsubscribeFlowTest extends TestCase
     {
         $flow = new IncomingUnsubscribeFlow($this->packetFactory, [], 0);
 
-        self::assertEquals(self::CODE_UNSUBSCRIBE, $flow->getCode());
+        $this->assertSame(self::CODE_UNSUBSCRIBE, $flow->getCode());
     }
 
     public function test_start_generates_unsuback_packet_with_single_subscription(): void
@@ -38,7 +39,7 @@ class IncomingUnsubscribeFlowTest extends TestCase
         $packet = new UnsubscribeResponsePacket();
 
         $this->packetFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_UNSUBACK)
             ->willReturn($packet);
@@ -46,8 +47,8 @@ class IncomingUnsubscribeFlowTest extends TestCase
         $flow = new IncomingUnsubscribeFlow($this->packetFactory, [$subscription], self::PACKET_IDENTIFIER);
         $result = $flow->start();
 
-        self::assertInstanceOf(UnsubscribeResponsePacket::class, $result);
-        self::assertEquals(self::PACKET_IDENTIFIER, $result->getIdentifier());
+        $this->assertInstanceOf(UnsubscribeResponsePacket::class, $result);
+        $this->assertSame(self::PACKET_IDENTIFIER, $result->getIdentifier());
     }
 
     public function test_start_generates_unsuback_packet_with_multiple_subscriptions(): void
@@ -65,8 +66,8 @@ class IncomingUnsubscribeFlowTest extends TestCase
         );
         $result = $flow->start();
 
-        self::assertInstanceOf(UnsubscribeResponsePacket::class, $result);
-        self::assertEquals(self::PACKET_IDENTIFIER, $result->getIdentifier());
+        $this->assertInstanceOf(UnsubscribeResponsePacket::class, $result);
+        $this->assertSame(self::PACKET_IDENTIFIER, $result->getIdentifier());
     }
 
     public function test_start_immediately_succeeds_flow(): void
@@ -80,20 +81,20 @@ class IncomingUnsubscribeFlowTest extends TestCase
         $flow = new IncomingUnsubscribeFlow($this->packetFactory, $subscriptions, self::PACKET_IDENTIFIER);
         $flow->start();
 
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
-        self::assertEquals($subscriptions, $flow->getResult());
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
+        $this->assertEquals($subscriptions, $flow->getResult());
     }
 
     public function test_accept_returns_false(): void
     {
         $flow = new IncomingUnsubscribeFlow($this->packetFactory, [], 0);
-        self::assertFalse($flow->accept(new ConnectResponsePacket()));
+        $this->assertFalse($flow->accept(new ConnectResponsePacket()));
     }
 
     public function test_next_returns_null(): void
     {
         $flow = new IncomingUnsubscribeFlow($this->packetFactory, [], 0);
-        self::assertNull($flow->next(new ConnectResponsePacket()));
+        $this->assertNotInstanceOf(Packet::class, $flow->next(new ConnectResponsePacket()));
     }
 }

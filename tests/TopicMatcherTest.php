@@ -5,23 +5,21 @@ declare(strict_types=1);
 namespace BinSoul\Test\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\TopicMatcher;
+use Iterator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the TopicMatcher class.
  *
- * @group       unit
- *
  * @author      Alin Eugen Deac <ade@vestergaardcompany.com>
  */
-class TopicMatcherTest extends TestCase
+final class TopicMatcherTest extends TestCase
 {
     /**
      * Instance of the topic matcher.
-     *
-     * @var TopicMatcher
      */
-    protected $matcher;
+    private TopicMatcher $matcher;
 
     /**
      * {@inheritdoc}
@@ -40,141 +38,127 @@ class TopicMatcherTest extends TestCase
      *
      * @see test_can_match_topic()
      *
-     * @return array<int, array<int, string|bool>>
+     * @return Iterator<int, array<int, (bool | string)>>
      */
-    public function patternsAndTopics(): array
+    public static function patternsAndTopics(): Iterator
     {
         // Test cases inspired by (https://github.com/eclipse/mosquitto) package
         // @see https://github.com/eclipse/mosquitto/blob/master/test/broker/03-pattern-matching.py
+        // pattern, topic, expected to match
+        // 0
+        yield ['foo/bar', 'foo/bar', true];
 
-        return [
-            // pattern, topic, expected to match
+        // 1
+        yield ['foo/+', 'foo/bar', true];
 
-            // 0
-            ['foo/bar', 'foo/bar', true],
+        // 2
+        yield ['foo/+/baz', 'foo/bar/baz', true];
 
-            // 1
-            ['foo/+', 'foo/bar', true],
+        // 3
+        yield ['foo/+/#', 'foo/bar/baz', true];
 
-            // 2
-            ['foo/+/baz', 'foo/bar/baz', true],
+        // 4
+        yield ['#', 'foo/bar/baz', true];
 
-            // 3
-            ['foo/+/#', 'foo/bar/baz', true],
+        ////////////////////////////////////
+        // 5
+        yield ['foo/bar', 'foo', false];
 
-            // 4
-            ['#', 'foo/bar/baz', true],
+        // 6
+        yield ['foo/+', 'foo/bar/baz', false];
 
-            ////////////////////////////////////
+        // 7
+        yield ['foo/+/baz', 'foo/bar/bar', false];
 
-            // 5
-            ['foo/bar', 'foo', false],
+        // 8
+        yield ['foo/+/#', 'fo2/bar/baz', false];
 
-            // 6
-            ['foo/+', 'foo/bar/baz', false],
+        ////////////////////////////////////
+        // 9
+        yield ['#', '/foo/bar', true];
 
-            // 7
-            ['foo/+/baz', 'foo/bar/bar', false],
+        // 10
+        yield ['/#', '/foo/bar', true];
 
-            // 8
-            ['foo/+/#', 'fo2/bar/baz', false],
+        // 11
+        yield ['/#', 'foo/bar', false];
 
-            ////////////////////////////////////
+        ////////////////////////////////////
+        // 12
+        yield ['foo//bar', 'foo//bar', true];
 
-            // 9
-            ['#', '/foo/bar', true],
+        // 13
+        yield ['foo//+', 'foo//bar', true];
 
-            // 10
-            ['/#', '/foo/bar', true],
+        // 14
+        yield ['foo/+/+/baz', 'foo///baz', true];
 
-            // 11
-            ['/#', 'foo/bar', false],
+        // 15
+        yield ['foo/bar/+', 'foo/bar/', true];
 
-            ////////////////////////////////////
+        ////////////////////////////////////
+        // 16
+        yield ['foo/#', 'foo/', true];
 
-            // 12
-            ['foo//bar', 'foo//bar', true],
+        // 17
+        yield ['foo#', 'foo', false];
 
-            // 13
-            ['foo//+', 'foo//bar', true],
+        // 18
+        yield ['fo#o/', 'foo', false];
 
-            // 14
-            ['foo/+/+/baz', 'foo///baz', true],
+        // 19
+        yield ['foo#', 'fooa', false];
 
-            // 15
-            ['foo/bar/+', 'foo/bar/', true],
+        // 20
+        yield ['foo+', 'foo', false];
 
-            ////////////////////////////////////
+        // 21
+        yield ['foo+', 'fooa', false];
 
-            // 16
-            ['foo/#', 'foo/', true],
+        ////////////////////////////////////
+        // 22
+        yield ['test/6/#', 'test/3', false];
 
-            // 17
-            ['foo#', 'foo', false],
+        // 23
+        yield ['foo/bar', 'foo/bar', true];
 
-            // 18
-            ['fo#o/', 'foo', false],
+        // 24
+        yield ['foo/+', 'foo/bar', true];
 
-            // 19
-            ['foo#', 'fooa', false],
+        // 25
+        yield ['foo/+/baz', 'foo/bar/baz', true];
 
-            // 20
-            ['foo+', 'foo', false],
+        ////////////////////////////////////
+        // 26
+        yield ['A/B/+/#', 'A/B/B/C', true];
 
-            // 21
-            ['foo+', 'fooa', false],
+        ////////////////////////////////////
+        // 27
+        yield ['foo/+/#', 'foo/bar/baz', true];
 
-            ////////////////////////////////////
+        // 28
+        yield ['#', 'foo/bar/baz', true];
 
-            // 22
-            ['test/6/#', 'test/3', false],
+        ////////////////////////////////////
+        // 29
+        yield ['$SYS/bar', '$SYS/bar', true];
 
-            // 23
-            ['foo/bar', 'foo/bar', true],
+        // 30
+        yield ['#', '$SYS/bar', false];
 
-            // 24
-            ['foo/+', 'foo/bar', true],
-
-            // 25
-            ['foo/+/baz', 'foo/bar/baz', true],
-
-            ////////////////////////////////////
-
-            // 26
-            ['A/B/+/#', 'A/B/B/C', true],
-
-            ////////////////////////////////////
-
-            // 27
-            ['foo/+/#', 'foo/bar/baz', true],
-
-            // 28
-            ['#', 'foo/bar/baz', true],
-
-            ////////////////////////////////////
-
-            // 29
-            ['$SYS/bar', '$SYS/bar', true],
-
-            // 30
-            ['#', '$SYS/bar', false],
-
-            // 31
-            ['$BOB/bar', '$SYS/bar', false],
-        ];
+        // 31
+        yield ['$BOB/bar', '$SYS/bar', false];
     }
 
     /*************************************************
      * Actual tests
      ************************************************/
 
-    /**
-     * @dataProvider patternsAndTopics
-     */
+    #[DataProvider('patternsAndTopics')]
     public function test_can_match_topic(string $pattern, string $topic, bool $expectedResult): void
     {
         $result = $this->matcher->matches($pattern, $topic);
 
-        self::assertSame($expectedResult, $result);
+        $this->assertSame($expectedResult, $result);
     }
 }

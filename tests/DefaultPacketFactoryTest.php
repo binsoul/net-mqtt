@@ -23,7 +23,7 @@ use BinSoul\Net\Mqtt\Packet\UnsubscribeRequestPacket;
 use BinSoul\Net\Mqtt\Packet\UnsubscribeResponsePacket;
 use PHPUnit\Framework\TestCase;
 
-class DefaultPacketFactoryTest extends TestCase
+final class DefaultPacketFactoryTest extends TestCase
 {
     private DefaultPacketFactory $factory;
 
@@ -36,98 +36,98 @@ class DefaultPacketFactoryTest extends TestCase
     {
         $packet = $this->factory->build(Packet::TYPE_CONNECT);
 
-        self::assertInstanceOf(ConnectRequestPacket::class, $packet);
+        $this->assertInstanceOf(ConnectRequestPacket::class, $packet);
     }
 
     public function test_builds_connack_packet(): void
     {
         $packet = $this->factory->build(Packet::TYPE_CONNACK);
 
-        self::assertInstanceOf(ConnectResponsePacket::class, $packet);
+        $this->assertInstanceOf(ConnectResponsePacket::class, $packet);
     }
 
     public function test_builds_publish_packet(): void
     {
         $packet = $this->factory->build(Packet::TYPE_PUBLISH);
 
-        self::assertInstanceOf(PublishRequestPacket::class, $packet);
+        $this->assertInstanceOf(PublishRequestPacket::class, $packet);
     }
 
     public function test_builds_puback_packet(): void
     {
         $packet = $this->factory->build(Packet::TYPE_PUBACK);
 
-        self::assertInstanceOf(PublishAckPacket::class, $packet);
+        $this->assertInstanceOf(PublishAckPacket::class, $packet);
     }
 
     public function test_builds_pubrec_packet(): void
     {
         $packet = $this->factory->build(Packet::TYPE_PUBREC);
 
-        self::assertInstanceOf(PublishReceivedPacket::class, $packet);
+        $this->assertInstanceOf(PublishReceivedPacket::class, $packet);
     }
 
     public function test_builds_pubrel_packet(): void
     {
         $packet = $this->factory->build(Packet::TYPE_PUBREL);
 
-        self::assertInstanceOf(PublishReleasePacket::class, $packet);
+        $this->assertInstanceOf(PublishReleasePacket::class, $packet);
     }
 
     public function test_builds_pubcomp_packet(): void
     {
         $packet = $this->factory->build(Packet::TYPE_PUBCOMP);
 
-        self::assertInstanceOf(PublishCompletePacket::class, $packet);
+        $this->assertInstanceOf(PublishCompletePacket::class, $packet);
     }
 
     public function test_builds_subscribe_packet(): void
     {
         $packet = $this->factory->build(Packet::TYPE_SUBSCRIBE);
 
-        self::assertInstanceOf(SubscribeRequestPacket::class, $packet);
+        $this->assertInstanceOf(SubscribeRequestPacket::class, $packet);
     }
 
     public function test_builds_suback_packet(): void
     {
         $packet = $this->factory->build(Packet::TYPE_SUBACK);
 
-        self::assertInstanceOf(SubscribeResponsePacket::class, $packet);
+        $this->assertInstanceOf(SubscribeResponsePacket::class, $packet);
     }
 
     public function test_builds_unsubscribe_packet(): void
     {
         $packet = $this->factory->build(Packet::TYPE_UNSUBSCRIBE);
 
-        self::assertInstanceOf(UnsubscribeRequestPacket::class, $packet);
+        $this->assertInstanceOf(UnsubscribeRequestPacket::class, $packet);
     }
 
     public function test_builds_unsuback_packet(): void
     {
         $packet = $this->factory->build(Packet::TYPE_UNSUBACK);
 
-        self::assertInstanceOf(UnsubscribeResponsePacket::class, $packet);
+        $this->assertInstanceOf(UnsubscribeResponsePacket::class, $packet);
     }
 
     public function test_builds_pingreq_packet(): void
     {
         $packet = $this->factory->build(Packet::TYPE_PINGREQ);
 
-        self::assertInstanceOf(PingRequestPacket::class, $packet);
+        $this->assertInstanceOf(PingRequestPacket::class, $packet);
     }
 
     public function test_builds_pingresp_packet(): void
     {
         $packet = $this->factory->build(Packet::TYPE_PINGRESP);
 
-        self::assertInstanceOf(PingResponsePacket::class, $packet);
+        $this->assertInstanceOf(PingResponsePacket::class, $packet);
     }
 
     public function test_builds_disconnect_packet(): void
     {
         $packet = $this->factory->build(Packet::TYPE_DISCONNECT);
 
-        self::assertInstanceOf(DisconnectRequestPacket::class, $packet);
+        $this->assertInstanceOf(DisconnectRequestPacket::class, $packet);
     }
 
     public function test_throws_exception_for_unknown_packet_type(): void

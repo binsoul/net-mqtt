@@ -9,28 +9,28 @@ use BinSoul\Net\Mqtt\Packet\ConnectResponsePacket;
 use BinSoul\Net\Mqtt\PacketStream;
 use PHPUnit\Framework\TestCase;
 
-class ConnectResponsePacketTest extends TestCase
+final class ConnectResponsePacketTest extends TestCase
 {
     public function test_getters_and_setters(): void
     {
         $packet = new ConnectResponsePacket();
         $packet->setReturnCode(0);
-        self::assertEquals(0, $packet->getReturnCode());
-        self::assertTrue($packet->isSuccess());
-        self::assertFalse($packet->isError());
+        $this->assertSame(0, $packet->getReturnCode());
+        $this->assertTrue($packet->isSuccess());
+        $this->assertFalse($packet->isError());
 
         $packet = new ConnectResponsePacket();
         $packet->setReturnCode(1);
-        self::assertEquals(1, $packet->getReturnCode());
-        self::assertFalse($packet->isSuccess());
-        self::assertTrue($packet->isError());
+        $this->assertSame(1, $packet->getReturnCode());
+        $this->assertFalse($packet->isSuccess());
+        $this->assertTrue($packet->isError());
 
         $packet = new ConnectResponsePacket();
         $packet->setSessionPresent(false);
-        self::assertFalse($packet->isSessionPresent());
+        $this->assertFalse($packet->isSessionPresent());
 
         $packet->setSessionPresent(true);
-        self::assertTrue($packet->isSessionPresent());
+        $this->assertTrue($packet->isSessionPresent());
     }
 
     public function test_returns_error_names(): void
@@ -39,14 +39,14 @@ class ConnectResponsePacketTest extends TestCase
 
         for ($i = 0; $i < 5; $i++) {
             $packet->setReturnCode($i);
-            self::assertNotEmpty($packet->getErrorName());
-            self::assertStringNotContainsString('Unknown', $packet->getErrorName());
+            $this->assertNotEmpty($packet->getErrorName());
+            $this->assertStringNotContainsString('Unknown', $packet->getErrorName());
         }
 
         foreach ([6, 128, 255] as $i) {
             $packet->setReturnCode($i);
-            self::assertNotEmpty($packet->getErrorName());
-            self::assertStringContainsString('Unknown', $packet->getErrorName());
+            $this->assertNotEmpty($packet->getErrorName());
+            $this->assertStringContainsString('Unknown', $packet->getErrorName());
         }
     }
 
@@ -56,7 +56,7 @@ class ConnectResponsePacketTest extends TestCase
         $stream = new PacketStream();
         $packet->write($stream);
 
-        self::assertEquals($this->getDefaultData(), $stream->getData());
+        $this->assertSame($this->getDefaultData(), $stream->getData());
     }
 
     public function test_read(): void
@@ -65,11 +65,11 @@ class ConnectResponsePacketTest extends TestCase
         $packet = new ConnectResponsePacket();
         $packet->read($stream);
 
-        self::assertEquals(0, $packet->getReturnCode());
-        self::assertFalse($packet->isSessionPresent());
-        self::assertTrue($packet->isSuccess());
-        self::assertFalse($packet->isError());
-        self::assertEquals('Connection accepted', $packet->getErrorName());
+        $this->assertSame(0, $packet->getReturnCode());
+        $this->assertFalse($packet->isSessionPresent());
+        $this->assertTrue($packet->isSuccess());
+        $this->assertFalse($packet->isError());
+        $this->assertSame('Connection accepted', $packet->getErrorName());
     }
 
     public function test_remaining_length(): void
@@ -78,7 +78,7 @@ class ConnectResponsePacketTest extends TestCase
         $packet = new ConnectResponsePacket();
         $packet->read($stream);
 
-        self::assertEquals(2, $packet->getRemainingPacketLength());
+        $this->assertSame(2, $packet->getRemainingPacketLength());
     }
 
     public function test_packet_without_remaining_length(): void
@@ -118,8 +118,8 @@ class ConnectResponsePacketTest extends TestCase
 
         $packet = new ConnectResponsePacket();
         $packet->read($stream);
-        self::assertEquals(0, $packet->getReturnCode());
-        self::assertFalse($packet->isSessionPresent());
+        $this->assertSame(0, $packet->getReturnCode());
+        $this->assertFalse($packet->isSessionPresent());
     }
 
     private function createDefaultPacket(): ConnectResponsePacket

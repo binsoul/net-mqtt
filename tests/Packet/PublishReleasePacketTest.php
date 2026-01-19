@@ -10,13 +10,13 @@ use BinSoul\Net\Mqtt\PacketStream;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-class PublishReleasePacketTest extends TestCase
+final class PublishReleasePacketTest extends TestCase
 {
     public function test_getters_and_setters(): void
     {
         $packet = new PublishReleasePacket();
         $packet->setIdentifier(1);
-        self::assertEquals(1, $packet->getIdentifier());
+        $this->assertSame(1, $packet->getIdentifier());
     }
 
     public function test_cannot_set_negative_identifier(): void
@@ -41,7 +41,7 @@ class PublishReleasePacketTest extends TestCase
         $stream = new PacketStream();
         $packet->write($stream);
 
-        self::assertEquals($this->getDefaultData(), $stream->getData());
+        $this->assertSame($this->getDefaultData(), $stream->getData());
     }
 
     public function test_read(): void
@@ -50,7 +50,7 @@ class PublishReleasePacketTest extends TestCase
         $packet = new PublishReleasePacket();
         $packet->read($stream);
 
-        self::assertEquals(Packet::TYPE_PUBREL, $packet->getPacketType());
+        $this->assertSame(Packet::TYPE_PUBREL, $packet->getPacketType());
     }
 
     public function test_can_read_what_it_writes(): void
@@ -64,7 +64,7 @@ class PublishReleasePacketTest extends TestCase
 
         $packet = new PublishReleasePacket();
         $packet->read($stream);
-        self::assertEquals($this->getDefaultData(), $stream->getData());
+        $this->assertSame($this->getDefaultData(), $stream->getData());
     }
 
     private function getDefaultData(): string

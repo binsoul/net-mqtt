@@ -25,7 +25,7 @@ use BinSoul\Net\Mqtt\PacketIdentifierGenerator;
 use BinSoul\Net\Mqtt\Subscription;
 use PHPUnit\Framework\TestCase;
 
-class DefaultFlowFactoryTest extends TestCase
+final class DefaultFlowFactoryTest extends TestCase
 {
     private DefaultFlowFactory $factory;
 
@@ -48,7 +48,7 @@ class DefaultFlowFactoryTest extends TestCase
 
         $flow = $this->factory->buildIncomingConnectFlow($connection, 0, true);
 
-        self::assertInstanceOf(IncomingConnectFlow::class, $flow);
+        $this->assertInstanceOf(IncomingConnectFlow::class, $flow);
     }
 
     public function test_builds_incoming_disconnect_flow(): void
@@ -57,14 +57,14 @@ class DefaultFlowFactoryTest extends TestCase
 
         $flow = $this->factory->buildIncomingDisconnectFlow($connection);
 
-        self::assertInstanceOf(IncomingDisconnectFlow::class, $flow);
+        $this->assertInstanceOf(IncomingDisconnectFlow::class, $flow);
     }
 
     public function test_builds_incoming_ping_flow(): void
     {
         $flow = $this->factory->buildIncomingPingFlow();
 
-        self::assertInstanceOf(IncomingPingFlow::class, $flow);
+        $this->assertInstanceOf(IncomingPingFlow::class, $flow);
     }
 
     public function test_builds_incoming_publish_flow_without_identifier(): void
@@ -73,7 +73,7 @@ class DefaultFlowFactoryTest extends TestCase
 
         $flow = $this->factory->buildIncomingPublishFlow($message);
 
-        self::assertInstanceOf(IncomingPublishFlow::class, $flow);
+        $this->assertInstanceOf(IncomingPublishFlow::class, $flow);
     }
 
     public function test_builds_incoming_publish_flow_with_identifier(): void
@@ -82,7 +82,7 @@ class DefaultFlowFactoryTest extends TestCase
 
         $flow = $this->factory->buildIncomingPublishFlow($message, 123);
 
-        self::assertInstanceOf(IncomingPublishFlow::class, $flow);
+        $this->assertInstanceOf(IncomingPublishFlow::class, $flow);
     }
 
     public function test_builds_incoming_subscribe_flow(): void
@@ -91,7 +91,7 @@ class DefaultFlowFactoryTest extends TestCase
 
         $flow = $this->factory->buildIncomingSubscribeFlow($subscriptions, [0], 456);
 
-        self::assertInstanceOf(IncomingSubscribeFlow::class, $flow);
+        $this->assertInstanceOf(IncomingSubscribeFlow::class, $flow);
     }
 
     public function test_builds_incoming_unsubscribe_flow(): void
@@ -100,7 +100,7 @@ class DefaultFlowFactoryTest extends TestCase
 
         $flow = $this->factory->buildIncomingUnsubscribeFlow($subscriptions, 789);
 
-        self::assertInstanceOf(IncomingUnsubscribeFlow::class, $flow);
+        $this->assertInstanceOf(IncomingUnsubscribeFlow::class, $flow);
     }
 
     public function test_builds_outgoing_connect_flow(): void
@@ -109,7 +109,7 @@ class DefaultFlowFactoryTest extends TestCase
 
         $flow = $this->factory->buildOutgoingConnectFlow($connection);
 
-        self::assertInstanceOf(OutgoingConnectFlow::class, $flow);
+        $this->assertInstanceOf(OutgoingConnectFlow::class, $flow);
     }
 
     public function test_builds_outgoing_disconnect_flow(): void
@@ -118,14 +118,14 @@ class DefaultFlowFactoryTest extends TestCase
 
         $flow = $this->factory->buildOutgoingDisconnectFlow($connection);
 
-        self::assertInstanceOf(OutgoingDisconnectFlow::class, $flow);
+        $this->assertInstanceOf(OutgoingDisconnectFlow::class, $flow);
     }
 
     public function test_builds_outgoing_ping_flow(): void
     {
         $flow = $this->factory->buildOutgoingPingFlow();
 
-        self::assertInstanceOf(OutgoingPingFlow::class, $flow);
+        $this->assertInstanceOf(OutgoingPingFlow::class, $flow);
     }
 
     public function test_builds_outgoing_publish_flow(): void
@@ -134,7 +134,7 @@ class DefaultFlowFactoryTest extends TestCase
 
         $flow = $this->factory->buildOutgoingPublishFlow($message);
 
-        self::assertInstanceOf(OutgoingPublishFlow::class, $flow);
+        $this->assertInstanceOf(OutgoingPublishFlow::class, $flow);
     }
 
     public function test_builds_outgoing_subscribe_flow(): void
@@ -143,7 +143,7 @@ class DefaultFlowFactoryTest extends TestCase
 
         $flow = $this->factory->buildOutgoingSubscribeFlow($subscriptions);
 
-        self::assertInstanceOf(OutgoingSubscribeFlow::class, $flow);
+        $this->assertInstanceOf(OutgoingSubscribeFlow::class, $flow);
     }
 
     public function test_builds_outgoing_unsubscribe_flow(): void
@@ -152,6 +152,6 @@ class DefaultFlowFactoryTest extends TestCase
 
         $flow = $this->factory->buildOutgoingUnsubscribeFlow($subscriptions);
 
-        self::assertInstanceOf(OutgoingUnsubscribeFlow::class, $flow);
+        $this->assertInstanceOf(OutgoingUnsubscribeFlow::class, $flow);
     }
 }

@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-class ValidatorTest extends TestCase
+final class ValidatorTest extends TestCase
 {
     private const string EXCEPTION_CLASS_DEFAULT = InvalidArgumentException::class;
 

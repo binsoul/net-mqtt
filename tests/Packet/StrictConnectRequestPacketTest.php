@@ -10,7 +10,7 @@ use BinSoul\Net\Mqtt\PacketStream;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-class StrictConnectRequestPacketTest extends TestCase
+final class StrictConnectRequestPacketTest extends TestCase
 {
     public function test_defaults(): void
     {
@@ -22,7 +22,7 @@ class StrictConnectRequestPacketTest extends TestCase
         $packet = new StrictConnectRequestPacket();
         $packet->read($stream);
 
-        self::assertEquals('foobar', $packet->getClientID());
+        $this->assertSame('foobar', $packet->getClientID());
     }
 
     public function test_too_long_client_id_in_packet(): void

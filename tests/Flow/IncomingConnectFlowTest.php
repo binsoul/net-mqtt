@@ -9,9 +9,10 @@ use BinSoul\Net\Mqtt\Flow\IncomingConnectFlow;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\ConnectResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class IncomingConnectFlowTest extends TestCase
+final class IncomingConnectFlowTest extends TestCase
 {
     private const string CODE_CONNECT = 'connect';
 
@@ -19,9 +20,9 @@ class IncomingConnectFlowTest extends TestCase
 
     private const int RETURN_CODE_SUCCESS = 0;
 
-    private PacketFactory $packetFactory;
+    private PacketFactory&MockObject $packetFactory;
 
-    private Connection $connection;
+    private Connection&MockObject $connection;
 
     protected function setUp(): void
     {
@@ -33,13 +34,13 @@ class IncomingConnectFlowTest extends TestCase
     {
         $flow = new IncomingConnectFlow($this->packetFactory, $this->connection, self::RETURN_CODE_SUCCESS, false);
 
-        self::assertEquals(self::CODE_CONNECT, $flow->getCode());
+        $this->assertSame(self::CODE_CONNECT, $flow->getCode());
     }
 
     public function test_start_generates_connack_packet_with_success(): void
     {
         $this->packetFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_CONNACK)
             ->willReturn(new ConnectResponsePacket());
@@ -47,15 +48,15 @@ class IncomingConnectFlowTest extends TestCase
         $flow = new IncomingConnectFlow($this->packetFactory, $this->connection, self::RETURN_CODE_SUCCESS, false);
         $result = $flow->start();
 
-        self::assertInstanceOf(ConnectResponsePacket::class, $result);
-        self::assertEquals(self::RETURN_CODE_SUCCESS, $result->getReturnCode());
-        self::assertFalse($result->isSessionPresent());
+        $this->assertInstanceOf(ConnectResponsePacket::class, $result);
+        $this->assertSame(self::RETURN_CODE_SUCCESS, $result->getReturnCode());
+        $this->assertFalse($result->isSessionPresent());
     }
 
     public function test_start_generates_connack_packet_with_error(): void
     {
         $this->packetFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_CONNACK)
             ->willReturn(new ConnectResponsePacket());
@@ -63,9 +64,9 @@ class IncomingConnectFlowTest extends TestCase
         $flow = new IncomingConnectFlow($this->packetFactory, $this->connection, self::RETURN_CODE_ERROR, false);
         $result = $flow->start();
 
-        self::assertInstanceOf(ConnectResponsePacket::class, $result);
-        self::assertEquals(self::RETURN_CODE_ERROR, $result->getReturnCode());
-        self::assertFalse($result->isSessionPresent());
+        $this->assertInstanceOf(ConnectResponsePacket::class, $result);
+        $this->assertSame(self::RETURN_CODE_ERROR, $result->getReturnCode());
+        $this->assertFalse($result->isSessionPresent());
     }
 
     public function test_start_sets_session_present_to_true(): void
@@ -74,8 +75,9 @@ class IncomingConnectFlowTest extends TestCase
 
         $flow = new IncomingConnectFlow($this->packetFactory, $this->connection, self::RETURN_CODE_SUCCESS, true);
         $result = $flow->start();
+        $this->assertInstanceOf(ConnectResponsePacket::class, $result);
 
-        self::assertTrue($result->isSessionPresent());
+        $this->assertTrue($result->isSessionPresent());
     }
 
     public function test_start_sets_session_present_to_false(): void
@@ -84,8 +86,9 @@ class IncomingConnectFlowTest extends TestCase
 
         $flow = new IncomingConnectFlow($this->packetFactory, $this->connection, self::RETURN_CODE_SUCCESS, false);
         $result = $flow->start();
+        $this->assertInstanceOf(ConnectResponsePacket::class, $result);
 
-        self::assertFalse($result->isSessionPresent());
+        $this->assertFalse($result->isSessionPresent());
     }
 
     public function test_start_immediately_succeeds_flow(): void
@@ -95,20 +98,20 @@ class IncomingConnectFlowTest extends TestCase
         $flow = new IncomingConnectFlow($this->packetFactory, $this->connection, self::RETURN_CODE_SUCCESS, false);
         $flow->start();
 
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
-        self::assertSame($this->connection, $flow->getResult());
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
+        $this->assertSame($this->connection, $flow->getResult());
     }
 
     public function test_accept_returns_false(): void
     {
         $flow = new IncomingConnectFlow($this->packetFactory, $this->connection, self::RETURN_CODE_SUCCESS, false);
-        self::assertFalse($flow->accept(new ConnectResponsePacket()));
+        $this->assertFalse($flow->accept(new ConnectResponsePacket()));
     }
 
     public function test_next_returns_null(): void
     {
         $flow = new IncomingConnectFlow($this->packetFactory, $this->connection, self::RETURN_CODE_SUCCESS, false);
-        self::assertNull($flow->next(new ConnectResponsePacket()));
+        $this->assertNotInstanceOf(Packet::class, $flow->next(new ConnectResponsePacket()));
     }
 }

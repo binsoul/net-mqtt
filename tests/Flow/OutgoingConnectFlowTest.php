@@ -13,9 +13,10 @@ use BinSoul\Net\Mqtt\Packet\ConnectRequestPacket;
 use BinSoul\Net\Mqtt\Packet\ConnectResponsePacket;
 use BinSoul\Net\Mqtt\Packet\PublishAckPacket;
 use BinSoul\Net\Mqtt\PacketFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class OutgoingConnectFlowTest extends TestCase
+final class OutgoingConnectFlowTest extends TestCase
 {
     private const string CLIENT_ID_AUTO = 'auto-generated-id';
 
@@ -47,11 +48,11 @@ class OutgoingConnectFlowTest extends TestCase
 
     private const string WILL_TOPIC = 'status/client';
 
-    private PacketFactory $packetFactory;
+    private PacketFactory&MockObject $packetFactory;
 
-    private Connection $connection;
+    private Connection&MockObject $connection;
 
-    private ClientIdentifierGenerator $clientIdGenerator;
+    private ClientIdentifierGenerator&MockObject $clientIdGenerator;
 
     protected function setUp(): void
     {
@@ -66,7 +67,7 @@ class OutgoingConnectFlowTest extends TestCase
 
         $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
 
-        self::assertEquals(self::CODE_CONNECT, $flow->getCode());
+        $this->assertSame(self::CODE_CONNECT, $flow->getCode());
     }
 
     public function test_generates_client_id_when_empty(): void
@@ -78,16 +79,17 @@ class OutgoingConnectFlowTest extends TestCase
         $this->connection->method('withClientID')->willReturn($clonedConnection);
 
         $this->clientIdGenerator
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('generateClientIdentifier')
             ->willReturn(self::CLIENT_ID_AUTO);
 
         $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
         $packet = new ConnectResponsePacket();
         $packet->setReturnCode(self::RETURN_CODE_SUCCESS);
+
         $flow->next($packet);
 
-        self::assertEquals(self::CLIENT_ID_AUTO, $flow->getResult()->getClientID());
+        $this->assertEquals(self::CLIENT_ID_AUTO, $flow->getResult()->getClientID());
     }
 
     public function test_does_not_generate_client_id_when_provided(): void
@@ -95,7 +97,7 @@ class OutgoingConnectFlowTest extends TestCase
         $this->connection->method('getClientID')->willReturn(self::CLIENT_ID_TEST);
 
         $this->clientIdGenerator
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('generateClientIdentifier');
 
         new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
@@ -112,7 +114,7 @@ class OutgoingConnectFlowTest extends TestCase
         $this->connection->method('getWill')->willReturn(null);
 
         $this->packetFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_CONNECT)
             ->willReturn(new ConnectRequestPacket());
@@ -120,13 +122,13 @@ class OutgoingConnectFlowTest extends TestCase
         $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
         $result = $flow->start();
 
-        self::assertInstanceOf(ConnectRequestPacket::class, $result);
-        self::assertEquals(self::PROTOCOL_LEVEL_4, $result->getProtocolLevel());
-        self::assertEquals(self::KEEP_ALIVE_DEFAULT, $result->getKeepAlive());
-        self::assertEquals(self::CLIENT_ID_TEST, $result->getClientID());
-        self::assertTrue($result->isCleanSession());
-        self::assertEquals(self::USERNAME_TEST, $result->getUsername());
-        self::assertEquals(self::PASSWORD_TEST, $result->getPassword());
+        $this->assertInstanceOf(ConnectRequestPacket::class, $result);
+        $this->assertSame(self::PROTOCOL_LEVEL_4, $result->getProtocolLevel());
+        $this->assertSame(self::KEEP_ALIVE_DEFAULT, $result->getKeepAlive());
+        $this->assertSame(self::CLIENT_ID_TEST, $result->getClientID());
+        $this->assertTrue($result->isCleanSession());
+        $this->assertSame(self::USERNAME_TEST, $result->getUsername());
+        $this->assertSame(self::PASSWORD_TEST, $result->getPassword());
     }
 
     public function test_start_sets_clean_session_to_false(): void
@@ -143,8 +145,9 @@ class OutgoingConnectFlowTest extends TestCase
 
         $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
         $result = $flow->start();
+        $this->assertInstanceOf(ConnectRequestPacket::class, $result);
 
-        self::assertFalse($result->isCleanSession());
+        $this->assertFalse($result->isCleanSession());
     }
 
     public function test_start_configures_will_message(): void
@@ -163,12 +166,13 @@ class OutgoingConnectFlowTest extends TestCase
 
         $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
         $result = $flow->start();
+        $this->assertInstanceOf(ConnectRequestPacket::class, $result);
 
-        self::assertTrue($result->hasWill());
-        self::assertEquals(self::WILL_TOPIC, $result->getWillTopic());
-        self::assertEquals(self::WILL_PAYLOAD, $result->getWillMessage());
-        self::assertEquals(self::QOS_LEVEL_AT_LEAST_ONCE, $result->getWillQosLevel());
-        self::assertTrue($result->isWillRetained());
+        $this->assertTrue($result->hasWill());
+        $this->assertSame(self::WILL_TOPIC, $result->getWillTopic());
+        $this->assertSame(self::WILL_PAYLOAD, $result->getWillMessage());
+        $this->assertSame(self::QOS_LEVEL_AT_LEAST_ONCE, $result->getWillQosLevel());
+        $this->assertTrue($result->isWillRetained());
     }
 
     public function test_start_with_different_protocol_level(): void
@@ -185,9 +189,10 @@ class OutgoingConnectFlowTest extends TestCase
 
         $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
         $result = $flow->start();
+        $this->assertInstanceOf(ConnectRequestPacket::class, $result);
 
-        self::assertEquals(self::PROTOCOL_LEVEL_3, $result->getProtocolLevel());
-        self::assertEquals(self::KEEP_ALIVE_LONG, $result->getKeepAlive());
+        $this->assertSame(self::PROTOCOL_LEVEL_3, $result->getProtocolLevel());
+        $this->assertSame(self::KEEP_ALIVE_LONG, $result->getKeepAlive());
     }
 
     public function test_flow_is_not_finished_after_start(): void
@@ -205,22 +210,22 @@ class OutgoingConnectFlowTest extends TestCase
         $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
         $flow->start();
 
-        self::assertFalse($flow->isFinished());
-        self::assertFalse($flow->isSuccess());
+        $this->assertFalse($flow->isFinished());
+        $this->assertFalse($flow->isSuccess());
     }
 
     public function test_accept_returns_true_for_connack_packet(): void
     {
         $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
 
-        self::assertTrue($flow->accept(new ConnectResponsePacket()));
+        $this->assertTrue($flow->accept(new ConnectResponsePacket()));
     }
 
     public function test_accept_returns_false_for_wrong_packet_type(): void
     {
         $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
 
-        self::assertFalse($flow->accept(new PublishAckPacket()));
+        $this->assertFalse($flow->accept(new PublishAckPacket()));
     }
 
     public function test_next_succeeds_flow_on_successful_response(): void
@@ -233,10 +238,10 @@ class OutgoingConnectFlowTest extends TestCase
         $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
         $result = $flow->next($packet);
 
-        self::assertNull($result);
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
-        self::assertSame($this->connection, $flow->getResult());
+        $this->assertNotInstanceOf(Packet::class, $result);
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
+        $this->assertSame($this->connection, $flow->getResult());
     }
 
     public function test_next_fails_flow_on_error_response(): void
@@ -247,10 +252,10 @@ class OutgoingConnectFlowTest extends TestCase
         $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
         $result = $flow->next($packet);
 
-        self::assertNull($result);
-        self::assertTrue($flow->isFinished());
-        self::assertFalse($flow->isSuccess());
-        self::assertEquals(self::ERROR_MESSAGE_UNAUTHORIZED, $flow->getErrorMessage());
-        self::assertNull($flow->getResult());
+        $this->assertNotInstanceOf(Packet::class, $result);
+        $this->assertTrue($flow->isFinished());
+        $this->assertFalse($flow->isSuccess());
+        $this->assertSame(self::ERROR_MESSAGE_UNAUTHORIZED, $flow->getErrorMessage());
+        $this->assertNull($flow->getResult());
     }
 }

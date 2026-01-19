@@ -12,7 +12,7 @@ use BinSoul\Net\Mqtt\PacketStream;
 use BinSoul\Net\Mqtt\StreamParser;
 use PHPUnit\Framework\TestCase;
 
-class StreamParserTest extends TestCase
+final class StreamParserTest extends TestCase
 {
     private array $packets;
 
@@ -59,7 +59,7 @@ class StreamParserTest extends TestCase
                 $result = $parser->push($data);
 
                 foreach ($result as $packet) {
-                    self::assertEquals($type, $packet->getPacketType());
+                    $this->assertEquals($type, $packet->getPacketType());
                 }
             }
         }
@@ -78,7 +78,7 @@ class StreamParserTest extends TestCase
         $parser->push("\x00");
         $parser->push("\xF0");
 
-        self::assertEquals(2, $called);
+        $this->assertSame(2, $called);
     }
 
     public function test_handles_packet_factory_exceptions(): void
@@ -98,19 +98,19 @@ class StreamParserTest extends TestCase
 
         $parser->push($this->packets[Packet::TYPE_CONNECT][0]);
 
-        self::assertGreaterThan(0, $called);
+        $this->assertGreaterThan(0, $called);
     }
 
     public function test_handles_packet_stream_exceptions(): void
     {
         $packetStream = $this->createMock(PacketStream::class);
         $packetStream
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getRemainingBytes')
             ->willReturn(1, 0);
 
         $packetStream
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('readByte')
             ->willThrowException(new EndOfStreamException());
 
@@ -136,7 +136,7 @@ class StreamParserTest extends TestCase
         );
 
         $parser->push("\x16\x00");
-        self::assertEquals(1, $called);
+        $this->assertSame(1, $called);
     }
 
     public function test_handles_fragmented_packets(): void
@@ -150,13 +150,13 @@ class StreamParserTest extends TestCase
         );
 
         $packets = $parser->push("0\x0d");
-        self::assertCount(0, $packets);
+        $this->assertCount(0, $packets);
         $packets = $parser->push("\x00\x06TopicAqos 1");
-        self::assertCount(1, $packets);
+        $this->assertCount(1, $packets);
 
         $packets = $parser->push("0\x0d\x00\x06TopicA");
-        self::assertCount(0, $packets);
+        $this->assertCount(0, $packets);
         $packets = $parser->push('qos 1');
-        self::assertCount(1, $packets);
+        $this->assertCount(1, $packets);
     }
 }

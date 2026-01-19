@@ -8,16 +8,16 @@ use BinSoul\Net\Mqtt\DefaultSubscription;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-class DefaultSubscriptionTest extends TestCase
+final class DefaultSubscriptionTest extends TestCase
 {
     public function test_returns_instance_with_different_filter(): void
     {
         $original = new DefaultSubscription('foo', 1);
         $clone = $original->withFilter('bar');
 
-        self::assertNotEquals($original, $clone);
-        self::assertEquals('bar', $clone->getFilter());
-        self::assertEquals($original->getQosLevel(), $clone->getQosLevel());
+        $this->assertNotEquals($original, $clone);
+        $this->assertSame('bar', $clone->getFilter());
+        $this->assertSame($original->getQosLevel(), $clone->getQosLevel());
     }
 
     public function test_returns_instance_with_different_qos(): void
@@ -25,9 +25,9 @@ class DefaultSubscriptionTest extends TestCase
         $original = new DefaultSubscription('foo', 1);
         $clone = $original->withQosLevel(2);
 
-        self::assertNotEquals($original, $clone);
-        self::assertEquals($original->getFilter(), $clone->getFilter());
-        self::assertEquals(2, $clone->getQosLevel());
+        $this->assertNotEquals($original, $clone);
+        $this->assertSame($original->getFilter(), $clone->getFilter());
+        $this->assertSame(2, $clone->getQosLevel());
     }
 
     public function test_negative_qos_level(): void

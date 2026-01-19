@@ -10,16 +10,16 @@ use BinSoul\Net\Mqtt\PacketStream;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-class UnsubscribeRequestPacketTest extends TestCase
+final class UnsubscribeRequestPacketTest extends TestCase
 {
     public function test_getters_and_setters(): void
     {
         $packet = new UnsubscribeRequestPacket();
         $packet->setIdentifier(1);
-        self::assertEquals(1, $packet->getIdentifier());
+        $this->assertSame(1, $packet->getIdentifier());
 
         $packet->setFilters(['#']);
-        self::assertEquals(['#'], $packet->getFilters());
+        $this->assertSame(['#'], $packet->getFilters());
     }
 
     public function test_cannot_set_negative_identifier(): void
@@ -59,7 +59,7 @@ class UnsubscribeRequestPacketTest extends TestCase
         $stream = new PacketStream();
         $packet->write($stream);
 
-        self::assertEquals($this->getDefaultData(), $stream->getData());
+        $this->assertSame($this->getDefaultData(), $stream->getData());
     }
 
     public function test_read(): void
@@ -68,7 +68,7 @@ class UnsubscribeRequestPacketTest extends TestCase
         $packet = new UnsubscribeRequestPacket();
         $packet->read($stream);
 
-        self::assertEquals(Packet::TYPE_UNSUBSCRIBE, $packet->getPacketType());
+        $this->assertSame(Packet::TYPE_UNSUBSCRIBE, $packet->getPacketType());
     }
 
     public function test_read_multiple_filters(): void
@@ -77,7 +77,7 @@ class UnsubscribeRequestPacketTest extends TestCase
         $packet = new UnsubscribeRequestPacket();
         $packet->read($stream);
 
-        self::assertEquals(Packet::TYPE_UNSUBSCRIBE, $packet->getPacketType());
+        $this->assertSame(Packet::TYPE_UNSUBSCRIBE, $packet->getPacketType());
     }
 
     public function test_can_read_what_it_writes(): void
@@ -92,7 +92,7 @@ class UnsubscribeRequestPacketTest extends TestCase
 
         $packet = new UnsubscribeRequestPacket();
         $packet->read($stream);
-        self::assertEquals($this->getDefaultData(), $stream->getData());
+        $this->assertSame($this->getDefaultData(), $stream->getData());
     }
 
     private function getDefaultData(): string

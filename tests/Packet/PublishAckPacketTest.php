@@ -10,13 +10,13 @@ use BinSoul\Net\Mqtt\PacketStream;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-class PublishAckPacketTest extends TestCase
+final class PublishAckPacketTest extends TestCase
 {
     public function test_getters_and_setters(): void
     {
         $packet = new PublishAckPacket();
         $packet->setIdentifier(1);
-        self::assertEquals(1, $packet->getIdentifier());
+        $this->assertSame(1, $packet->getIdentifier());
     }
 
     public function test_cannot_set_negative_identifier(): void
@@ -41,7 +41,7 @@ class PublishAckPacketTest extends TestCase
         $stream = new PacketStream();
         $packet->write($stream);
 
-        self::assertEquals($this->getDefaultData(), $stream->getData());
+        $this->assertSame($this->getDefaultData(), $stream->getData());
     }
 
     public function test_read(): void
@@ -50,7 +50,7 @@ class PublishAckPacketTest extends TestCase
         $packet = new PublishAckPacket();
         $packet->read($stream);
 
-        self::assertEquals(Packet::TYPE_PUBACK, $packet->getPacketType());
+        $this->assertSame(Packet::TYPE_PUBACK, $packet->getPacketType());
     }
 
     public function test_can_read_what_it_writes(): void
@@ -64,7 +64,7 @@ class PublishAckPacketTest extends TestCase
 
         $packet = new PublishAckPacket();
         $packet->read($stream);
-        self::assertEquals($this->getDefaultData(), $stream->getData());
+        $this->assertSame($this->getDefaultData(), $stream->getData());
     }
 
     private function getDefaultData(): string

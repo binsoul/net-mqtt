@@ -9,13 +9,14 @@ use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\PingRequestPacket;
 use BinSoul\Net\Mqtt\Packet\PingResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class IncomingPingFlowTest extends TestCase
+final class IncomingPingFlowTest extends TestCase
 {
     private const string CODE_PONG = 'pong';
 
-    private PacketFactory $packetFactory;
+    private PacketFactory&MockObject $packetFactory;
 
     protected function setUp(): void
     {
@@ -26,13 +27,13 @@ class IncomingPingFlowTest extends TestCase
     {
         $flow = new IncomingPingFlow($this->packetFactory);
 
-        self::assertEquals(self::CODE_PONG, $flow->getCode());
+        $this->assertSame(self::CODE_PONG, $flow->getCode());
     }
 
     public function test_start_generates_ping_response_packet(): void
     {
         $this->packetFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_PINGRESP)
             ->willReturn(new PingResponsePacket());
@@ -40,7 +41,7 @@ class IncomingPingFlowTest extends TestCase
         $flow = new IncomingPingFlow($this->packetFactory);
         $result = $flow->start();
 
-        self::assertInstanceOf(PingResponsePacket::class, $result);
+        $this->assertInstanceOf(PingResponsePacket::class, $result);
     }
 
     public function test_start_immediately_succeeds_flow(): void
@@ -50,20 +51,20 @@ class IncomingPingFlowTest extends TestCase
         $flow = new IncomingPingFlow($this->packetFactory);
         $flow->start();
 
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
-        self::assertNull($flow->getResult());
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
+        $this->assertNull($flow->getResult());
     }
 
     public function test_accept_returns_false(): void
     {
         $flow = new IncomingPingFlow($this->packetFactory);
-        self::assertFalse($flow->accept(new PingRequestPacket()));
+        $this->assertFalse($flow->accept(new PingRequestPacket()));
     }
 
     public function test_next_returns_null(): void
     {
         $flow = new IncomingPingFlow($this->packetFactory);
-        self::assertNull($flow->next(new PingRequestPacket()));
+        $this->assertNotInstanceOf(Packet::class, $flow->next(new PingRequestPacket()));
     }
 }

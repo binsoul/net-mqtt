@@ -10,13 +10,14 @@ use BinSoul\Net\Mqtt\Packet\PingRequestPacket;
 use BinSoul\Net\Mqtt\Packet\PingResponsePacket;
 use BinSoul\Net\Mqtt\Packet\PublishAckPacket;
 use BinSoul\Net\Mqtt\PacketFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class OutgoingPingFlowTest extends TestCase
+final class OutgoingPingFlowTest extends TestCase
 {
     private const string CODE_PING = 'ping';
 
-    private PacketFactory $packetFactory;
+    private PacketFactory&MockObject $packetFactory;
 
     protected function setUp(): void
     {
@@ -27,13 +28,13 @@ class OutgoingPingFlowTest extends TestCase
     {
         $flow = new OutgoingPingFlow($this->packetFactory);
 
-        self::assertEquals(self::CODE_PING, $flow->getCode());
+        $this->assertSame(self::CODE_PING, $flow->getCode());
     }
 
     public function test_start_generates_ping_request_packet(): void
     {
         $this->packetFactory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_PINGREQ)
             ->willReturn(new PingRequestPacket());
@@ -41,23 +42,23 @@ class OutgoingPingFlowTest extends TestCase
         $flow = new OutgoingPingFlow($this->packetFactory);
         $result = $flow->start();
 
-        self::assertInstanceOf(PingRequestPacket::class, $result);
-        self::assertFalse($flow->isFinished());
-        self::assertFalse($flow->isSuccess());
+        $this->assertInstanceOf(PingRequestPacket::class, $result);
+        $this->assertFalse($flow->isFinished());
+        $this->assertFalse($flow->isSuccess());
     }
 
     public function test_accept_returns_true_for_ping_response_packet(): void
     {
         $flow = new OutgoingPingFlow($this->packetFactory);
 
-        self::assertTrue($flow->accept(new PingResponsePacket()));
+        $this->assertTrue($flow->accept(new PingResponsePacket()));
     }
 
     public function test_accept_returns_false_for_wrong_packet_type(): void
     {
         $flow = new OutgoingPingFlow($this->packetFactory);
 
-        self::assertFalse($flow->accept(new PublishAckPacket()));
+        $this->assertFalse($flow->accept(new PublishAckPacket()));
     }
 
     public function test_next_completes_flow_successfully(): void
@@ -65,9 +66,9 @@ class OutgoingPingFlowTest extends TestCase
         $flow = new OutgoingPingFlow($this->packetFactory);
         $result = $flow->next(new PingResponsePacket());
 
-        self::assertNull($result);
-        self::assertNull($flow->getResult());
-        self::assertTrue($flow->isFinished());
-        self::assertTrue($flow->isSuccess());
+        $this->assertNotInstanceOf(Packet::class, $result);
+        $this->assertNull($flow->getResult());
+        $this->assertTrue($flow->isFinished());
+        $this->assertTrue($flow->isSuccess());
     }
 }
