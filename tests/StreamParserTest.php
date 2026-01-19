@@ -83,7 +83,7 @@ final class StreamParserTest extends TestCase
 
     public function test_handles_packet_factory_exceptions(): void
     {
-        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory = $this->createStub(PacketFactory::class);
         $packetFactory
             ->method('build')
             ->willThrowException(new UnknownPacketTypeException());

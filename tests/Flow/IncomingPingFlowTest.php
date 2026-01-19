@@ -9,18 +9,18 @@ use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\PingRequestPacket;
 use BinSoul\Net\Mqtt\Packet\PingResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class IncomingPingFlowTest extends TestCase
 {
     private const string CODE_PONG = 'pong';
 
-    private PacketFactory&MockObject $packetFactory;
+    private PacketFactory&Stub $packetFactory;
 
     protected function setUp(): void
     {
-        $this->packetFactory = $this->createMock(PacketFactory::class);
+        $this->packetFactory = $this->createStub(PacketFactory::class);
     }
 
     public function test_returns_correct_code(): void
@@ -32,13 +32,14 @@ final class IncomingPingFlowTest extends TestCase
 
     public function test_start_generates_ping_response_packet(): void
     {
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_PINGRESP)
             ->willReturn(new PingResponsePacket());
 
-        $flow = new IncomingPingFlow($this->packetFactory);
+        $flow = new IncomingPingFlow($packetFactory);
         $result = $flow->start();
 
         $this->assertInstanceOf(PingResponsePacket::class, $result);

@@ -10,7 +10,7 @@ use BinSoul\Net\Mqtt\Packet\ConnectResponsePacket;
 use BinSoul\Net\Mqtt\Packet\UnsubscribeResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
 use BinSoul\Net\Mqtt\Subscription;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class IncomingUnsubscribeFlowTest extends TestCase
@@ -19,11 +19,11 @@ final class IncomingUnsubscribeFlowTest extends TestCase
 
     private const int PACKET_IDENTIFIER = 42;
 
-    private PacketFactory&MockObject $packetFactory;
+    private PacketFactory&Stub $packetFactory;
 
     protected function setUp(): void
     {
-        $this->packetFactory = $this->createMock(PacketFactory::class);
+        $this->packetFactory = $this->createStub(PacketFactory::class);
     }
 
     public function test_returns_correct_code(): void
@@ -35,16 +35,18 @@ final class IncomingUnsubscribeFlowTest extends TestCase
 
     public function test_start_generates_unsuback_packet_with_single_subscription(): void
     {
-        $subscription = $this->createMock(Subscription::class);
+        /** @var Subscription&Stub $subscription */
+        $subscription = $this->createStub(Subscription::class);
         $packet = new UnsubscribeResponsePacket();
 
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_UNSUBACK)
             ->willReturn($packet);
 
-        $flow = new IncomingUnsubscribeFlow($this->packetFactory, [$subscription], self::PACKET_IDENTIFIER);
+        $flow = new IncomingUnsubscribeFlow($packetFactory, [$subscription], self::PACKET_IDENTIFIER);
         $result = $flow->start();
 
         $this->assertInstanceOf(UnsubscribeResponsePacket::class, $result);
@@ -53,9 +55,12 @@ final class IncomingUnsubscribeFlowTest extends TestCase
 
     public function test_start_generates_unsuback_packet_with_multiple_subscriptions(): void
     {
-        $subscription1 = $this->createMock(Subscription::class);
-        $subscription2 = $this->createMock(Subscription::class);
-        $subscription3 = $this->createMock(Subscription::class);
+        /** @var Subscription&Stub $subscription1 */
+        $subscription1 = $this->createStub(Subscription::class);
+        /** @var Subscription&Stub $subscription2 */
+        $subscription2 = $this->createStub(Subscription::class);
+        /** @var Subscription&Stub $subscription3 */
+        $subscription3 = $this->createStub(Subscription::class);
 
         $this->packetFactory->method('build')->willReturn(new UnsubscribeResponsePacket());
 
@@ -72,8 +77,10 @@ final class IncomingUnsubscribeFlowTest extends TestCase
 
     public function test_start_immediately_succeeds_flow(): void
     {
-        $subscription1 = $this->createMock(Subscription::class);
-        $subscription2 = $this->createMock(Subscription::class);
+        /** @var Subscription&Stub $subscription1 */
+        $subscription1 = $this->createStub(Subscription::class);
+        /** @var Subscription&Stub $subscription2 */
+        $subscription2 = $this->createStub(Subscription::class);
 
         $this->packetFactory->method('build')->willReturn(new UnsubscribeResponsePacket());
 

@@ -13,7 +13,7 @@ use BinSoul\Net\Mqtt\Packet\ConnectRequestPacket;
 use BinSoul\Net\Mqtt\Packet\ConnectResponsePacket;
 use BinSoul\Net\Mqtt\Packet\PublishAckPacket;
 use BinSoul\Net\Mqtt\PacketFactory;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class OutgoingConnectFlowTest extends TestCase
@@ -48,17 +48,17 @@ final class OutgoingConnectFlowTest extends TestCase
 
     private const string WILL_TOPIC = 'status/client';
 
-    private PacketFactory&MockObject $packetFactory;
+    private PacketFactory&Stub $packetFactory;
 
-    private Connection&MockObject $connection;
+    private Connection&Stub $connection;
 
-    private ClientIdentifierGenerator&MockObject $clientIdGenerator;
+    private ClientIdentifierGenerator&Stub $clientIdGenerator;
 
     protected function setUp(): void
     {
-        $this->packetFactory = $this->createMock(PacketFactory::class);
-        $this->connection = $this->createMock(Connection::class);
-        $this->clientIdGenerator = $this->createMock(ClientIdentifierGenerator::class);
+        $this->packetFactory = $this->createStub(PacketFactory::class);
+        $this->connection = $this->createStub(Connection::class);
+        $this->clientIdGenerator = $this->createStub(ClientIdentifierGenerator::class);
     }
 
     public function test_returns_correct_code(): void
@@ -72,18 +72,20 @@ final class OutgoingConnectFlowTest extends TestCase
 
     public function test_generates_client_id_when_empty(): void
     {
-        $clonedConnection = $this->createMock(Connection::class);
+        /** @var Connection&Stub $clonedConnection */
+        $clonedConnection = $this->createStub(Connection::class);
         $clonedConnection->method('getClientID')->willReturn(self::CLIENT_ID_AUTO);
 
         $this->connection->method('getClientID')->willReturn('');
         $this->connection->method('withClientID')->willReturn($clonedConnection);
 
-        $this->clientIdGenerator
+        $clientIdGenerator = $this->createMock(ClientIdentifierGenerator::class);
+        $clientIdGenerator
             ->expects($this->once())
             ->method('generateClientIdentifier')
             ->willReturn(self::CLIENT_ID_AUTO);
 
-        $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
+        $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $clientIdGenerator);
         $packet = new ConnectResponsePacket();
         $packet->setReturnCode(self::RETURN_CODE_SUCCESS);
 
@@ -96,11 +98,12 @@ final class OutgoingConnectFlowTest extends TestCase
     {
         $this->connection->method('getClientID')->willReturn(self::CLIENT_ID_TEST);
 
-        $this->clientIdGenerator
+        $clientIdGenerator = $this->createMock(ClientIdentifierGenerator::class);
+        $clientIdGenerator
             ->expects($this->never())
             ->method('generateClientIdentifier');
 
-        new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
+        new OutgoingConnectFlow($this->packetFactory, $this->connection, $clientIdGenerator);
     }
 
     public function test_start_generates_connect_request_packet(): void
@@ -113,13 +116,14 @@ final class OutgoingConnectFlowTest extends TestCase
         $this->connection->method('getPassword')->willReturn(self::PASSWORD_TEST);
         $this->connection->method('getWill')->willReturn(null);
 
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_CONNECT)
             ->willReturn(new ConnectRequestPacket());
 
-        $flow = new OutgoingConnectFlow($this->packetFactory, $this->connection, $this->clientIdGenerator);
+        $flow = new OutgoingConnectFlow($packetFactory, $this->connection, $this->clientIdGenerator);
         $result = $flow->start();
 
         $this->assertInstanceOf(ConnectRequestPacket::class, $result);

@@ -13,7 +13,7 @@ use BinSoul\Net\Mqtt\Packet\SubscribeResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
 use BinSoul\Net\Mqtt\PacketIdentifierGenerator;
 use LogicException;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -37,14 +37,14 @@ final class OutgoingSubscribeFlowTest extends TestCase
 
     private const string TOPIC_FILTER_TEST = 'test/topic';
 
-    private PacketFactory&MockObject $packetFactory;
+    private PacketFactory&Stub $packetFactory;
 
-    private PacketIdentifierGenerator&MockObject $identifierGenerator;
+    private PacketIdentifierGenerator&Stub $identifierGenerator;
 
     protected function setUp(): void
     {
-        $this->packetFactory = $this->createMock(PacketFactory::class);
-        $this->identifierGenerator = $this->createMock(PacketIdentifierGenerator::class);
+        $this->packetFactory = $this->createStub(PacketFactory::class);
+        $this->identifierGenerator = $this->createStub(PacketIdentifierGenerator::class);
         $this->identifierGenerator
             ->method('generatePacketIdentifier')
             ->willReturn(self::PACKET_IDENTIFIER);
@@ -63,13 +63,14 @@ final class OutgoingSubscribeFlowTest extends TestCase
         $subscription = new DefaultSubscription(self::TOPIC_FILTER_TEST, self::QOS_LEVEL_AT_LEAST_ONCE);
         $packet = new SubscribeRequestPacket();
 
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_SUBSCRIBE)
             ->willReturn($packet);
 
-        $flow = new OutgoingSubscribeFlow($this->packetFactory, [$subscription], $this->identifierGenerator);
+        $flow = new OutgoingSubscribeFlow($packetFactory, [$subscription], $this->identifierGenerator);
         $result = $flow->start();
 
         $this->assertInstanceOf(SubscribeRequestPacket::class, $result);
@@ -84,14 +85,15 @@ final class OutgoingSubscribeFlowTest extends TestCase
         $subscription2 = new DefaultSubscription(self::TOPIC_FILTER_SENSOR, self::QOS_LEVEL_EXACTLY_ONCE);
         $packet = new SubscribeRequestPacket();
 
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_SUBSCRIBE)
             ->willReturn($packet);
 
         $flow = new OutgoingSubscribeFlow(
-            $this->packetFactory,
+            $packetFactory,
             [$subscription1, $subscription2],
             $this->identifierGenerator
         );

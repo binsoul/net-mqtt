@@ -9,21 +9,21 @@ use BinSoul\Net\Mqtt\Flow\OutgoingDisconnectFlow;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\DisconnectRequestPacket;
 use BinSoul\Net\Mqtt\PacketFactory;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class OutgoingDisconnectFlowTest extends TestCase
 {
     private const string CODE_DISCONNECT = 'disconnect';
 
-    private PacketFactory&MockObject $packetFactory;
+    private PacketFactory&Stub $packetFactory;
 
-    private Connection&MockObject $connection;
+    private Connection&Stub $connection;
 
     protected function setUp(): void
     {
-        $this->packetFactory = $this->createMock(PacketFactory::class);
-        $this->connection = $this->createMock(Connection::class);
+        $this->packetFactory = $this->createStub(PacketFactory::class);
+        $this->connection = $this->createStub(Connection::class);
     }
 
     public function test_returns_correct_code(): void
@@ -35,13 +35,14 @@ final class OutgoingDisconnectFlowTest extends TestCase
 
     public function test_start_generates_disconnect_request_packet(): void
     {
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_DISCONNECT)
             ->willReturn(new DisconnectRequestPacket());
 
-        $flow = new OutgoingDisconnectFlow($this->packetFactory, $this->connection);
+        $flow = new OutgoingDisconnectFlow($packetFactory, $this->connection);
         $result = $flow->start();
 
         $this->assertInstanceOf(DisconnectRequestPacket::class, $result);

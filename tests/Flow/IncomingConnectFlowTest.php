@@ -9,7 +9,7 @@ use BinSoul\Net\Mqtt\Flow\IncomingConnectFlow;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\ConnectResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class IncomingConnectFlowTest extends TestCase
@@ -20,14 +20,14 @@ final class IncomingConnectFlowTest extends TestCase
 
     private const int RETURN_CODE_SUCCESS = 0;
 
-    private PacketFactory&MockObject $packetFactory;
+    private PacketFactory&Stub $packetFactory;
 
-    private Connection&MockObject $connection;
+    private Connection&Stub $connection;
 
     protected function setUp(): void
     {
-        $this->packetFactory = $this->createMock(PacketFactory::class);
-        $this->connection = $this->createMock(Connection::class);
+        $this->packetFactory = $this->createStub(PacketFactory::class);
+        $this->connection = $this->createStub(Connection::class);
     }
 
     public function test_returns_correct_code(): void
@@ -39,13 +39,14 @@ final class IncomingConnectFlowTest extends TestCase
 
     public function test_start_generates_connack_packet_with_success(): void
     {
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_CONNACK)
             ->willReturn(new ConnectResponsePacket());
 
-        $flow = new IncomingConnectFlow($this->packetFactory, $this->connection, self::RETURN_CODE_SUCCESS, false);
+        $flow = new IncomingConnectFlow($packetFactory, $this->connection, self::RETURN_CODE_SUCCESS, false);
         $result = $flow->start();
 
         $this->assertInstanceOf(ConnectResponsePacket::class, $result);
@@ -55,13 +56,14 @@ final class IncomingConnectFlowTest extends TestCase
 
     public function test_start_generates_connack_packet_with_error(): void
     {
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_CONNACK)
             ->willReturn(new ConnectResponsePacket());
 
-        $flow = new IncomingConnectFlow($this->packetFactory, $this->connection, self::RETURN_CODE_ERROR, false);
+        $flow = new IncomingConnectFlow($packetFactory, $this->connection, self::RETURN_CODE_ERROR, false);
         $result = $flow->start();
 
         $this->assertInstanceOf(ConnectResponsePacket::class, $result);

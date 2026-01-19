@@ -9,7 +9,7 @@ use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\SubscribeResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
 use BinSoul\Net\Mqtt\Subscription;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class IncomingSubscribeFlowTest extends TestCase
@@ -22,11 +22,11 @@ final class IncomingSubscribeFlowTest extends TestCase
 
     private const int RETURN_CODE_FAILURE = 128;
 
-    private PacketFactory&MockObject $packetFactory;
+    private PacketFactory&Stub $packetFactory;
 
     protected function setUp(): void
     {
-        $this->packetFactory = $this->createMock(PacketFactory::class);
+        $this->packetFactory = $this->createStub(PacketFactory::class);
     }
 
     public function test_returns_correct_code(): void
@@ -38,15 +38,16 @@ final class IncomingSubscribeFlowTest extends TestCase
 
     public function test_start_generates_suback_packet_with_single_subscription(): void
     {
-        $subscription = $this->createMock(Subscription::class);
+        $subscription = $this->createStub(Subscription::class);
 
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_SUBACK)
             ->willReturn(new SubscribeResponsePacket());
 
-        $flow = new IncomingSubscribeFlow($this->packetFactory, [$subscription], [self::RETURN_CODE_SUCCESS], self::PACKET_IDENTIFIER);
+        $flow = new IncomingSubscribeFlow($packetFactory, [$subscription], [self::RETURN_CODE_SUCCESS], self::PACKET_IDENTIFIER);
         $result = $flow->start();
 
         $this->assertInstanceOf(SubscribeResponsePacket::class, $result);
@@ -56,9 +57,12 @@ final class IncomingSubscribeFlowTest extends TestCase
 
     public function test_start_generates_suback_packet_with_multiple_subscriptions(): void
     {
-        $subscription1 = $this->createMock(Subscription::class);
-        $subscription2 = $this->createMock(Subscription::class);
-        $subscription3 = $this->createMock(Subscription::class);
+        /** @var Subscription&Stub $subscription1 */
+        $subscription1 = $this->createStub(Subscription::class);
+        /** @var Subscription&Stub $subscription2 */
+        $subscription2 = $this->createStub(Subscription::class);
+        /** @var Subscription&Stub $subscription3 */
+        $subscription3 = $this->createStub(Subscription::class);
 
         $this->packetFactory->method('build')->willReturn(new SubscribeResponsePacket());
 
@@ -77,8 +81,10 @@ final class IncomingSubscribeFlowTest extends TestCase
 
     public function test_start_immediately_succeeds_flow(): void
     {
-        $subscription1 = $this->createMock(Subscription::class);
-        $subscription2 = $this->createMock(Subscription::class);
+        /** @var Subscription&Stub $subscription1 */
+        $subscription1 = $this->createStub(Subscription::class);
+        /** @var Subscription&Stub $subscription2 */
+        $subscription2 = $this->createStub(Subscription::class);
         $subscriptions = [$subscription1, $subscription2];
 
         $this->packetFactory->method('build')->willReturn(new SubscribeResponsePacket());

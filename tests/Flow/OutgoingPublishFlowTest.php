@@ -14,7 +14,7 @@ use BinSoul\Net\Mqtt\Packet\PublishReleasePacket;
 use BinSoul\Net\Mqtt\Packet\PublishRequestPacket;
 use BinSoul\Net\Mqtt\PacketFactory;
 use BinSoul\Net\Mqtt\PacketIdentifierGenerator;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class OutgoingPublishFlowTest extends TestCase
@@ -39,14 +39,14 @@ final class OutgoingPublishFlowTest extends TestCase
 
     private const string TOPIC_TEST = 'test/topic';
 
-    private PacketFactory&MockObject $packetFactory;
+    private PacketFactory&Stub $packetFactory;
 
-    private PacketIdentifierGenerator&MockObject $identifierGenerator;
+    private PacketIdentifierGenerator&Stub $identifierGenerator;
 
     protected function setUp(): void
     {
-        $this->packetFactory = $this->createMock(PacketFactory::class);
-        $this->identifierGenerator = $this->createMock(PacketIdentifierGenerator::class);
+        $this->packetFactory = $this->createStub(PacketFactory::class);
+        $this->identifierGenerator = $this->createStub(PacketIdentifierGenerator::class);
         $this->identifierGenerator
             ->method('generatePacketIdentifier')
             ->willReturn(self::PACKET_IDENTIFIER);
@@ -68,13 +68,14 @@ final class OutgoingPublishFlowTest extends TestCase
             self::QOS_LEVEL_AT_MOST_ONCE
         );
 
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_PUBLISH)
             ->willReturn(new PublishRequestPacket());
 
-        $flow = new OutgoingPublishFlow($this->packetFactory, $message, $this->identifierGenerator);
+        $flow = new OutgoingPublishFlow($packetFactory, $message, $this->identifierGenerator);
         $result = $flow->start();
 
         $this->assertInstanceOf(PublishRequestPacket::class, $result);
@@ -95,13 +96,14 @@ final class OutgoingPublishFlowTest extends TestCase
             self::QOS_LEVEL_AT_LEAST_ONCE
         );
 
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_PUBLISH)
             ->willReturn(new PublishRequestPacket());
 
-        $flow = new OutgoingPublishFlow($this->packetFactory, $message, $this->identifierGenerator);
+        $flow = new OutgoingPublishFlow($packetFactory, $message, $this->identifierGenerator);
         $result = $flow->start();
 
         $this->assertInstanceOf(PublishRequestPacket::class, $result);
@@ -120,13 +122,14 @@ final class OutgoingPublishFlowTest extends TestCase
             self::QOS_LEVEL_EXACTLY_ONCE
         );
 
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_PUBLISH)
             ->willReturn(new PublishRequestPacket());
 
-        $flow = new OutgoingPublishFlow($this->packetFactory, $message, $this->identifierGenerator);
+        $flow = new OutgoingPublishFlow($packetFactory, $message, $this->identifierGenerator);
         $result = $flow->start();
 
         $this->assertInstanceOf(PublishRequestPacket::class, $result);
@@ -141,13 +144,14 @@ final class OutgoingPublishFlowTest extends TestCase
     {
         $message = new DefaultMessage(self::TOPIC_TEST, self::PAYLOAD_SIMPLE, self::QOS_LEVEL_AT_MOST_ONCE, true);
 
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_PUBLISH)
             ->willReturn(new PublishRequestPacket());
 
-        $flow = new OutgoingPublishFlow($this->packetFactory, $message, $this->identifierGenerator);
+        $flow = new OutgoingPublishFlow($packetFactory, $message, $this->identifierGenerator);
         $result = $flow->start();
         $this->assertInstanceOf(PublishRequestPacket::class, $result);
 
@@ -165,13 +169,14 @@ final class OutgoingPublishFlowTest extends TestCase
             true
         );
 
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_PUBLISH)
             ->willReturn(new PublishRequestPacket());
 
-        $flow = new OutgoingPublishFlow($this->packetFactory, $message, $this->identifierGenerator);
+        $flow = new OutgoingPublishFlow($packetFactory, $message, $this->identifierGenerator);
         $result = $flow->start();
         $this->assertInstanceOf(PublishRequestPacket::class, $result);
 

@@ -20,7 +20,10 @@ function hex2bin(string $string)
 namespace BinSoul\Test\Net\Mqtt;
 
 use BinSoul\Net\Mqtt\DefaultIdentifierGenerator;
+use function hex2bin;
 use PHPUnit\Framework\TestCase;
+use function random_bytes;
+use RuntimeException;
 
 final class DefaultIdentifierGeneratorTest extends TestCase
 {
@@ -130,10 +133,10 @@ final class DefaultIdentifierGeneratorTest extends TestCase
     public static function randomBytes(int $length): string
     {
         if (self::$randomBytesFails) {
-            throw new \RuntimeException('test');
+            throw new RuntimeException('test');
         }
 
-        return \random_bytes($length);
+        return random_bytes($length);
     }
 
     public static function hex2bin(string $string): false|string
@@ -142,6 +145,6 @@ final class DefaultIdentifierGeneratorTest extends TestCase
             return false;
         }
 
-        return \hex2bin($string);
+        return hex2bin($string);
     }
 }

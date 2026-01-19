@@ -12,7 +12,7 @@ use BinSoul\Net\Mqtt\Packet\PublishCompletePacket;
 use BinSoul\Net\Mqtt\Packet\PublishReceivedPacket;
 use BinSoul\Net\Mqtt\Packet\PublishReleasePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class IncomingPublishFlowTest extends TestCase
@@ -31,11 +31,11 @@ final class IncomingPublishFlowTest extends TestCase
 
     private const string TOPIC_TEST = 'test/topic';
 
-    private PacketFactory&MockObject $packetFactory;
+    private PacketFactory&Stub $packetFactory;
 
     protected function setUp(): void
     {
-        $this->packetFactory = $this->createMock(PacketFactory::class);
+        $this->packetFactory = $this->createStub(PacketFactory::class);
     }
 
     public function test_returns_correct_code(): void
@@ -63,13 +63,14 @@ final class IncomingPublishFlowTest extends TestCase
     {
         $message = new DefaultMessage(self::TOPIC_TEST, self::PAYLOAD_SIMPLE, self::QOS_LEVEL_AT_LEAST_ONCE);
 
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_PUBACK)
             ->willReturn(new PublishAckPacket());
 
-        $flow = new IncomingPublishFlow($this->packetFactory, $message, self::PACKET_IDENTIFIER);
+        $flow = new IncomingPublishFlow($packetFactory, $message, self::PACKET_IDENTIFIER);
         $result = $flow->start();
 
         $this->assertInstanceOf(PublishAckPacket::class, $result);
@@ -83,13 +84,14 @@ final class IncomingPublishFlowTest extends TestCase
     {
         $message = new DefaultMessage(self::TOPIC_TEST, self::PAYLOAD_SIMPLE, self::QOS_LEVEL_EXACTLY_ONCE);
 
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_PUBREC)
             ->willReturn(new PublishReceivedPacket());
 
-        $flow = new IncomingPublishFlow($this->packetFactory, $message, self::PACKET_IDENTIFIER);
+        $flow = new IncomingPublishFlow($packetFactory, $message, self::PACKET_IDENTIFIER);
         $result = $flow->start();
 
         $this->assertInstanceOf(PublishReceivedPacket::class, $result);

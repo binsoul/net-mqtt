@@ -12,7 +12,7 @@ use BinSoul\Net\Mqtt\Packet\UnsubscribeRequestPacket;
 use BinSoul\Net\Mqtt\Packet\UnsubscribeResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
 use BinSoul\Net\Mqtt\PacketIdentifierGenerator;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class OutgoingUnsubscribeFlowTest extends TestCase
@@ -35,14 +35,14 @@ final class OutgoingUnsubscribeFlowTest extends TestCase
 
     private const string TOPIC_FILTER_TEST = 'test/topic';
 
-    private PacketFactory&MockObject $packetFactory;
+    private PacketFactory&Stub $packetFactory;
 
-    private PacketIdentifierGenerator&MockObject $identifierGenerator;
+    private PacketIdentifierGenerator&Stub $identifierGenerator;
 
     protected function setUp(): void
     {
-        $this->packetFactory = $this->createMock(PacketFactory::class);
-        $this->identifierGenerator = $this->createMock(PacketIdentifierGenerator::class);
+        $this->packetFactory = $this->createStub(PacketFactory::class);
+        $this->identifierGenerator = $this->createStub(PacketIdentifierGenerator::class);
         $this->identifierGenerator
             ->method('generatePacketIdentifier')
             ->willReturn(self::PACKET_IDENTIFIER);
@@ -61,13 +61,14 @@ final class OutgoingUnsubscribeFlowTest extends TestCase
         $subscription = new DefaultSubscription(self::TOPIC_FILTER_TEST, self::QOS_LEVEL_AT_LEAST_ONCE);
         $packet = new UnsubscribeRequestPacket();
 
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_UNSUBSCRIBE)
             ->willReturn($packet);
 
-        $flow = new OutgoingUnsubscribeFlow($this->packetFactory, [$subscription], $this->identifierGenerator);
+        $flow = new OutgoingUnsubscribeFlow($packetFactory, [$subscription], $this->identifierGenerator);
         $result = $flow->start();
 
         $this->assertInstanceOf(UnsubscribeRequestPacket::class, $result);
@@ -82,14 +83,15 @@ final class OutgoingUnsubscribeFlowTest extends TestCase
         $subscription3 = new DefaultSubscription(self::TOPIC_FILTER_DEVICE, self::QOS_LEVEL_AT_LEAST_ONCE);
         $packet = new UnsubscribeRequestPacket();
 
-        $this->packetFactory
+        $packetFactory = $this->createMock(PacketFactory::class);
+        $packetFactory
             ->expects($this->once())
             ->method('build')
             ->with(Packet::TYPE_UNSUBSCRIBE)
             ->willReturn($packet);
 
         $flow = new OutgoingUnsubscribeFlow(
-            $this->packetFactory,
+            $packetFactory,
             [$subscription1, $subscription2, $subscription3],
             $this->identifierGenerator
         );

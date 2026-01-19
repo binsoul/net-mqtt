@@ -31,9 +31,9 @@ final class DefaultFlowFactoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $clientIdentifierGenerator = $this->createMock(ClientIdentifierGenerator::class);
-        $packetIdentifierGenerator = $this->createMock(PacketIdentifierGenerator::class);
-        $packetFactory = $this->createMock(PacketFactory::class);
+        $clientIdentifierGenerator = $this->createStub(ClientIdentifierGenerator::class);
+        $packetIdentifierGenerator = $this->createStub(PacketIdentifierGenerator::class);
+        $packetFactory = $this->createStub(PacketFactory::class);
 
         $this->factory = new DefaultFlowFactory(
             $clientIdentifierGenerator,
@@ -44,7 +44,7 @@ final class DefaultFlowFactoryTest extends TestCase
 
     public function test_builds_incoming_connect_flow(): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
 
         $flow = $this->factory->buildIncomingConnectFlow($connection, 0, true);
 
@@ -53,7 +53,7 @@ final class DefaultFlowFactoryTest extends TestCase
 
     public function test_builds_incoming_disconnect_flow(): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
 
         $flow = $this->factory->buildIncomingDisconnectFlow($connection);
 
@@ -69,7 +69,7 @@ final class DefaultFlowFactoryTest extends TestCase
 
     public function test_builds_incoming_publish_flow_without_identifier(): void
     {
-        $message = $this->createMock(Message::class);
+        $message = $this->createStub(Message::class);
 
         $flow = $this->factory->buildIncomingPublishFlow($message);
 
@@ -78,7 +78,7 @@ final class DefaultFlowFactoryTest extends TestCase
 
     public function test_builds_incoming_publish_flow_with_identifier(): void
     {
-        $message = $this->createMock(Message::class);
+        $message = $this->createStub(Message::class);
 
         $flow = $this->factory->buildIncomingPublishFlow($message, 123);
 
@@ -87,7 +87,7 @@ final class DefaultFlowFactoryTest extends TestCase
 
     public function test_builds_incoming_subscribe_flow(): void
     {
-        $subscriptions = [$this->createMock(Subscription::class)];
+        $subscriptions = [$this->createStub(Subscription::class)];
 
         $flow = $this->factory->buildIncomingSubscribeFlow($subscriptions, [0], 456);
 
@@ -96,7 +96,7 @@ final class DefaultFlowFactoryTest extends TestCase
 
     public function test_builds_incoming_unsubscribe_flow(): void
     {
-        $subscriptions = [$this->createMock(Subscription::class)];
+        $subscriptions = [$this->createStub(Subscription::class)];
 
         $flow = $this->factory->buildIncomingUnsubscribeFlow($subscriptions, 789);
 
@@ -105,7 +105,7 @@ final class DefaultFlowFactoryTest extends TestCase
 
     public function test_builds_outgoing_connect_flow(): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
 
         $flow = $this->factory->buildOutgoingConnectFlow($connection);
 
@@ -114,7 +114,7 @@ final class DefaultFlowFactoryTest extends TestCase
 
     public function test_builds_outgoing_disconnect_flow(): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
 
         $flow = $this->factory->buildOutgoingDisconnectFlow($connection);
 
@@ -130,7 +130,7 @@ final class DefaultFlowFactoryTest extends TestCase
 
     public function test_builds_outgoing_publish_flow(): void
     {
-        $message = $this->createMock(Message::class);
+        $message = $this->createStub(Message::class);
 
         $flow = $this->factory->buildOutgoingPublishFlow($message);
 
@@ -139,7 +139,7 @@ final class DefaultFlowFactoryTest extends TestCase
 
     public function test_builds_outgoing_subscribe_flow(): void
     {
-        $subscriptions = [$this->createMock(Subscription::class)];
+        $subscriptions = [$this->createStub(Subscription::class)];
 
         $flow = $this->factory->buildOutgoingSubscribeFlow($subscriptions);
 
@@ -148,7 +148,7 @@ final class DefaultFlowFactoryTest extends TestCase
 
     public function test_builds_outgoing_unsubscribe_flow(): void
     {
-        $subscriptions = [$this->createMock(Subscription::class)];
+        $subscriptions = [$this->createStub(Subscription::class)];
 
         $flow = $this->factory->buildOutgoingUnsubscribeFlow($subscriptions);
 
