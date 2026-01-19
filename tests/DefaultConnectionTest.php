@@ -54,6 +54,20 @@ final class DefaultConnectionTest extends TestCase
         $this->assertSame('clientid', $clone->getClientID());
     }
 
+    public function test_returns_instance_with_different_clean_session(): void
+    {
+        $original = new DefaultConnection();
+        $clone = $original->withCleanSession(true);
+
+        $this->assertNotSame($clone, $original);
+        $this->assertTrue($clone->isCleanSession());
+
+        $clone = $original->withCleanSession(false);
+
+        $this->assertNotSame($clone, $original);
+        $this->assertFalse($clone->isCleanSession());
+    }
+
     public function test_returns_instance_with_different_protocol(): void
     {
         $original = new DefaultConnection();

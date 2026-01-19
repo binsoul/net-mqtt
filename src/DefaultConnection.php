@@ -83,6 +83,14 @@ class DefaultConnection implements Connection
         return $result;
     }
 
+    public function withCleanSession(bool $clean): self
+    {
+        $result = clone $this;
+        $result->clean = $clean;
+
+        return $result;
+    }
+
     public function withCredentials(string $username, string $password): self
     {
         $result = clone $this;
