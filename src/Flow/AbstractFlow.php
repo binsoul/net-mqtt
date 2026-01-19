@@ -18,10 +18,7 @@ abstract class AbstractFlow implements Flow
 
     private bool $isSuccess = false;
 
-    /**
-     * @var mixed
-     */
-    private $result;
+    private mixed $result = null;
 
     private string $error = '';
 
@@ -55,10 +52,7 @@ abstract class AbstractFlow implements Flow
         return $this->isFinished && $this->isSuccess;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getResult()
+    public function getResult(): mixed
     {
         return $this->result;
     }
@@ -70,10 +64,8 @@ abstract class AbstractFlow implements Flow
 
     /**
      * Marks the flow as successful and sets the result.
-     *
-     * @param mixed $result
      */
-    protected function succeed($result = null): void
+    protected function succeed(mixed $result = null): void
     {
         $this->isFinished = true;
         $this->isSuccess = true;

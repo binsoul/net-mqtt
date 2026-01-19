@@ -55,10 +55,8 @@ interface Flow
 
     /**
      * Returns the result of the flow if it finished successfully.
-     *
-     * @return mixed
      */
-    public function getResult();
+    public function getResult(): mixed;
 
     /**
      * Returns an error message if the flow didn't finish successfully.
