@@ -6,6 +6,7 @@ namespace BinSoul\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
+use Override;
 
 /**
  * Represents the PINGRESP packet.
@@ -14,6 +15,7 @@ class PingResponsePacket extends BasePacket
 {
     protected static int $packetType = Packet::TYPE_PINGRESP;
 
+    #[Override]
     public function read(PacketStream $stream): void
     {
         parent::read($stream);

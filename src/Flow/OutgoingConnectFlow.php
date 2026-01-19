@@ -10,6 +10,7 @@ use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\ConnectRequestPacket;
 use BinSoul\Net\Mqtt\Packet\ConnectResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
+use Override;
 
 /**
  * Represents a flow starting with an outgoing CONNECT packet.
@@ -60,11 +61,13 @@ class OutgoingConnectFlow extends AbstractFlow
         return $packet;
     }
 
+    #[Override]
     public function accept(Packet $packet): bool
     {
         return $packet->getPacketType() === Packet::TYPE_CONNACK;
     }
 
+    #[Override]
     public function next(Packet $packet): ?Packet
     {
         /** @var ConnectResponsePacket $packet */

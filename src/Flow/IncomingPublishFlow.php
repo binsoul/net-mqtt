@@ -11,6 +11,7 @@ use BinSoul\Net\Mqtt\Packet\PublishCompletePacket;
 use BinSoul\Net\Mqtt\Packet\PublishReceivedPacket;
 use BinSoul\Net\Mqtt\Packet\PublishReleasePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
+use Override;
 
 /**
  * Represents a flow starting with an incoming PUBLISH packet.
@@ -69,6 +70,7 @@ class IncomingPublishFlow extends AbstractFlow
         return $packet;
     }
 
+    #[Override]
     public function accept(Packet $packet): bool
     {
         if ($this->message->getQosLevel() !== 2 || $packet->getPacketType() !== Packet::TYPE_PUBREL) {
@@ -82,6 +84,7 @@ class IncomingPublishFlow extends AbstractFlow
     /**
      * @return PublishCompletePacket
      */
+    #[Override]
     public function next(Packet $packet): ?Packet
     {
         $this->succeed($this->message);

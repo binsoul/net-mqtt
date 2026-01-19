@@ -7,6 +7,7 @@ namespace BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\PacketStream;
 use BinSoul\Net\Mqtt\Validator;
+use Override;
 
 /**
  * Provides a base class for PUB* packets.
@@ -17,6 +18,7 @@ abstract class IdentifierOnlyPacket extends BasePacket
 
     protected int $remainingPacketLength = 2;
 
+    #[Override]
     public function read(PacketStream $stream): void
     {
         parent::read($stream);
@@ -28,6 +30,7 @@ abstract class IdentifierOnlyPacket extends BasePacket
         $this->identifier = $identifier;
     }
 
+    #[Override]
     public function write(PacketStream $stream): void
     {
         $this->remainingPacketLength = 2;

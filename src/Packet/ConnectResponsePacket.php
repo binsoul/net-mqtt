@@ -6,6 +6,7 @@ namespace BinSoul\Net\Mqtt\Packet;
 
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
+use Override;
 
 /**
  * Represents the CONNACK packet.
@@ -56,6 +57,7 @@ class ConnectResponsePacket extends BasePacket
      */
     private int $returnCode = 0;
 
+    #[Override]
     public function read(PacketStream $stream): void
     {
         parent::read($stream);
@@ -66,6 +68,7 @@ class ConnectResponsePacket extends BasePacket
         $this->returnCode = $stream->readByte();
     }
 
+    #[Override]
     public function write(PacketStream $stream): void
     {
         $this->remainingPacketLength = 2;

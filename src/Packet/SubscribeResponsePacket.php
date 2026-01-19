@@ -9,6 +9,7 @@ use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
 use BinSoul\Net\Mqtt\Validator;
 use InvalidArgumentException;
+use Override;
 
 /**
  * Represents the SUBACK packet.
@@ -34,6 +35,7 @@ class SubscribeResponsePacket extends BasePacket
      */
     private array $returnCodes = [];
 
+    #[Override]
     public function read(PacketStream $stream): void
     {
         parent::read($stream);
@@ -54,6 +56,7 @@ class SubscribeResponsePacket extends BasePacket
         }
     }
 
+    #[Override]
     public function write(PacketStream $stream): void
     {
         $data = new PacketStream();

@@ -7,12 +7,14 @@ namespace BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\PacketStream;
 use InvalidArgumentException;
+use Override;
 
 /**
  * Represents the CONNECT packet with strict rules for client ids.
  */
 class StrictConnectRequestPacket extends ConnectRequestPacket
 {
+    #[Override]
     public function read(PacketStream $stream): void
     {
         parent::read($stream);
@@ -25,6 +27,7 @@ class StrictConnectRequestPacket extends ConnectRequestPacket
      *
      * @throws InvalidArgumentException
      */
+    #[Override]
     public function setClientID(string $value): void
     {
         try {

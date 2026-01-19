@@ -9,6 +9,7 @@ use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
 use BinSoul\Net\Mqtt\Validator;
 use InvalidArgumentException;
+use Override;
 
 /**
  * Represents the SUBSCRIBE packet.
@@ -31,6 +32,7 @@ class SubscribeRequestPacket extends BasePacket
      */
     private array $qosLevels = [];
 
+    #[Override]
     public function read(PacketStream $stream): void
     {
         parent::read($stream);
@@ -56,6 +58,7 @@ class SubscribeRequestPacket extends BasePacket
         } while (($stream->getPosition() - $originalPosition) < $this->remainingPacketLength);
     }
 
+    #[Override]
     public function write(PacketStream $stream): void
     {
         $data = new PacketStream();

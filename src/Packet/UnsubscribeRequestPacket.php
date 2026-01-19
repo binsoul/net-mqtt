@@ -9,6 +9,7 @@ use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
 use BinSoul\Net\Mqtt\Validator;
 use InvalidArgumentException;
+use Override;
 
 /**
  * Represents the UNSUBSCRIBE packet.
@@ -26,6 +27,7 @@ class UnsubscribeRequestPacket extends BasePacket
      */
     private array $filters = [];
 
+    #[Override]
     public function read(PacketStream $stream): void
     {
         parent::read($stream);
@@ -46,6 +48,7 @@ class UnsubscribeRequestPacket extends BasePacket
         } while (($stream->getPosition() - $originalPosition) < $this->remainingPacketLength);
     }
 
+    #[Override]
     public function write(PacketStream $stream): void
     {
         $data = new PacketStream();

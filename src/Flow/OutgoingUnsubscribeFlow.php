@@ -10,6 +10,7 @@ use BinSoul\Net\Mqtt\Packet\UnsubscribeResponsePacket;
 use BinSoul\Net\Mqtt\PacketFactory;
 use BinSoul\Net\Mqtt\PacketIdentifierGenerator;
 use BinSoul\Net\Mqtt\Subscription;
+use Override;
 
 /**
  * Represents a flow starting with an outgoing UNSUBSCRIBE packet.
@@ -64,6 +65,7 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
         return $packet;
     }
 
+    #[Override]
     public function accept(Packet $packet): bool
     {
         if ($packet->getPacketType() !== Packet::TYPE_UNSUBACK) {
@@ -74,6 +76,7 @@ class OutgoingUnsubscribeFlow extends AbstractFlow
         return $packet->getIdentifier() === $this->identifier;
     }
 
+    #[Override]
     public function next(Packet $packet): ?Packet
     {
         $this->succeed($this->subscriptions);

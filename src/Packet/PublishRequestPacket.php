@@ -9,6 +9,7 @@ use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
 use BinSoul\Net\Mqtt\Validator;
 use InvalidArgumentException;
+use Override;
 
 /**
  * Represents the PUBLISH packet.
@@ -26,6 +27,7 @@ class PublishRequestPacket extends BasePacket
 
     private string $payload;
 
+    #[Override]
     public function read(PacketStream $stream): void
     {
         parent::read($stream);
@@ -51,6 +53,7 @@ class PublishRequestPacket extends BasePacket
         $this->payload = $stream->read($payloadLength);
     }
 
+    #[Override]
     public function write(PacketStream $stream): void
     {
         $data = new PacketStream();

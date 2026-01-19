@@ -10,6 +10,7 @@ use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
 use BinSoul\Net\Mqtt\Validator;
 use InvalidArgumentException;
+use Override;
 
 /**
  * Represents the CONNECT packet.
@@ -48,6 +49,7 @@ class ConnectRequestPacket extends BasePacket
 
     private ?string $password = null;
 
+    #[Override]
     public function read(PacketStream $stream): void
     {
         parent::read($stream);
@@ -94,6 +96,7 @@ class ConnectRequestPacket extends BasePacket
         }
     }
 
+    #[Override]
     public function write(PacketStream $stream): void
     {
         if ($this->clientID === null) {
