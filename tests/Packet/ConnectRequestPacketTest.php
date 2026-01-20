@@ -165,7 +165,7 @@ final class ConnectRequestPacketTest extends TestCase
 
     public function test_packet_with_password(): void
     {
-        $data = "\x10\x1e\x00\x04MQTT\x04\x82\x00\x0a\x00\x06foobar\x00\x0ap\xc3\xa4ssw\xc3\xb6rd";
+        $data = "\x10\x26\x00\x04MQTT\x04\xc2\x00\x0a\x00\x06foobar\x00\x06user01\x00\x0ap\xc3\xa4ssw\xc3\xb6rd";
         $stream = new PacketStream($data);
         $packet = new ConnectRequestPacket();
         $packet->read($stream);
@@ -175,12 +175,32 @@ final class ConnectRequestPacketTest extends TestCase
         $this->assertSame($data, (string) $packet);
 
         $packet = $this->createDefaultPacket();
+        $packet->setUsername('user01');
         $packet->setPassword('pässwörd');
 
         $this->assertSame($data, (string) $packet);
 
         $packet->setPassword('');
+        $packet->setUsername('');
         $this->assertSame($this->getDefaultData(), (string) $packet);
+    }
+
+    public function test_corrects_password_without_username_on_write(): void
+    {
+        $packet = new ConnectRequestPacket();
+        $packet->setClientID('id');
+        $packet->setPassword('world');
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+
+        $this->assertFalse($packet->hasPassword());
+
+        $stream->setPosition(0);
+        $readPacket = new ConnectRequestPacket();
+        $readPacket->read($stream);
+
+        $this->assertFalse($readPacket->hasPassword());
     }
 
     public function test_cannot_set_invalid_password(): void
@@ -306,6 +326,53 @@ final class ConnectRequestPacketTest extends TestCase
         $this->assertTrue($packet->isCleanSession());
         $this->assertSame(10, $packet->getKeepAlive());
         $this->assertSame('foobar', $packet->getClientID());
+    }
+
+    public function test_throws_exception_for_invalid_protocol_name_level_4(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\x10\x0e\x00\x06MQIsdp\x04\x02\x00\x0a\x00\x00";
+        $stream = new PacketStream($data);
+        $packet = new ConnectRequestPacket();
+        $packet->read($stream);
+    }
+
+    public function test_throws_exception_for_invalid_protocol_name_level_3(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\x10\x0c\x00\x04MQTT\x03\x02\x00\x0a\x00\x00";
+        $stream = new PacketStream($data);
+        $packet = new ConnectRequestPacket();
+        $packet->read($stream);
+    }
+
+    public function test_throws_exception_for_reserved_flag_not_zero(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\x10\x0c\x00\x04MQTT\x04\x03\x00\x0a\x00\x00"; // Flag Byte 0x03 (Bit 0 ist 1)
+        $stream = new PacketStream($data);
+        $packet = new ConnectRequestPacket();
+        $packet->read($stream);
+    }
+
+    public function test_throws_exception_for_fixed_header_reserved_bits(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\x11\x0c\x00\x04MQTT\x04\x02\x00\x0a\x00\x00"; // Header 0x11 (Reserved bits 1-3 are not 0)
+        $stream = new PacketStream($data);
+        $packet = new ConnectRequestPacket();
+        $packet->read($stream);
+    }
+
+    public function test_throws_exception_for_password_flag_without_username_flag(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        // Header (0x10), Length (14), Protocol Name (0x0004 MQTT), Protocol Level (0x04),
+        // Flags (0x82 = Password set, Username NOT set, Clean Session), Keep Alive (0x000a), Client ID (0x0000), Password (0x0000)
+        $data = "\x10\x0e\x00\x04MQTT\x04\x82\x00\x0a\x00\x00\x00\x00";
+        $stream = new PacketStream($data);
+        $packet = new ConnectRequestPacket();
+        $packet->read($stream);
     }
 
     private function createDefaultPacket(): ConnectRequestPacket

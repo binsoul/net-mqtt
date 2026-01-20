@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BinSoul\Test\Net\Mqtt\Packet;
 
+use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\PublishReleasePacket;
 use BinSoul\Net\Mqtt\PacketStream;
@@ -65,6 +66,15 @@ final class PublishReleasePacketTest extends TestCase
         $packet = new PublishReleasePacket();
         $packet->read($stream);
         $this->assertSame($this->getDefaultData(), $stream->getData());
+    }
+
+    public function test_throws_exception_for_wrong_header_flags(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\x60\x02\x00\x01"; // Header 0x60 (Reserved bits is 0x2 for PUBREL, here 0x0)
+        $stream = new PacketStream($data);
+        $packet = new PublishReleasePacket();
+        $packet->read($stream);
     }
 
     private function getDefaultData(): string

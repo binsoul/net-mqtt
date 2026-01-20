@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BinSoul\Test\Net\Mqtt\Packet;
 
+use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\UnsubscribeRequestPacket;
 use BinSoul\Net\Mqtt\PacketStream;
@@ -93,6 +94,15 @@ final class UnsubscribeRequestPacketTest extends TestCase
         $packet = new UnsubscribeRequestPacket();
         $packet->read($stream);
         $this->assertSame($this->getDefaultData(), $stream->getData());
+    }
+
+    public function test_throws_exception_for_wrong_header_flags(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\xa0\x05\x00\x01\x00\x01#"; // header 0xa0 (bits 0-3 are 0x0 instead of 0x2)
+        $stream = new PacketStream($data);
+        $packet = new UnsubscribeRequestPacket();
+        $packet->read($stream);
     }
 
     private function getDefaultData(): string

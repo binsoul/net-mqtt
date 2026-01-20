@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BinSoul\Net\Mqtt\Packet;
 
+use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\PacketStream;
 use Override;
@@ -65,6 +66,11 @@ class ConnectResponsePacket extends BasePacket
         $this->assertRemainingPacketLength(2);
 
         $this->flags = $stream->readByte();
+
+        if (($this->flags & 0xFE) !== 0) {
+            throw new MalformedPacketException(sprintf('The reserved bits 1-7 in the CONNACK packet must be zero, but got %02x.', $this->flags));
+        }
+
         $this->returnCode = $stream->readByte();
     }
 

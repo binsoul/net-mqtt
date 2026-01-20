@@ -63,9 +63,22 @@ class ConnectRequestPacket extends BasePacket
             throw new MalformedPacketException(sprintf('Expected protocol level 3 or 4 but got %d.', $protocolLevel));
         }
 
+        if ($protocolLevel === 4 && $this->protocolName !== 'MQTT') {
+            throw new MalformedPacketException(sprintf('Expected protocol name "MQTT" for protocol level 4 but got "%s".', $this->protocolName));
+        }
+
+        if ($protocolLevel === 3 && $this->protocolName !== 'MQIsdp') {
+            throw new MalformedPacketException(sprintf('Expected protocol name "MQIsdp" for protocol level 3 but got "%s".', $this->protocolName));
+        }
+
         $this->protocolLevel = $protocolLevel;
 
         $this->flags = $stream->readByte();
+
+        if (($this->flags & 1) !== 0) {
+            throw new MalformedPacketException('The reserved flag in the CONNECT packet must be zero.');
+        }
+
         $this->keepAlive = $stream->readWord();
         $this->clientID = $stream->readString();
         Validator::assertValidString($this->clientID, MalformedPacketException::class);
@@ -94,6 +107,10 @@ class ConnectRequestPacket extends BasePacket
         if ($this->hasPassword()) {
             $this->password = $stream->readString();
         }
+
+        if (! $this->hasUsername() && $this->hasPassword()) {
+            throw new MalformedPacketException('The password flag must be zero if the username flag is zero.');
+        }
     }
 
     #[Override]
@@ -103,13 +120,17 @@ class ConnectRequestPacket extends BasePacket
             $this->clientID = DefaultIdentifierGenerator::buildClientIdentifier();
         }
 
+        if (! $this->hasUsername()) {
+            $this->setPassword('');
+        }
+
         $data = new PacketStream();
 
         $data->writeString($this->protocolName);
         $data->writeByte($this->protocolLevel);
         $data->writeByte($this->flags);
         $data->writeWord($this->keepAlive);
-        $data->writeString($this->clientID);
+        $data->writeString($this->clientID ?? '');
 
         if ($this->hasWill()) {
             $data->writeString($this->willTopic ?? '');

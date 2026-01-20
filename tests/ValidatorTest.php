@@ -67,7 +67,7 @@ final class ValidatorTest extends TestCase
 
     public function test_throws_exception_for_invalid_utf8(): void
     {
-        $value = "\xC3\x28";
+        $value = "abc\xED\xA0\x80xyz";
 
         $this->expectException(self::EXCEPTION_CLASS_DEFAULT);
 
@@ -77,6 +77,15 @@ final class ValidatorTest extends TestCase
     public function test_throws_exception_for_null_characters(): void
     {
         $value = "test\x00\x00";
+
+        $this->expectException(self::EXCEPTION_CLASS_DEFAULT);
+
+        Validator::assertValidString($value);
+    }
+
+    public function test_throws_exception_for_single_null_character(): void
+    {
+        $value = "test\x00abc";
 
         $this->expectException(self::EXCEPTION_CLASS_DEFAULT);
 

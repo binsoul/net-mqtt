@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BinSoul\Test\Net\Mqtt\Packet;
 
+use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\SubscribeRequestPacket;
 use BinSoul\Net\Mqtt\PacketStream;
@@ -138,6 +139,15 @@ final class SubscribeRequestPacketTest extends TestCase
 
         $this->assertSame(['#', 'test/a/b/c'], $packetRead->getFilters());
         $this->assertSame([0, 1], $packetRead->getQosLevels());
+    }
+
+    public function test_throws_exception_for_wrong_header_flags(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\x80\x06\x00\x01\x00\x01#\x00"; // header 0x80 (bits 0-3 are 0x0 instead of 0x2)
+        $stream = new PacketStream($data);
+        $packet = new SubscribeRequestPacket();
+        $packet->read($stream);
     }
 
     private function getDefaultDataSingleFilter(): string

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BinSoul\Test\Net\Mqtt\Packet;
 
+use BinSoul\Net\Mqtt\Exception\MalformedPacketException;
 use BinSoul\Net\Mqtt\Packet\PublishRequestPacket;
 use BinSoul\Net\Mqtt\PacketStream;
 use InvalidArgumentException;
@@ -203,6 +204,43 @@ final class PublishRequestPacketTest extends TestCase
         $packet = new PublishRequestPacket();
         $packet->read($stream);
         $this->assertSame($this->getDefaultData(), $stream->getData());
+    }
+
+    public function test_corrects_dup_flag_at_qos_0_on_write(): void
+    {
+        $packet = new PublishRequestPacket();
+        $packet->setTopic('topic');
+        $packet->setQosLevel(0);
+        $packet->setDuplicate(true);
+
+        $stream = new PacketStream();
+        $packet->write($stream);
+
+        $this->assertFalse($packet->isDuplicate());
+
+        $stream->setPosition(0);
+        $readPacket = new PublishRequestPacket();
+        $readPacket->read($stream);
+
+        $this->assertFalse($readPacket->isDuplicate());
+    }
+
+    public function test_throws_exception_for_dup_flag_at_qos_0(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\x38\x0e\x00\x05topicmessage"; // Header 0x38 (DUP=1, QoS=0)
+        $stream = new PacketStream($data);
+        $packet = new PublishRequestPacket();
+        $packet->read($stream);
+    }
+
+    public function test_throws_exception_for_qos_3(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\x36\x0e\x00\x05topicmessage"; // Header 0x36 (QoS=3)
+        $stream = new PacketStream($data);
+        $packet = new PublishRequestPacket();
+        $packet->read($stream);
     }
 
     private function getDefaultData(): string

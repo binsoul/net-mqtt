@@ -52,7 +52,7 @@ class Validator
             );
         }
 
-        if (preg_match('/[\xD8-\xDF][\x00-\xFF]|\x00\x00/x', $value)) {
+        if (preg_match('/[\xD8-\xDF][\x00-\xFF]|\x00/x', $value)) {
             throw new $exceptionClass(
                 sprintf(
                     'The string "%s" contains invalid characters.',

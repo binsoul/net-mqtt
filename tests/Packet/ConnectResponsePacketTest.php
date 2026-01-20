@@ -122,6 +122,24 @@ final class ConnectResponsePacketTest extends TestCase
         $this->assertFalse($packet->isSessionPresent());
     }
 
+    public function test_throws_exception_for_reserved_flags_not_zero(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\x20\x02\x02\x00"; // flag byte 0x02 (bit 1 is 1)
+        $stream = new PacketStream($data);
+        $packet = new ConnectResponsePacket();
+        $packet->read($stream);
+    }
+
+    public function test_throws_exception_for_header_reserved_bits_not_zero(): void
+    {
+        $this->expectException(MalformedPacketException::class);
+        $data = "\x21\x02\x00\x00"; // header 0x21 (bits 0-3 are 0x1)
+        $stream = new PacketStream($data);
+        $packet = new ConnectResponsePacket();
+        $packet->read($stream);
+    }
+
     private function createDefaultPacket(): ConnectResponsePacket
     {
         $packet = new ConnectResponsePacket();

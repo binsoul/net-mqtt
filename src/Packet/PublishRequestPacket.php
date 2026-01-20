@@ -23,9 +23,9 @@ class PublishRequestPacket extends BasePacket
     /**
      * @var non-empty-string
      */
-    private string $topic;
+    private string $topic = 'topic';
 
-    private string $payload;
+    private string $payload = '';
 
     #[Override]
     public function read(PacketStream $stream): void
@@ -40,6 +40,10 @@ class PublishRequestPacket extends BasePacket
 
         $qosLevel = ($this->packetFlags & 6) >> 1;
         Validator::assertValidQosLevel($qosLevel, MalformedPacketException::class);
+
+        if ($qosLevel === 0 && $this->isDuplicate()) {
+            throw new MalformedPacketException('The duplicate flag must be zero if the quality of service level is zero.');
+        }
 
         $this->identifier = null;
 
@@ -56,6 +60,10 @@ class PublishRequestPacket extends BasePacket
     #[Override]
     public function write(PacketStream $stream): void
     {
+        if ($this->getQosLevel() === 0) {
+            $this->setDuplicate(false);
+        }
+
         $data = new PacketStream();
 
         $data->writeString($this->topic);
